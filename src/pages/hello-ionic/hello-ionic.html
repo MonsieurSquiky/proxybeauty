@@ -1,25 +1,38 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Hello Ionic</ion-title>
-  </ion-navbar>
 </ion-header>
 
+<ion-content padding class="home-background-flat">
+    <div class="container">
+        <div class="forecast">
+            <!-- <ion-icon text-center name="pin" class="main-logo"></ion-icon>
+            <p>
+                La beaute a portee
+            </p>
+        -->
+            <img src="../../assets/icon/logoPB2.png" class="main-logo" />
+        </div>
+        <div style="width:100%">
+              <ion-item class="transparent rounded">
+                <ion-input class="" type="text" placeholder="Email"></ion-input>
+              </ion-item>
 
-<ion-content padding>
+              <ion-item class="transparent rounded">
+                <ion-input class="" type="password" placeholder="Password"></ion-input>
+              </ion-item>
+              <button ion-button color="light" (click)="openList()">Login</button>
+              <button ion-button color="dark" menuToggle>Register</button>
+        </div>
+        <div style="width:100%">
+            <button ion-button color="light" class="facebook" icon-start full>
+                <ion-icon name="logo-facebook"></ion-icon>
+                Login with Facebook
+            </button>
+            <button ion-button color="light" class="google" icon-start full>
+                <ion-icon name="logo-google"></ion-icon>
+                Login with Google
+            </button>
+        </div>
 
-  <h3>Welcome to your first Ionic app!</h3>
-
-  <p>
-    This starter project is our way of helping you get a functional app running in record time.
-  </p>
-  <p>
-    Follow along on the tutorial section of the Ionic docs!
-  </p>
-  <p>
-    <button ion-button color="primary" menuToggle>Toggle Menu</button>
-  </p>
+    </div>
 
 </ion-content>

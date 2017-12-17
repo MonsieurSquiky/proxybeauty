@@ -4,6 +4,13 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 
 import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
 import { ListPage } from '../pages/list/list';
+import { DashboardPage } from '../pages/dashboard/dashboard';
+import { PrestaBoardPage } from '../pages/presta-board/presta-board';
+import { FilterPage } from '../pages/filter/filter';
+import { PrestaListPage } from '../pages/presta-list/presta-list';
+import { PrestaRatingsPage } from '../pages/presta-ratings/presta-ratings';
+import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
+import { ParrainagePage } from '../pages/parrainage/parrainage';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -30,7 +37,14 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Hello Ionic', component: HelloIonicPage },
-      { title: 'My First List', component: ListPage }
+      { title: 'My First List', component: ListPage },
+      { title: 'Da Dashboard', component: DashboardPage },
+      { title: 'Choose Freely', component: FilterPage },
+      { title: 'For you, professionals', component: PrestaBoardPage },
+      { title: 'My offers', component: PrestaListPage },
+      { title: 'My reviews', component: PrestaRatingsPage },
+      { title: 'My appointments', component: PrestaRdvPage },
+      { title: 'Mon reseau', component: ParrainagePage }
     ];
   }
 

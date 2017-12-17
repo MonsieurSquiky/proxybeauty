@@ -10,18 +10,18 @@ import { ItemDetailsPage } from '../item-details/item-details';
 })
 export class ListPage {
   icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
+  items: Array<{title: string, note: number, price: number, statut: string}>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    'american-football', 'boat', 'bluetooth', 'build'];
+    this.icons = ['Professionnel', 'Particulier', 'Salon', 'Diplome'];
 
     this.items = [];
     for(let i = 1; i < 11; i++) {
       this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+        title: 'Annonceur ' + i,
+        note: Math.floor(Math.random() * 5),
+        price: Math.floor(Math.random() * 60),
+        statut: this.icons[Math.floor(Math.random() * this.icons.length)]
       });
     }
   }

@@ -1,0 +1,109 @@
+<!--
+  Generated template for the FilterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar class="colored-menu">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Nouvelle offre</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+    <p class="title">
+        Offre de base : <br />
+
+    </p>
+
+    <ion-row>
+
+        <ion-col col-12>
+            <ion-badge class="main-color-button" color="light"> Manucure</ion-badge>
+            <ion-badge color="light" > Gel</ion-badge>
+            <ion-badge class="main-color-button" color="light"> Faux ongles</ion-badge>
+            <br />
+            <br />
+            <ion-badge color="light"> Semi-Permanent</ion-badge>
+            <ion-badge class="main-color-button" color="light"> French Manucure</ion-badge>
+        </ion-col>
+
+    </ion-row>
+
+    <ion-item>
+      <ion-label><span class="icon-left"><ion-icon name="home" color="red"></ion-icon></span> A domicile</ion-label>
+      <ion-checkbox [(ngModel)]="pepperoni"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label><span class="icon-left"><ion-icon name="pin" color="red"></ion-icon></span> Chez le client</ion-label>
+      <ion-checkbox [(ngModel)]="sausage"></ion-checkbox>
+    </ion-item>
+
+    <ion-row>
+        <ion-col col-7 class="close-subtitles subtitle">
+            <p>
+                Prix de base :
+            </p>
+        </ion-col>
+        <ion-col class="subtitle close-subtitles right-align" col-5>
+            <ion-item no-margin>
+              <ion-input no-margin type="text" placeholder="Prix"></ion-input>
+            </ion-item>
+        </ion-col>
+
+    </ion-row>
+    <ion-row>
+        <ion-col col-12  class="close-subtitles subtitles">
+            <ion-item no-padding>
+              <ion-label>Durée de la prestation :</ion-label>
+              <ion-select [(ngModel)]="gender" >
+                <ion-option value="f">30 min</ion-option>
+                <ion-option value="m">1h</ion-option>
+              </ion-select>
+            </ion-item>
+        </ion-col>
+
+    </ion-row>
+
+
+        <p class="title">
+            Supplément(s) : <br />
+
+        </p>
+    <ion-row>
+        <ion-col col-7 class="close-subtitles">
+            <p class="subtitle">
+                <ion-badge class="main-color-button" color="light" > Gel</ion-badge>
+            </p>
+
+        </ion-col>
+        <ion-col class="subtitle close-subtitles" col-5>
+            <ion-item>
+              <ion-input type="text" placeholder="Prix"></ion-input>
+            </ion-item>
+        </ion-col>
+
+    </ion-row>
+    <ion-row>
+        <ion-col col-12>
+            <button ion-button icon-left color="dark" outline>
+                <ion-icon name="add"></ion-icon>
+                Ajouter un supplément
+            </button>
+
+        </ion-col>
+        <ion-col col-12>
+            <button ion-button icon-left color="dark">
+                <ion-icon name="send"></ion-icon>
+                Valider l'offre
+            </button>
+        </ion-col>
+    </ion-row>
+
+</ion-content>

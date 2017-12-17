@@ -1,3 +1,62 @@
-page-hello-ionic {
+$background-color1: #B24592;
+$background-color2: #F15F79;
+$text-color: #ecf0f1;
 
+page-home {
+
+}
+
+@mixin background($color1, $color2) {
+    background: $background-color1; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(bottom, $color1, $color2); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom, $color2, $color1); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom, $color2, $color1); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom, $color2, $color1); /* Standard syntax */
+}
+
+.home-background-flat {
+    @include background($background-color1, $background-color2);
+    color: $text-color;
+}
+
+
+
+.facebook {
+    color:#3b5998;
+}
+.google {
+    color:#db3236;
+}
+
+.transparent {
+    background-color: transparent;
+
+}
+.item-inner {
+    border-bottom: 0px solid white !important;
+}
+.rounded {
+    color: $text-color;
+    border: 1px solid $text-color;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.bigText {
+    flex: 2;
+    font-size: 20px;
+    text-align: center;
+    margin: 5px;
+    color: #FFFFFF;
+}
+
+.mainText {
+    flex: 1;
+    font-size: 16px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.main-logo {
+    font-size: 100px;
+    max-width: 140px;
 }

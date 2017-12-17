@@ -14,3 +14,299 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+$background-color1: #B24592;
+$background-color2: #F15F79;
+$text-color: #ecf0f1;
+$button-radius: 60px;
+
+@mixin background($color1, $color2) {
+    background: $background-color1; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, $color1, $color2); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, $color2, $color1); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, $color2, $color1); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to left, $color2, $color1); /* Standard syntax */
+}
+@font-face {
+    font-family: Cooper Black;
+    src: url('../assets/fonts/CooperBlackRegular.ttf');
+}
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+    min-height: 100%;
+    min-width: 100%;
+    padding: 0px 15px;
+    color: $text-color;
+}
+
+.full-height {
+    //max-height: 100%;
+}
+
+.container ion-row {
+    min-width: 100%;
+}
+.grid-centered {
+    display: flex;
+
+    text-align: center;
+}
+.background-cloud {
+    background-color: #bdc3c7;
+}
+.main-icon {
+    //font-size: 35px;
+}
+
+ion-tabs[tabs-only] {
+    /* margin-bottom: 20px; */
+    contain: none;
+}
+
+.icon-button {
+    max-width: $button-radius;
+    max-height: $button-radius;
+    width: $button-radius;
+    height: $button-radius;
+    border-radius: $button-radius;
+    //font-size: 35px;
+}
+.rdv-content {
+    border-bottom: 1px solid gray;
+    padding-top: 5px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+.tab-day {
+    font-size: 16px;
+    font-weight: bold;
+    border-left: 5px solid black;
+    border-bottom: 1px solid gray;
+}
+.align-right {
+    text-align: right;
+}
+.badge-little {
+    margin-bottom: 5px;
+}
+.info-minor {
+    color: gray;
+    font-weight: normal;
+
+}
+.info-major {
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 5px 0;
+    margin-right: 15px;
+    text-align: center;
+}
+.bordered-right {
+    border-right: 1px solid black;
+}
+.icon-left {
+    margin-right: 10px;
+}
+.pic-profil {
+    max-width: 60px;
+    max-height: 60px;
+}
+.no-padding {
+    padding: 5px 6px;
+}
+.card-price {
+    font-size: 22px;
+}
+.card-footer {
+    bottom: -15px;
+    height: 40px;
+}
+
+.card-footer-content {
+    padding-left: 5px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.main-color-button {
+    @include background($background-color1, $background-color2);
+    color: $text-color;
+}
+
+.img-background {
+    position:absolute;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+.img-background-profilepic {
+    position:static;
+    background-image: url('../assets/img/background/pb-background-profilepic.jpg');
+}
+
+.img-background-makeup {
+    background-image: url('../assets/img/background/pb-background-makeup.jpg');
+}
+.img-background-manucure {
+    background-image: url('../assets/img/background/pb-background-manucure.jpg');
+}
+.img-background-massage {
+    background-image: url('../assets/img/background/pb-background-massage.jpg');
+}
+.img-background-depilation {
+    background-image: url('../assets/img/background/pb-background-depilation.jpg');
+}
+.img-background-eyebrow {
+    background-image: url('../assets/img/background/pb-background-eyebrow.jpg');
+}
+.img-background-haircut {
+    background-image: url('../assets/img/background/pb-background-haircut.jpg');
+}
+.img-background-coach {
+    background-image: url('../assets/img/background/pb-background-coach.jpg');
+}
+.img-background-pedicure {
+    background-image: url('../assets/img/background/pb-background-pedicure.jpg');
+}
+
+.icon-label {
+    font-family: "Cooper Black";
+    color: black;
+    margin: 5px;
+    font-size: 14px;
+}
+.label-md {
+
+}
+.toolbar-background {
+    @include background($background-color1, $background-color2);
+}
+.toolbar * {
+    color: $text-color ;
+}
+
+.toolbar-title {
+    font-family: "Cooper Black";
+    font-size: 22px;
+}
+
+.beauty-font {
+    font-family: 'olivierregular';
+    src: url('../assets/fonts/olivier-webfont.woff2') format('woff2'),
+         url('../assets/fonts/olivier-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.icon-pb {
+    font-size: 50px;
+}
+
+.icon-pb-manucure {
+    font-size: 80px;
+    padding-top: 12px;
+    padding-left: 5px;
+}
+.icon-pb-depilation {
+    padding-top: 10px;
+}
+.icon-pb-eyebrow {
+    padding-top: 10px;
+}
+
+.icon-pb-makeup {
+    padding-top: 10px;
+}
+
+.icon-pb-haircut {
+    padding-top: 10px;
+}
+.icon-pb-pedicure {
+    padding-right: 10px;
+}
+.icon-pb-depilation {
+    font-size: 90px;
+}
+
+.icon-pb-eyebrow::before {
+  content: "\e900";
+}
+.icon-pb-makeup::before {
+  content: "\e901";
+}
+.icon-pb-depilation::before {
+  content: "\e902";
+}
+.icon-pb-massage::before {
+  content: "\e903";
+}
+.icon-pb-manucure:before {
+  content: "\e904:";
+}
+.icon-pb-haircut .path1:before {
+  content: "\e905";
+
+}
+.icon-pb-haircut .path2:before {
+  content: "\e906";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path3:before {
+  content: "\e907";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path4:before {
+  content: "\e908";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path5:before {
+  content: "\e909";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path6:before {
+  content: "\e90a";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path7:before {
+  content: "\e90b";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path8:before {
+  content: "\e90c";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path9:before {
+  content: "\e90d";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path10:before {
+  content: "\e90e";
+  margin-left: -0.7998046875em;
+
+}
+.icon-pb-haircut .path11:before {
+  content: "\e90f";
+  margin-left: -0.7998046875em;
+  color: rgb(255, 255, 255);
+}
+.icon-pb-haircut .path12:before {
+  content: "\e910";
+  margin-left: -0.7998046875em;
+
+}
