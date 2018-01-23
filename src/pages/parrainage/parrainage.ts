@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
+import { PrestaRatingsPage } from '../presta-ratings/presta-ratings';
 /**
  * Generated class for the ParrainagePage page.
  *
@@ -16,11 +18,14 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ParrainagePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+    tab1Root = ParrainageGainPage;
+    tab2Root = PrestaRatingsPage;
 
-  ionViewDidLoad() {
+    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    }
+
+    ionViewDidLoad() {
     console.log('ionViewDidLoad ParrainagePage');
-  }
+    }
 
 }

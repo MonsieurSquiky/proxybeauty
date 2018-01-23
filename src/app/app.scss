@@ -89,6 +89,8 @@ ion-tabs[tabs-only] {
 }
 .align-right {
     text-align: right;
+    float:right;
+    margin-top: 15px;
 }
 .badge-little {
     margin-bottom: 5px;
@@ -97,6 +99,15 @@ ion-tabs[tabs-only] {
     color: gray;
     font-weight: normal;
 
+}
+.solde-big {
+    text-align: center;
+    font-size: 60px;
+    font-weight: bold;
+    padding:30px 0;
+    padding-bottom: 70px;
+    border-bottom: 1.9px solid gray;
+    color: #e5509f;
 }
 .info-major {
     font-size: 14px;
@@ -109,6 +120,11 @@ ion-tabs[tabs-only] {
 }
 .bordered-right {
     border-right: 1px solid black;
+}
+.item-main-content {
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .icon-left {
     margin-right: 10px;

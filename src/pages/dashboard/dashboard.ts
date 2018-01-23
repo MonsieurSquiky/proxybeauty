@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import firebase from 'firebase';
 
 /**
  * Generated class for the DashboardPage page.
@@ -14,8 +15,25 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'dashboard.html',
 })
 export class DashboardPage {
-
+  num : string;
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+      console.log(this);
+
+      firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+            console.log(this);
+            console.log(user.uid);
+          } else {
+            // No user is signed in.
+          }
+        });
+
+  }
+
+  getUserName() {
+      var user = firebase.auth().currentUser;
+      return user.displayName;
   }
 
   ionViewDidLoad() {

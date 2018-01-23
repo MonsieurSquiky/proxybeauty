@@ -11,6 +11,8 @@ import { PrestaListPage } from '../pages/presta-list/presta-list';
 import { PrestaRatingsPage } from '../pages/presta-ratings/presta-ratings';
 import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
 import { ParrainagePage } from '../pages/parrainage/parrainage';
+import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
+import { MapPage } from '../pages/map/map';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -23,7 +25,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = HelloIonicPage;
+  rootPage = MapPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
@@ -44,7 +46,8 @@ export class MyApp {
       { title: 'My offers', component: PrestaListPage },
       { title: 'My reviews', component: PrestaRatingsPage },
       { title: 'My appointments', component: PrestaRdvPage },
-      { title: 'Mon reseau', component: ParrainagePage }
+      { title: 'Mon reseau', component: ParrainagePage },
+      { title: 'Mon adresse', component: MapPage }
     ];
   }
 

@@ -13,21 +13,21 @@
         </div>
         <div style="width:100%">
               <ion-item class="transparent rounded">
-                <ion-input class="" type="text" placeholder="Email"></ion-input>
+                <ion-input class="" [(ngModel)]="user.email" type="text" placeholder="Email"></ion-input>
               </ion-item>
 
               <ion-item class="transparent rounded">
-                <ion-input class="" type="password" placeholder="Password"></ion-input>
+                <ion-input class="" [(ngModel)]="user.password" type="password" placeholder="Password"></ion-input>
               </ion-item>
-              <button ion-button color="light" (click)="openList()">Login</button>
-              <button ion-button color="dark" menuToggle>Register</button>
+              <button ion-button color="light" (click)="login(user)">Login</button>
+              <button ion-button color="dark" (click)="confirmPassword(user)" >Register</button>
         </div>
         <div style="width:100%">
-            <button ion-button color="light" class="facebook" icon-start full>
+            <button ion-button color="light" class="facebook" (click)="facebookLogin()" icon-start full>
                 <ion-icon name="logo-facebook"></ion-icon>
                 Login with Facebook
             </button>
-            <button ion-button color="light" class="google" icon-start full>
+            <button ion-button color="light" class="google" (click)="googleLogin()" icon-start full>
                 <ion-icon name="logo-google"></ion-icon>
                 Login with Google
             </button>
