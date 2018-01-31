@@ -1,0 +1,39 @@
+<!--
+  Generated template for the FirstloginPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title> Votre profil </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div class="container" style="color:black">
+        <p>
+            Remplissez les champs pour compléter votre profil.
+        </p>
+        <ion-list>
+
+          <ion-item>
+            <ion-label floating>Nom</ion-label>
+            <ion-input [(ngModel)]="firstname" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label floating>Prénom</ion-label>
+            <ion-input [(ngModel)]="lastname" type="text"></ion-input>
+          </ion-item>
+
+        </ion-list>
+
+        <div padding>
+          <button ion-button (click)="saveName(firstname, lastname)"> Confirmer </button>
+        </div>
+    </div>
+</ion-content>

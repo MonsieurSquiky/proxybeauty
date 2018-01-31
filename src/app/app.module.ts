@@ -11,12 +11,17 @@ import { ListPage } from '../pages/list/list';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { PrestaBoardPage } from '../pages/presta-board/presta-board';
 import { FilterPage } from '../pages/filter/filter';
-import { PrestaListPage } from '../pages/presta-list/presta-list';
-import { PrestaRatingsPage } from '../pages/presta-ratings/presta-ratings';
-import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
-import { ParrainagePage } from '../pages/parrainage/parrainage';
 import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
 import { MapPage } from '../pages/map/map';
+import { ChooseHomePage } from '../pages/choose-home/choose-home';
+import { AutocompletePage } from '../pages/autocomplete/autocomplete';
+import { FirstloginPage } from '../pages/firstlogin/firstlogin';
+import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
+
+import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
+import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
+import { PrestaRdvPageModule } from '../pages/presta-rdv/presta-rdv.module';
+import { ParrainagePageModule } from '../pages/parrainage/parrainage.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,6 +31,9 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook'
 import { Geolocation } from '@ionic-native/geolocation';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
+
+import { GeocoderProvider } from '../providers/geocoder/geocoder';
 //import { DatabaseserviceProvider } from '../providers/databaseservice/databaseservice';
 
 
@@ -60,20 +68,25 @@ var config = {
     PrestaBoardPage,
     ListPage,
     FilterPage,
-    PrestaListPage,
-    PrestaRatingsPage,
-    PrestaRdvPage,
-    ParrainagePage,
+    //PrestaListPage,
+    FirstloginPage,
+    FirstloginTypePage,
     ParrainageGainPage,
-    MapPage
+    MapPage,
+    ChooseHomePage,
+    AutocompletePage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    PrestaListPageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    PrestaRatingsPageModule,
+    PrestaRdvPageModule,
+    ParrainagePageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -84,12 +97,13 @@ var config = {
     PrestaBoardPage,
     ListPage,
     FilterPage,
-    PrestaListPage,
-    PrestaRatingsPage,
-    PrestaRdvPage,
-    ParrainagePage,
+    //PrestaListPage,
+    FirstloginPage,
+    FirstloginTypePage,
     ParrainageGainPage,
-    MapPage
+    MapPage,
+    ChooseHomePage,
+    AutocompletePage
   ],
   providers: [
     StatusBar,
@@ -97,7 +111,9 @@ var config = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Facebook,
     GooglePlus,
-    Geolocation
+    Geolocation,
+    GeocoderProvider,
+    NativeGeocoder
   ]
 })
 export class AppModule {}

@@ -18,12 +18,11 @@ export class DashboardPage {
   num : string;
   constructor(public navCtrl: NavController, public navParams: NavParams) {
       console.log(this);
-
+      var page = this;
       firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
-            console.log(this);
-            console.log(user.uid);
+            page.num = user.email;
           } else {
             // No user is signed in.
           }

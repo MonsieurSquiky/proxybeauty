@@ -8,7 +8,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+@IonicPage({
+    name: 'prestardv'
+})
 @Component({
   selector: 'page-presta-rdv',
   templateUrl: 'presta-rdv.html',

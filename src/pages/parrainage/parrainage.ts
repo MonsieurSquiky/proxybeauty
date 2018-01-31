@@ -11,7 +11,9 @@ import { PrestaRatingsPage } from '../presta-ratings/presta-ratings';
  */
 
 
-@IonicPage()
+@IonicPage({
+    name: 'parrainage'
+})
 @Component({
   selector: 'page-parrainage',
   templateUrl: 'parrainage.html',

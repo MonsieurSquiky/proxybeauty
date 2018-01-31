@@ -8,10 +8,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+@IonicPage({
+    name: 'prestalist'
+})
 @Component({
   selector: 'page-presta-list',
   templateUrl: 'presta-list.html',
+
 })
 export class PrestaListPage {
 

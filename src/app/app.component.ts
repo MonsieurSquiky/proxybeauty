@@ -13,6 +13,9 @@ import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
 import { ParrainagePage } from '../pages/parrainage/parrainage';
 import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
 import { MapPage } from '../pages/map/map';
+import { ChooseHomePage } from '../pages/choose-home/choose-home';
+import { AutocompletePage } from '../pages/autocomplete/autocomplete';
+import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -25,7 +28,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = MapPage;
+  rootPage = FirstloginTypePage;
   pages: Array<{title: string, component: any}>;
 
   constructor(

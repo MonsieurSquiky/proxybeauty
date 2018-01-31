@@ -5,6 +5,9 @@ import firebase from 'firebase';
 import { GooglePlus } from '@ionic-native/google-plus';
 
 import { DashboardPage } from '../dashboard/dashboard';
+import { PrestaBoardPage } from '../presta-board/presta-board';
+import { FirstloginPage } from '../firstlogin/firstlogin';
+
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Facebook } from '@ionic-native/facebook'
@@ -33,6 +36,18 @@ export class HelloIonicPage {
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              // User is signed in.
+              console.log(user.email);
+              console.log(user.uid);
+              //navCtrl.setRoot(PrestaBoardPage);
+            } else {
+              // No user is signed in.
+              console.log("No user signed");
+            }
+          });
   }
 
   facebookLogin(): Promise<any> {
@@ -44,7 +59,7 @@ export class HelloIonicPage {
         firebase.auth().signInWithCredential(facebookCredential)
           .then( success => {
             console.log("Firebase success: " + JSON.stringify(success));
-            this.navCtrl.setRoot(DashboardPage);
+            //HelloIonicPage.goDashboard();
           });
 
       }).catch((error) => { console.log(error) });
@@ -124,6 +139,10 @@ export class HelloIonicPage {
     }
   }
 
+  goDashboard () {
+      this.navCtrl.setRoot(DashboardPage);
+  }
+
   async register(user: User) {
       console.log(user);
     try {
@@ -132,7 +151,14 @@ export class HelloIonicPage {
         user.password
       );
       if (result) {
-        this.navCtrl.setRoot(DashboardPage);
+          var userReg = firebase.auth().currentUser;
+          var ref = this.fdb.database.ref("/users/"+ userReg.uid);
+          ref.set({
+            uid: userReg.uid,
+            email: userReg.email
+          });
+        this.navCtrl.setRoot(FirstloginPage);
+
       }
     } catch (e) {
 
