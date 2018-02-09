@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
-import { PrestaBoardPage } from '../presta-board/presta-board';
+import { SetAddressPage } from '../set-address/set-address';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 /**
@@ -42,7 +42,7 @@ export class FirstloginPage {
           firstname: firstname,
           lastname: lastname
         });
-        this.navCtrl.setRoot(PrestaBoardPage);
+        this.navCtrl.push(SetAddressPage);
     }
 
 

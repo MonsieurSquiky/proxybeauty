@@ -17,6 +17,8 @@ import { ChooseHomePage } from '../pages/choose-home/choose-home';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 import { FirstloginPage } from '../pages/firstlogin/firstlogin';
 import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
+import { SetAddressPage } from '../pages/set-address/set-address';
+import { SchedulePage } from '../pages/schedule/schedule';
 
 import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
 import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
@@ -74,7 +76,9 @@ var config = {
     ParrainageGainPage,
     MapPage,
     ChooseHomePage,
-    AutocompletePage
+    AutocompletePage,
+    SetAddressPage,
+    SchedulePage
   ],
   imports: [
     BrowserModule,
@@ -103,7 +107,9 @@ var config = {
     ParrainageGainPage,
     MapPage,
     ChooseHomePage,
-    AutocompletePage
+    AutocompletePage,
+    SetAddressPage,
+    SchedulePage
   ],
   providers: [
     StatusBar,

@@ -45,7 +45,7 @@ $button-radius: 60px;
 .alone {
     margin-top: 10vh;
     color: black;
-    
+
 }
 .full-height {
     //max-height: 100%;
@@ -79,6 +79,11 @@ ion-tabs[tabs-only] {
     border-radius: $button-radius;
     //font-size: 35px;
 }
+
+ion-badge {
+    margin: 5px 2px;
+}
+
 .rdv-content {
     border-bottom: 1px solid gray;
     padding-top: 5px;
@@ -142,6 +147,7 @@ ion-tabs[tabs-only] {
 }
 .card-price {
     font-size: 22px;
+    color: gray;
 }
 .card-footer {
     bottom: -15px;

@@ -1,0 +1,35 @@
+<!--
+  Generated template for the SetAddressPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Votre lieu de travail</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="" padding>
+    <p *ngIf="isPresta;else client_content" padding>
+        Saisissez l'adresse que vous utiliserez pour effectuer vos prestations. <br />
+        Vous pourrez également proposez à vos clients des prestations à domicile.
+    </p>
+    <ng-template #client_content><p padding>
+         Saisissez votre adresse, afin de pouvoir prendre des rendez-vous à domicile. </p> </ng-template>
+    <ion-list padding>
+      <ion-item>
+        <ion-input (click)="showAddressModal()" [(ngModel)]="address.place"type="text" placeholder="Entrez votre adresse">              </ion-input>
+      </ion-item>
+    </ion-list>
+
+    <div padding>
+
+      <button block ion-button (click)="saveAddress()"> Confirmer </button>
+      <br />
+      <button block color="dark" (click)="goToDashboard()" ion-button> Passer cette étape </button>
+    </div>
+</ion-content>

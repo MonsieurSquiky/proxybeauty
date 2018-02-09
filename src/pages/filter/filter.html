@@ -14,8 +14,8 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content style="padding-top:0px" padding>
+<div padding style="padding-top:0px">
     <p class="title">
         Offre de base : <br />
 
@@ -24,36 +24,35 @@
     <ion-row>
 
         <ion-col col-12>
-            <ion-badge class="main-color-button" color="light"> Manucure</ion-badge>
-            <ion-badge color="light" > Gel</ion-badge>
-            <ion-badge class="main-color-button" color="light"> Faux ongles</ion-badge>
-            <br />
-            <br />
-            <ion-badge color="light"> Semi-Permanent</ion-badge>
-            <ion-badge class="main-color-button" color="light"> French Manucure</ion-badge>
+            <ion-badge class="main-color-button" color="light"> {{ category }}</ion-badge>
+            <ion-badge id ="code1" (click)="switchTag('code1')" color="light" > code1</ion-badge>
+            <ion-badge id="code2" class="" (click)="switchTag('code2')" color="light"> code2</ion-badge>
+
+            <ion-badge id="code3" (click)="switchTag('code3')" color="light"> code3</ion-badge>
+            <ion-badge id="code4" (click)="switchTag('code4')" color="light"> code4</ion-badge>
         </ion-col>
 
     </ion-row>
 
     <ion-item>
-      <ion-label><span class="icon-left"><ion-icon name="home" color="red"></ion-icon></span> A domicile</ion-label>
-      <ion-checkbox [(ngModel)]="pepperoni"></ion-checkbox>
+      <ion-label><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A domicile</ion-label>
+      <ion-checkbox [(ngModel)]="home"></ion-checkbox>
     </ion-item>
 
     <ion-item>
-      <ion-label><span class="icon-left"><ion-icon name="pin" color="red"></ion-icon></span> Chez le client</ion-label>
-      <ion-checkbox [(ngModel)]="sausage"></ion-checkbox>
+      <ion-label><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le client</ion-label>
+      <ion-checkbox [(ngModel)]="remote"></ion-checkbox>
     </ion-item>
 
     <ion-row>
         <ion-col col-7 class="close-subtitles subtitle">
             <p>
-                Prix de base :
+                Prix de base (€):
             </p>
         </ion-col>
         <ion-col class="subtitle close-subtitles right-align" col-5>
             <ion-item no-margin>
-              <ion-input no-margin type="text" placeholder="Prix"></ion-input>
+              <ion-input no-margin [(ngModel)]="prix" type="number" min="1" placeholder="Prix"></ion-input>
             </ion-item>
         </ion-col>
 
@@ -62,9 +61,15 @@
         <ion-col col-12  class="close-subtitles subtitles">
             <ion-item no-padding>
               <ion-label>Durée de la prestation :</ion-label>
-              <ion-select [(ngModel)]="gender" >
-                <ion-option value="f">30 min</ion-option>
-                <ion-option value="m">1h</ion-option>
+              <ion-select [(ngModel)]="duree" >
+                  <ion-option value="15">15 min</ion-option>
+                  <ion-option value="20">20 min</ion-option>
+                  <ion-option value="25">25 min</ion-option>
+                    <ion-option value="30">30 min</ion-option>
+                    <ion-option value="45">45 min</ion-option>
+                    <ion-option value="60">1h</ion-option>
+                    <ion-option value="75">1h15</ion-option>
+                    <ion-option value="90">1h30</ion-option>
               </ion-select>
             </ion-item>
         </ion-col>
@@ -73,37 +78,94 @@
 
 
         <p class="title">
-            Supplément(s) : <br />
+            Supplément(s) en option : <br />
 
         </p>
-    <ion-row>
-        <ion-col col-7 class="close-subtitles">
-            <p class="subtitle">
-                <ion-badge class="main-color-button" color="light" > Gel</ion-badge>
-            </p>
 
-        </ion-col>
-        <ion-col class="subtitle close-subtitles" col-5>
-            <ion-item>
-              <ion-input type="text" placeholder="Prix"></ion-input>
-            </ion-item>
-        </ion-col>
+    <div id="supplements" *ngFor="let item of tags;let index = index;trackBy:trackByIndex;">
 
-    </ion-row>
+      <ion-row id="{{ 'supplement'+index }}">
+          <ion-col col-4 class="close-subtitles" no-padding style="margin: auto">
+
+                  <ion-badge class="main-color-button supplement_name" color="light" > {{tags[index]["name"]}}</ion-badge>
+
+
+          </ion-col>
+          <ion-col col-4 class="close-subtitles subtitle" no-padding>
+              <ion-item no-padding>
+                <ion-select [(ngModel)]="tags[index]['duree']" placeholder="Duree" no-padding style="max-width: 100%">
+                    <ion-option value="5">5 min</ion-option>
+                    <ion-option value="10">10 min</ion-option>
+                    <ion-option value="15">15 min</ion-option>
+                    <ion-option value="20">20 min</ion-option>
+                    <ion-option value="25">25 min</ion-option>
+                      <ion-option value="30">30 min</ion-option>
+                      <ion-option value="45">45 min</ion-option>
+                      <ion-option value="60">1h</ion-option>
+                      <ion-option value="75">1h15</ion-option>
+                      <ion-option value="90">1h30</ion-option>
+                </ion-select>
+              </ion-item>
+
+          </ion-col>
+          <ion-col class="subtitle close-subtitles" col-4 no-padding>
+              <ion-item>
+
+                <ion-input type="number" min="0" [(ngModel)]="tags[index]['prix']" placeholder="Prix"></ion-input>
+              </ion-item>
+          </ion-col>
+
+      </ion-row>
+    </div>
+    <!--
+    <div id="supplements">
+        <ion-row id='supplement_template'>
+            <ion-col col-4 class="close-subtitles" no-padding style="margin: auto">
+
+                    <ion-badge class="main-color-button supplement_name" color="light" > Gel</ion-badge>
+
+
+            </ion-col>
+            <ion-col col-4 class="close-subtitles subtitle" no-padding>
+                <ion-item no-padding>
+                  <ion-select [(ngModel)]="duree" placeholder="Duree" no-padding style="max-width: 100%">
+                      <ion-option value="15">15 min</ion-option>
+                      <ion-option value="20">20 min</ion-option>
+                      <ion-option value="25">25 min</ion-option>
+                        <ion-option value="30">30 min</ion-option>
+                        <ion-option value="45">45 min</ion-option>
+                        <ion-option value="60">1h</ion-option>
+                        <ion-option value="75">1h15</ion-option>
+                        <ion-option value="90">1h30</ion-option>
+                  </ion-select>
+                </ion-item>
+
+            </ion-col>
+            <ion-col class="subtitle close-subtitles" col-4 no-padding>
+                <ion-item>
+
+                  <ion-input type="number" min="0" placeholder="Prix"></ion-input>
+                </ion-item>
+            </ion-col>
+
+        </ion-row>
+    </div>
+-->
+
     <ion-row>
         <ion-col col-12>
-            <button ion-button icon-left color="dark" outline>
+            <button ion-button icon-left color="dark" (click)="showSupplement()" outline>
                 <ion-icon name="add"></ion-icon>
                 Ajouter un supplément
             </button>
 
         </ion-col>
         <ion-col col-12>
-            <button ion-button icon-left color="dark">
+            <button ion-button (click)="saveOffer()" icon-left color="dark">
                 <ion-icon name="send"></ion-icon>
                 Valider l'offre
             </button>
         </ion-col>
     </ion-row>
-
+</div>
 </ion-content>

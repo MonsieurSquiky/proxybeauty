@@ -16,6 +16,8 @@ import { MapPage } from '../pages/map/map';
 import { ChooseHomePage } from '../pages/choose-home/choose-home';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
+import { SetAddressPage } from '../pages/set-address/set-address';
+import { SchedulePage } from '../pages/schedule/schedule';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -28,7 +30,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = FirstloginTypePage;
+  rootPage = HelloIonicPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
@@ -50,7 +52,8 @@ export class MyApp {
       { title: 'My reviews', component: PrestaRatingsPage },
       { title: 'My appointments', component: PrestaRdvPage },
       { title: 'Mon reseau', component: ParrainagePage },
-      { title: 'Mon adresse', component: MapPage }
+      { title: 'Mon adresse', component: MapPage },
+      { title: 'Emploi du temps', component: SchedulePage }
     ];
   }
 

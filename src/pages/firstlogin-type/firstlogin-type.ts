@@ -41,14 +41,7 @@ export class FirstloginTypePage {
     address;
 
 
-    showAddressModal () {
-      let modal = this.modalCtrl.create(AutocompletePage);
-      let me = this;
-      modal.onDidDismiss(data => {
-        this.address.place = data;
-      });
-      modal.present();
-    }
+
 
     chooseType(statut) {
         var ref = this.fdb.database.ref("/users/"+ this.uid);

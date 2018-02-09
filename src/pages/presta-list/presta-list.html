@@ -13,32 +13,34 @@
   </ion-navbar>
 </ion-header>
 
-<ion-fab right bottom>
+<ion-fab (click)='addOffer()' right bottom>
     <button ion-fab class="main-color-button" color="light" ><ion-icon name="add"></ion-icon></button>
 
   </ion-fab>
 
 <ion-content class="background-cloud">
-    <ion-card>
+    <ion-card  *ngFor="let offer of offersList; let i = index">
         <ion-card-content class="no-padding">
             <ion-grid >
                 <ion-row>
-                    <ion-col col-9>
+                    <ion-col col-5>
                         <p class="title">
                             Manucure
                         </p>
 
                     </ion-col>
+                    <ion-col class="card-price" col-4>
+                         {{ offer.duree }} min
+                    </ion-col>
                     <ion-col class="card-price" col-3>
-                         35 €
+                         {{ offer.prix }} €
                     </ion-col>
                 </ion-row>
                 <ion-row>
 
                     <ion-col col-12>
-                     <ion-badge class="main-color-button" color="light"> Manucure</ion-badge>
-                     <ion-badge class="main-color-button" color="light"> Gel</ion-badge>
-                     <ion-badge class="main-color-button" color="light"> Faux ongles</ion-badge>
+                     <ion-badge class="main-color-button" color="light"> {{ offer.category }}</ion-badge>
+                     <ion-badge class="main-color-button" *ngFor="let tag of offer.tags; let j = index" color="light"> {{ tag }}</ion-badge>
                     </ion-col>
 
                 </ion-row>
@@ -51,30 +53,22 @@
                     </ion-col>
 
                 </ion-row>
-                <ion-row>
-                    <ion-col col-9 class="close-subtitles">
+                <ion-row *ngFor="let supplement of offer.supplements; let k = index" >
+                    <ion-col col-6 class="close-subtitles">
                         <p class="subtitle">
-                            French Manucure
+                            {{ supplement.name }}
                         </p>
 
                     </ion-col>
                     <ion-col class="subtitle close-subtitles" col-3>
-                         6 €
-                    </ion-col>
-
-                </ion-row>
-                <ion-row>
-                    <ion-col col-9 class="close-subtitles">
-                        <p class="subtitle">
-                            Semi Permanent
-                        </p>
-
+                         {{ supplement.duree }} min
                     </ion-col>
                     <ion-col class="subtitle close-subtitles" col-3>
-                         10 €
+                         {{ supplement.prix }} €
                     </ion-col>
 
                 </ion-row>
+
                 <ion-row>
                     <ion-col col-6>
                         <button ion-button icon-left color="dark" outline>
@@ -84,7 +78,7 @@
 
                     </ion-col>
                     <ion-col col-6>
-                        <button ion-button icon-left color="dark">
+                        <button ion-button icon-left color="dark" (click)="deleteOffer(offersKey[i])">
                             <ion-icon name="trash"></ion-icon>
                             Supprimer
                         </button>
@@ -94,79 +88,4 @@
         </ion-card-content>
     </ion-card>
 
-
-    <ion-card>
-        <ion-card-content class="no-padding">
-            <ion-grid >
-                <ion-row>
-                    <ion-col col-9>
-                        <p class="title">
-                            Maquillage
-                        </p>
-
-                    </ion-col>
-                    <ion-col class="card-price" col-3>
-                         20 €
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-
-                    <ion-col col-12>
-                     <ion-badge class="main-color-button" color="light"> Yeux</ion-badge>
-                     <ion-badge class="main-color-button" color="light"> Cils</ion-badge>
-                     <ion-badge class="main-color-button" color="light"> Bouche</ion-badge>
-                    </ion-col>
-
-                </ion-row>
-                <ion-row>
-                    <ion-col col-12>
-                        <p class="title" >
-                            Suppléments
-                        </p>
-
-                    </ion-col>
-
-                </ion-row>
-                <ion-row>
-                    <ion-col col-9 class="close-subtitles">
-                        <p class="subtitle">
-                            Joues
-                        </p>
-
-                    </ion-col>
-                    <ion-col class="subtitle close-subtitles" col-3>
-                         3 €
-                    </ion-col>
-
-                </ion-row>
-                <ion-row>
-                    <ion-col col-9 class="close-subtitles">
-                        <p class="subtitle">
-                            Sourcils
-                        </p>
-
-                    </ion-col>
-                    <ion-col class="subtitle close-subtitles" col-3>
-                         3 €
-                    </ion-col>
-
-                </ion-row>
-                <ion-row>
-                    <ion-col col-6>
-                        <button ion-button icon-left color="dark" outline>
-                            <ion-icon name="build"></ion-icon>
-                            Modifier
-                        </button>
-
-                    </ion-col>
-                    <ion-col col-6>
-                        <button ion-button icon-left color="dark">
-                            <ion-icon name="trash"></ion-icon>
-                            Supprimer
-                        </button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-card-content>
-    </ion-card>
 </ion-content>

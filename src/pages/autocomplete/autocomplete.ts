@@ -28,9 +28,10 @@ export class AutocompletePage {
     }
 
     chooseItem(item: any) {
-      this.viewCtrl.dismiss(item);
-      this.geo = item;
-      this.geoCode(this.geo);//convert Address to lat and long
+
+        this.geo = item;
+        //this.geoCode(this.geo);//convert Address to lat and long
+        this.viewCtrl.dismiss({'address': item, 'lat': this.latitude, 'long': this.longitude });
     }
 
     updateSearch() {
@@ -42,20 +43,25 @@ export class AutocompletePage {
       this.service.getPlacePredictions({ input: this.autocomplete.query,  componentRestrictions: {country: 'FR'} }, function (predictions, status) {
         me.autocompleteItems = [];
         me.zone.run(function () {
-          predictions.forEach(function (prediction) {
-            me.autocompleteItems.push(prediction.description);
-          });
+            if (predictions) {
+              predictions.forEach(function (prediction) {
+                me.autocompleteItems.push(prediction.description);
+              });
+            }
+
         });
       });
     }
 
     //convert Address string to lat and long
-    geoCode(address:any) {
+    async geoCode(address:any) {
+
       let geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ 'address': address }, (results, status) => {
+      await geocoder.geocode({ 'address': address }, (results, status) => {
       this.latitude = results[0].geometry.location.lat();
       this.longitude = results[0].geometry.location.lng();
-      alert("lat: " + this.latitude + ", long: " + this.longitude);
+      console.log(this.latitude);
+      //alert("lat: " + this.latitude + ", long: " + this.longitude);
      });
    }
 }

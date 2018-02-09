@@ -6,7 +6,7 @@ import { GooglePlus } from '@ionic-native/google-plus';
 
 import { DashboardPage } from '../dashboard/dashboard';
 import { PrestaBoardPage } from '../presta-board/presta-board';
-import { FirstloginPage } from '../firstlogin/firstlogin';
+import { FirstloginTypePage } from '../firstlogin-type/firstlogin-type';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -157,7 +157,7 @@ export class HelloIonicPage {
             uid: userReg.uid,
             email: userReg.email
           });
-        this.navCtrl.setRoot(FirstloginPage);
+        this.navCtrl.setRoot(FirstloginTypePage);
 
       }
     } catch (e) {
