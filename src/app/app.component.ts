@@ -18,6 +18,10 @@ import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
 import { SetAddressPage } from '../pages/set-address/set-address';
 import { SchedulePage } from '../pages/schedule/schedule';
+import { SearchOfferPage } from '../pages/search-offer/search-offer';
+import { ResultOfferPage } from '../pages/result-offer/result-offer';
+import { LogoutPage } from '../pages/logout/logout';
+import { HomepagePage } from '../pages/homepage/homepage';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,8 +46,11 @@ export class MyApp {
     this.initializeApp();
 
     // set our app's pages
+
     this.pages = [
-      { title: 'Hello Ionic', component: HelloIonicPage },
+      { title: 'Accueil', component: PrestaBoardPage },
+      { title: 'Se déconnecter', component: LogoutPage },
+      /*,
       { title: 'My First List', component: ListPage },
       { title: 'Da Dashboard', component: DashboardPage },
       { title: 'Choose Freely', component: FilterPage },
@@ -53,7 +60,9 @@ export class MyApp {
       { title: 'My appointments', component: PrestaRdvPage },
       { title: 'Mon reseau', component: ParrainagePage },
       { title: 'Mon adresse', component: MapPage },
-      { title: 'Emploi du temps', component: SchedulePage }
+      { title: 'Emploi du temps', component: SchedulePage },
+      { title: 'Trouvez offre', component: SearchOfferPage },
+      { title: 'une recherche', component: ResultOfferPage } */
     ];
   }
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { PrestaBoardPage } from '../presta-board/presta-board';
+import { DashboardPage } from '../dashboard/dashboard';
 import { ModalController } from 'ionic-angular';
 import { AutocompletePage } from '../autocomplete/autocomplete';
 import { HelloIonicPage } from '../hello-ionic/hello-ionic';
@@ -64,9 +65,21 @@ export class SetAddressPage {
       });
       modal.present();
     }
-    goToDashboard() {
-        this.navCtrl.setRoot(PrestaBoardPage);
+
+    goToDashboard () {
+        var ref = this.fdb.database.ref("/users/"+ this.uid);
+        var obj = this;
+        ref.on("value", function(snapshot) {
+            if (snapshot.val().statut == "client")
+              obj.navCtrl.setRoot(DashboardPage);
+            else
+              obj.navCtrl.setRoot(PrestaBoardPage);
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+
     }
+
     async saveAddress() {
         var ref = this.fdb.database.ref("/users/"+ this.uid +"/address");
         let geocoder = new google.maps.Geocoder();

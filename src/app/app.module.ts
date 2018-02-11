@@ -19,10 +19,14 @@ import { FirstloginPage } from '../pages/firstlogin/firstlogin';
 import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
 import { SetAddressPage } from '../pages/set-address/set-address';
 import { SchedulePage } from '../pages/schedule/schedule';
+import { SearchOfferPage } from '../pages/search-offer/search-offer';
+import { ResultOfferPage } from '../pages/result-offer/result-offer';
+import { LogoutPage } from '../pages/logout/logout';
 
 import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
 import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
 import { PrestaRdvPageModule } from '../pages/presta-rdv/presta-rdv.module';
+import { HorairePageModule } from '../pages/horaire/horaire.module';
 import { ParrainagePageModule } from '../pages/parrainage/parrainage.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -78,7 +82,10 @@ var config = {
     ChooseHomePage,
     AutocompletePage,
     SetAddressPage,
-    SchedulePage
+    SchedulePage,
+    SearchOfferPage,
+    ResultOfferPage,
+    LogoutPage
   ],
   imports: [
     BrowserModule,
@@ -109,7 +116,10 @@ var config = {
     ChooseHomePage,
     AutocompletePage,
     SetAddressPage,
-    SchedulePage
+    SchedulePage,
+    SearchOfferPage,
+    ResultOfferPage,
+    LogoutPage
   ],
   providers: [
     StatusBar,

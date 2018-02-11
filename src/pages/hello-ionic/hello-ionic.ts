@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { GooglePlus } from '@ionic-native/google-plus';
@@ -21,28 +21,24 @@ import { User } from "../../models/user";
 })
 export class HelloIonicPage {
     user = {} as User;
-
+    uid;
 
   constructor(  public navCtrl: NavController,
                 public alertCtrl: AlertController,
                 private afAuth: AngularFireAuth,
                 private fdb: AngularFireDatabase,
                 public facebook: Facebook,
-                private googlePlus: GooglePlus) {
-      var ref = this.fdb.database.ref("/users/mory/email");
+                private googlePlus: GooglePlus,
+                public menu: MenuController) {
 
-      ref.on("value", function(snapshot) {
-          console.log(snapshot.val());
-        }, function (errorObject) {
-          console.log("The read failed: " + errorObject.code);
-        });
-
+      this.menu.enable(false);
+      var obj =this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-              console.log(user.email);
+              obj.uid = user.uid;
               console.log(user.uid);
-              //navCtrl.setRoot(PrestaBoardPage);
+              obj.goDashboard();
             } else {
               // No user is signed in.
               console.log("No user signed");
@@ -129,7 +125,7 @@ export class HelloIonicPage {
     try {
       const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       if (result) {
-        this.navCtrl.setRoot(DashboardPage);
+        this.goDashboard();
       }
     }
     catch (e) {
@@ -140,7 +136,18 @@ export class HelloIonicPage {
   }
 
   goDashboard () {
-      this.navCtrl.setRoot(DashboardPage);
+      var ref = this.fdb.database.ref("/users/"+ this.uid);
+      var obj = this;
+      ref.on("value", function(snapshot) {
+          console.log(snapshot.val().statut);
+          if (snapshot.val().statut == "client")
+            obj.navCtrl.setRoot(DashboardPage);
+          else
+            obj.navCtrl.setRoot(PrestaBoardPage);
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+
   }
 
   async register(user: User) {

@@ -1,0 +1,115 @@
+<!--
+  Generated template for the FilterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar class="colored-menu">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title> {{ category }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content style="padding-top:0px" padding>
+<div padding style="padding-top:0px">
+    <p class="">
+        Sélectionner les catégories que vous désirez : <br />
+
+    </p>
+
+    <ion-row>
+
+        <ion-col col-12>
+            <ion-badge id ="code1" (click)="switchTag('code1')" color="light" > code1</ion-badge>
+            <ion-badge id="code2" class="" (click)="switchTag('code2')" color="light"> code2</ion-badge>
+
+            <ion-badge id="code3" (click)="switchTag('code3')" color="light"> code3</ion-badge>
+            <ion-badge id="code4" (click)="switchTag('code4')" color="light"> code4</ion-badge>
+        </ion-col>
+
+    </ion-row>
+
+    <p>
+        Quels types de prestation vous conviennent ?
+    </p>
+
+    <ion-item>
+      <ion-label><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
+      <ion-checkbox [(ngModel)]="remote"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le prestataire</ion-label>
+      <ion-checkbox [(ngModel)]="home"></ion-checkbox>
+    </ion-item>
+    <!--
+    <p>
+        A quelle(s) date(s) souhaitez vous réserver ?
+    </p>
+    <ion-row>
+        <ion-col col-12  class="close-subtitles subtitles">
+            <ion-item no-padding>
+              <ion-label> Date </ion-label>
+              <ion-select [(ngModel)]="day" >
+                  <ion-option value="0">Aujourd'hui</ion-option>
+                  <ion-option value="1">Demain</ion-option>
+                  <ion-option value="2"> Cette semaine</ion-option>
+                    <ion-option value="3">Toute date</ion-option>
+              </ion-select>
+            </ion-item>
+        </ion-col>
+
+    </ion-row>
+
+        <p class="">
+            A quelle(s) heure(s) souhaitez vous prendre rendez-vous ?
+        </p>
+
+    <div id="supplements">
+        <ion-row id='supplement_template'>
+            <ion-col col-4 class="close-subtitles" no-padding style="margin: auto">
+
+                    <ion-badge class="main-color-button supplement_name" color="light" > Gel</ion-badge>
+
+
+            </ion-col>
+            <ion-col col-4 class="close-subtitles subtitle" no-padding>
+                <ion-item no-padding>
+                  <ion-select [(ngModel)]="duree" placeholder="Duree" no-padding style="max-width: 100%">
+                      <ion-option value="15">15 min</ion-option>
+                      <ion-option value="20">20 min</ion-option>
+                      <ion-option value="25">25 min</ion-option>
+                        <ion-option value="30">30 min</ion-option>
+                        <ion-option value="45">45 min</ion-option>
+                        <ion-option value="60">1h</ion-option>
+                        <ion-option value="75">1h15</ion-option>
+                        <ion-option value="90">1h30</ion-option>
+                  </ion-select>
+                </ion-item>
+
+            </ion-col>
+            <ion-col class="subtitle close-subtitles" col-4 no-padding>
+                <ion-item>
+
+                  <ion-input type="number" min="0" placeholder="Prix"></ion-input>
+                </ion-item>
+            </ion-col>
+
+        </ion-row>
+    </div>
+-->
+    <br />
+    <ion-row>
+        <ion-col col-12>
+            <button ion-button (click)="startSearch()" icon-left color="dark">
+                <ion-icon name="send"></ion-icon>
+                Chercher une offre
+            </button>
+        </ion-col>
+    </ion-row>
+</div>
+</ion-content>

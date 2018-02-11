@@ -82,9 +82,9 @@
 
         </p>
 
-    <div id="supplements" *ngFor="let item of tags;let index = index;trackBy:trackByIndex;">
+    <div id="supplements">
 
-      <ion-row id="{{ 'supplement'+index }}">
+      <ion-row  *ngFor="let item of tags;let index = index;trackBy:trackByIndex;" id="{{ 'supplement'+index }}">
           <ion-col col-4 class="close-subtitles" no-padding style="margin: auto">
 
                   <ion-badge class="main-color-button supplement_name" color="light" > {{tags[index]["name"]}}</ion-badge>

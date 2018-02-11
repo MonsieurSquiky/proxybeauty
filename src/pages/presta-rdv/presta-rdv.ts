@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { PrestaBoardPage } from '../presta-board/presta-board';
 
 /**
  * Generated class for the PrestaRdvPage page.
@@ -22,6 +23,10 @@ export class PrestaRdvPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PrestaRdvPage');
+  }
+
+  goBoard() {
+      this.navCtrl.setRoot(PrestaBoardPage);
   }
 
 }

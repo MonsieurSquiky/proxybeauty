@@ -7,48 +7,75 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>schedule</ion-title>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    <ion-title>Mes disponibilites</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-6>
+                <button ion-button icon-left color="dark" (click)="resetPicked()" outline>
+                    <ion-icon name="trash"></ion-icon>
+                    Réinitialiser
+                </button>
+
+            </ion-col>
+            <ion-col col-6>
+                <button ion-button icon-left color="dark" (click)="saveSchedule()">
+                    <ion-icon name="checkmark"></ion-icon>
+                    Sauvegarder
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
     <table>
       <tr>
-        <td>&nbsp;</td>
-        <td>Knocky</td>
-        <td>Flor</td>
-        <td>Ella</td>
-        <td>Juan</td>
+          <th>
+
+          </th>
+          <th *ngFor="let day of days"> {{ day }} </th>
       </tr>
       <tr>
-        <td>Race</td>
-        <td>Jack Russell</td>
-        <td>Poodle</td>
-        <td>Streetdog</td>
-        <td>Cocker Spaniel</td>
+        <td>
+            Tout sélectionner
+        </td>
+        <td *ngFor="let day of days;let index = index;"> <ion-checkbox (click)="pickCol(index)"></ion-checkbox> </td>
       </tr>
-      <tr>
-        <td>Age</td>
-        <td>16</td>
-        <td>9</td>
-        <td>10</td>
-        <td>5</td>
+      <tr *ngFor="let hour of horaire;let index = index;">
+        <td> {{ hour }}</td>
+        <td> <ion-checkbox [(ngModel)]="picked[0][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[1][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[2][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[3][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[4][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[5][index]"></ion-checkbox> </td>
+        <td> <ion-checkbox [(ngModel)]="picked[6][index]"></ion-checkbox> </td>
+
       </tr>
-      <tr>
-        <td>Propriétaire</td>
-        <td>Belle-mère</td>
-        <td>Moi</td>
-        <td>Moi</td>
-        <td>Belle-soeur</td>
-      </tr>
-      <tr>
-        <td>Habitudes alimentaires</td>
-        <td>Mange tous les restes</td>
-        <td>Grignotte la nourriture</td>
-        <td>Mange copieusement</td>
-        <td>Mange jusqu'à ce qu'il éclate</td>
-      </tr>
+
     </table>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-6>
+                <button ion-button icon-left color="dark" (click)="resetPicked()" outline>
+                    <ion-icon name="trash"></ion-icon>
+                    Réinitialiser
+                </button>
+
+            </ion-col>
+            <ion-col col-6>
+                <button ion-button icon-left color="dark" (click)="saveSchedule()">
+                    <ion-icon name="checkmark"></ion-icon>
+                    Sauvegarder
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

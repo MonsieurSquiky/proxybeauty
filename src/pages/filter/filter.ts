@@ -37,6 +37,12 @@ export class FilterPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
       var obj = this;
       this.category = navParams.get('category');
+
+      this.supplementsNode = $( "#supplement_template").clone();
+      for (let i=0; i <this.tags.length; i++) {
+          $( "#supplement"+i).hide();
+      }
+
       firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
@@ -50,10 +56,9 @@ export class FilterPage {
   }
 
   ionViewDidLoad() {
-    this.supplementsNode = $( "#supplement_template").clone();
-    for (var i=0; i <this.tags.length; i++) {
-        $( "#supplement"+i).hide();
-    }
+      for (let i=0; i <this.tags.length; i++) {
+          $( "#supplement"+i).hide();
+      }
 
   }
 
@@ -164,7 +169,8 @@ export class FilterPage {
 
 
       this.fdb.database.ref().update(updates);
-      this.navCtrl.push(PrestaListPage);
+      this.navCtrl.pop();
+      //this.navCtrl.push(PrestaListPage);
 
   }
 
