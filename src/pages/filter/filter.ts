@@ -20,11 +20,69 @@ import * as $ from 'jquery'
   templateUrl: 'filter.html',
 })
 export class FilterPage {
-    selectedTags = { "code1": 0, "code2": 0, "code3": 0, "code4": 0};
-    tags = [{"name" : "code1", "duree": null, "prix": null},
-            {"name" : "code2", "duree": null, "prix": null},
-            {"name" : "code3", "duree": null, "prix": null},
-            {"name" : "code4", "duree": null, "prix": null}];
+    metatags = { "Coiffure" : ["Coupe Femme",
+            		"Coloration",
+            		"Balayage",
+            		"Mèches",
+            		"Tie & Dye",
+            		"Ombré Hair",
+            		"Lissage",
+            		"Brushing",
+            		"Permanente",
+            		"Défrisage",
+            		"Tissage",
+            		"Afro",
+            		"Beauté",
+            		"Esthétique",
+            		"Minceur",
+            		"Soin du cheveu"],
+              "Ongles" : [  "Manucure",
+            		"Pédicure",
+            		"Vernis semi-permanent",
+            		"Ongles en gel",
+            		"Nail art",
+            		"Réparation ongle cassé",
+            		"Extension/Faux ongles",
+            		"Remplissage d'ongles",
+            		"Traitement paraffine"],
+              "Massage" : [	"4 ou 6 mains",
+            		"Aux pierres chaudes",
+            		"Acupression",
+            		"Pré/Post natal",
+            		"Amincissant",
+            		"Mains",
+            		"Pieds",
+            		"Pierre de lave",
+            		"Indien (de la tête)",
+            		"Aux compresses d'herbes",
+            		"Thérapeutique",
+            		"Sportif",
+            		"Visage",
+            		"Suédois",
+            		"Ayurvédique",
+            		"En couple",
+            		"Thailandais",
+            		"Réflexologie",
+            		"Chinois",
+            		"Aux huiles essentielles",
+            		"Dos, épaules et cou",
+            		"Deep tissue",
+            		"Californien",
+            		"Shiatsu"],
+             "Epilation" : ["Maillot",
+            		"Maillot intégral",
+            		"Maillot brésilien",
+            		"Jambes",
+            		"Aisselles et bras",
+            		"Visage",
+            		"Visage (au fil)",
+            		"A la cire",
+            		"Orientale",
+            		"Lumière pulsée"]
+            };
+
+    selectedTags = {};
+    tags = [];
     supplements = [];
     remote: boolean;
     home: boolean;
@@ -37,6 +95,11 @@ export class FilterPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
       var obj = this;
       this.category = navParams.get('category');
+
+      for(let i=0; i < this.metatags[this.category].length; i++) {
+          this.selectedTags[this.metatags[this.category][i]] = 0
+          this.tags.push( {"name" : this.metatags[this.category][i], "duree": null, "prix": null});
+      }
 
       this.supplementsNode = $( "#supplement_template").clone();
       for (let i=0; i <this.tags.length; i++) {

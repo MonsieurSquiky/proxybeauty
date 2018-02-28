@@ -15,6 +15,7 @@ import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
 import { MapPage } from '../pages/map/map';
 import { ChooseHomePage } from '../pages/choose-home/choose-home';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
+import { FirstloginPage } from '../pages/firstlogin/firstlogin';
 import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
 import { SetAddressPage } from '../pages/set-address/set-address';
 import { SchedulePage } from '../pages/schedule/schedule';
@@ -22,6 +23,10 @@ import { SearchOfferPage } from '../pages/search-offer/search-offer';
 import { ResultOfferPage } from '../pages/result-offer/result-offer';
 import { LogoutPage } from '../pages/logout/logout';
 import { HomepagePage } from '../pages/homepage/homepage';
+import { StripeloginPage } from '../pages/stripelogin/stripelogin';
+import { StripeTestPage } from '../pages/stripe-test/stripe-test';
+import { BookingPage } from '../pages/booking/booking';
+import { PaybookingPage } from '../pages/paybooking/paybooking';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -50,6 +55,10 @@ export class MyApp {
     this.pages = [
       { title: 'Accueil', component: PrestaBoardPage },
       { title: 'Se déconnecter', component: LogoutPage },
+      { title: 'Do the payment', component: StripeTestPage },
+      { title: 'Create a Stripe', component: StripeloginPage },
+      { title: 'Settings', component: FirstloginPage },
+      { title: 'Mon adresse', component: SetAddressPage },
       /*,
       { title: 'My First List', component: ListPage },
       { title: 'Da Dashboard', component: DashboardPage },

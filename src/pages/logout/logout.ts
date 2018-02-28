@@ -22,7 +22,8 @@ export class LogoutPage {
       });
 
       loading.present();
-      firebase.auth().signOut().then(function() {
+
+      let logout = firebase.auth().signOut().then(function() {
           // Sign-out successful.
 
           navCtrl.setRoot(HelloIonicPage);
@@ -30,6 +31,8 @@ export class LogoutPage {
         }, function(error) {
           // An error happened.
         });
+
+        
   }
 
   ionViewDidLoad() {

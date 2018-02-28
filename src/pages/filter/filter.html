@@ -25,11 +25,7 @@
 
         <ion-col col-12>
             <ion-badge class="main-color-button" color="light"> {{ category }}</ion-badge>
-            <ion-badge id ="code1" (click)="switchTag('code1')" color="light" > code1</ion-badge>
-            <ion-badge id="code2" class="" (click)="switchTag('code2')" color="light"> code2</ion-badge>
-
-            <ion-badge id="code3" (click)="switchTag('code3')" color="light"> code3</ion-badge>
-            <ion-badge id="code4" (click)="switchTag('code4')" color="light"> code4</ion-badge>
+            <ion-badge *ngFor="let tag of metatags[category];let i = index;" id ="{{ tag }}" (click)="switchTag(tag)" color="light" > {{ tag }}</ion-badge>
         </ion-col>
 
     </ion-row>

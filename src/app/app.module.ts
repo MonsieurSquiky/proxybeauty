@@ -22,24 +22,32 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { SearchOfferPage } from '../pages/search-offer/search-offer';
 import { ResultOfferPage } from '../pages/result-offer/result-offer';
 import { LogoutPage } from '../pages/logout/logout';
+import { StripeTestPage } from '../pages/stripe-test/stripe-test';
+import { StripeloginPage } from '../pages/stripelogin/stripelogin';
+import { BookingPage } from '../pages/booking/booking';
+import { PaybookingPage } from '../pages/paybooking/paybooking';
 
 import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
 import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
 import { PrestaRdvPageModule } from '../pages/presta-rdv/presta-rdv.module';
 import { HorairePageModule } from '../pages/horaire/horaire.module';
 import { ParrainagePageModule } from '../pages/parrainage/parrainage.module';
+import {FormsModule} from '@angular/forms';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HttpModule } from '@angular/http';
+import { HTTP } from '@ionic-native/http';
 import { AngularFireModule } from "angularfire2";
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook'
 import { Geolocation } from '@ionic-native/geolocation';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
-
+import { Stripe } from '@ionic-native/stripe';
 import { GeocoderProvider } from '../providers/geocoder/geocoder';
+import { InAppBrowser, InAppBrowserOptions } from "@ionic-native/in-app-browser";
+
 //import { DatabaseserviceProvider } from '../providers/databaseservice/databaseservice';
 
 
@@ -85,11 +93,16 @@ var config = {
     SchedulePage,
     SearchOfferPage,
     ResultOfferPage,
-    LogoutPage
+    LogoutPage,
+    StripeTestPage,
+    StripeloginPage,
+    BookingPage,
+    PaybookingPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    FormsModule,
     PrestaListPageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config),
@@ -119,7 +132,11 @@ var config = {
     SchedulePage,
     SearchOfferPage,
     ResultOfferPage,
-    LogoutPage
+    LogoutPage,
+    StripeTestPage,
+    StripeloginPage,
+    BookingPage,
+    PaybookingPage
   ],
   providers: [
     StatusBar,
@@ -129,7 +146,10 @@ var config = {
     GooglePlus,
     Geolocation,
     GeocoderProvider,
-    NativeGeocoder
+    NativeGeocoder,
+    Stripe,
+    InAppBrowser,
+    HTTP
   ]
 })
 export class AppModule {}

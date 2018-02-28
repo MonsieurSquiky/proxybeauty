@@ -13,11 +13,8 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content >
     <div class="container" style="color:black">
-        <p>
-            Remplissez les champs pour compléter votre profil.
-        </p>
         <ion-list>
 
           <ion-item>
@@ -30,10 +27,19 @@
             <ion-input [(ngModel)]="lastname" type="text"></ion-input>
           </ion-item>
 
+          <ion-item>
+              <ion-label floating>Date de naissance</ion-label>
+              <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="birthdate" (click)="showDate()"></ion-datetime>
+            </ion-item>
+
+            <ion-item>
+              <ion-label floating>Numéro de téléphone</ion-label>
+              <ion-input [(ngModel)]="phoneNumber" type="text"></ion-input>
+            </ion-item>
         </ion-list>
 
         <div padding>
-          <button ion-button (click)="saveName(firstname, lastname)"> Confirmer </button>
+          <button ion-button (click)="save()"> Confirmer </button>
         </div>
     </div>
 </ion-content>

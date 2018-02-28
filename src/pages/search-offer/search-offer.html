@@ -24,11 +24,9 @@
     <ion-row>
 
         <ion-col col-12>
-            <ion-badge id ="code1" (click)="switchTag('code1')" color="light" > code1</ion-badge>
-            <ion-badge id="code2" class="" (click)="switchTag('code2')" color="light"> code2</ion-badge>
 
-            <ion-badge id="code3" (click)="switchTag('code3')" color="light"> code3</ion-badge>
-            <ion-badge id="code4" (click)="switchTag('code4')" color="light"> code4</ion-badge>
+            <ion-badge *ngFor="let tag of metatags[category];let i = index;" id ="{{ tag }}" (click)="switchTag(tag)" color="light" > {{ tag }}</ion-badge>
+
         </ion-col>
 
     </ion-row>
@@ -37,13 +35,13 @@
         Quels types de prestation vous conviennent ?
     </p>
 
-    <ion-item>
-      <ion-label><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
+    <ion-item no-padding>
+      <ion-label no-padding><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
       <ion-checkbox [(ngModel)]="remote"></ion-checkbox>
     </ion-item>
 
-    <ion-item>
-      <ion-label><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le prestataire</ion-label>
+    <ion-item no-padding>
+      <ion-label no-padding><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le prestataire</ion-label>
       <ion-checkbox [(ngModel)]="home"></ion-checkbox>
     </ion-item>
     <!--

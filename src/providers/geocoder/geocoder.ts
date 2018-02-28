@@ -39,7 +39,7 @@ export class GeocoderProvider {
            .then((result : NativeGeocoderReverseResult) =>
            {
               let str : string   = `The reverseGeocode address is ${result.thoroughfare} (${result.subThoroughfare}),  in ${result.locality} (${result.subLocality}) et (${result.administrativeArea}) `;
-              resolve(str);
+              resolve(result);
            })
            .catch((error: any) =>
            {

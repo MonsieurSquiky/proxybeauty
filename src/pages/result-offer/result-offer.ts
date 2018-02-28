@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
+import { BookingPage } from '../booking/booking';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 /**
@@ -181,6 +182,11 @@ export class ResultOfferPage {
       let d = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       console.log(earth_radius * d);
       return (earth_radius * d);
+    }
+
+    book(node) {
+        //console.log(node.parent());
+        this.navCtrl.push(BookingPage, {category: this.category, prestataire: node.prestataire, prix: this.getPrix(node),  duree: this.getDuree(node), tags: this.tags});
     }
 }
 

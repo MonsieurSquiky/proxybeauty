@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { PrestaBoardPage } from '../presta-board/presta-board';
 import { DashboardPage } from '../dashboard/dashboard';
@@ -8,6 +8,7 @@ import { AutocompletePage } from '../autocomplete/autocomplete';
 import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 
 import { AngularFireDatabase } from 'angularfire2/database';
+import { GeocoderProvider } from '../../providers/geocoder/geocoder';
 /**
  * Generated class for the SetAddressPage page.
  *
@@ -28,7 +29,12 @@ export class SetAddressPage {
     longitude: number = 0;
     uid: string;
 
-    constructor(public navCtrl: NavController, private fdb: AngularFireDatabase, public navParams: NavParams, private modalCtrl:ModalController) {
+    constructor(public navCtrl: NavController,
+                private fdb: AngularFireDatabase,
+                public navParams: NavParams,
+                public alertCtrl: AlertController,
+                private modalCtrl:ModalController,
+                public _GEOCODE   : GeocoderProvider) {
         var obj = this;
 
         this.address = {
@@ -81,6 +87,7 @@ export class SetAddressPage {
     }
 
     async saveAddress() {
+        const obj = this;
         var ref = this.fdb.database.ref("/users/"+ this.uid +"/address");
         let geocoder = new google.maps.Geocoder();
         geocoder.geocode({ 'address': this.address.place }, (results, status) => {
@@ -90,12 +97,47 @@ export class SetAddressPage {
                 'longitude': results[0].geometry.location.lng()
             });
 
+            obj.performReverseGeocoding(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+
         });
         ref.update({
             'place': this.address.place
+        }).then(function() {
+          obj.navCtrl.push(SetAddressPage);
+        }).catch(function(error) {
+          // An error happened.
+          let alertVerification = obj.alertCtrl.create({
+            title: "Echec",
+            subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
+            buttons: ['OK']
+          });
+          alertVerification.present();
         });
         this.goToDashboard();
     }
 
+    async performReverseGeocoding(latitude, longitude)
+    {
+          let ref = this.fdb.database.ref("/users/"+ this.uid +"/address");
+           /*
+          let latitude     : any = parseFloat(this.geoForm.controls["latitude"].value),
+              longitude    : any = parseFloat(this.geoForm.controls["longitude"].value);
+              */
+          this._GEOCODE.reverseGeocode(latitude, longitude)
+          .then((data : any) =>
+          {
+             //this.geocoded      = true;
+             console.log("Happens HERE "+ data.countryCode);
+             ref.update({
+                 'details': data
+             });
 
+          })
+          .catch((error : any)=>
+          {
+             //this.geocoded      = true;
+
+             console.log(error.message);
+          });
+    }
 }

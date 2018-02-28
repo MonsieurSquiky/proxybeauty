@@ -38,7 +38,10 @@ export class HelloIonicPage {
               // User is signed in.
               obj.uid = user.uid;
               console.log(user.uid);
-              obj.goDashboard();
+              if (user.emailVerified)
+                obj.goDashboard();
+              else
+                console.log('Waiting for email to be verified');
             } else {
               // No user is signed in.
               console.log("No user signed");
@@ -47,6 +50,7 @@ export class HelloIonicPage {
   }
 
   facebookLogin(): Promise<any> {
+    const obj = this;
     return this.facebook.login(['email'])
       .then( response => {
         const facebookCredential = firebase.auth.FacebookAuthProvider
@@ -55,13 +59,14 @@ export class HelloIonicPage {
         firebase.auth().signInWithCredential(facebookCredential)
           .then( success => {
             console.log("Firebase success: " + JSON.stringify(success));
-            //HelloIonicPage.goDashboard();
+            obj.goDashboard();
           });
 
       }).catch((error) => { console.log(error) });
   }
 
   googleLogin(): void {
+      const obj = this;
       this.googlePlus.login({
         'webClientId': '1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com',
         'offline': true
@@ -72,7 +77,7 @@ export class HelloIonicPage {
               firebase.auth().signInWithCredential(googleCredential)
             .then( response => {
                 console.log("Firebase success: " + JSON.stringify(response));
-                this.navCtrl.setRoot(DashboardPage);
+                obj.goDashboard();
             });
       }, err => {
           console.error("Error: ", err);
@@ -125,7 +130,17 @@ export class HelloIonicPage {
     try {
       const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       if (result) {
-        this.goDashboard();
+          if (firebase.auth().currentUser.emailVerified)
+            this.goDashboard();
+          else {
+              var obj = this;
+              let alertVerification = obj.alertCtrl.create({
+                title: "Compte pas encore validé",
+                subTitle: "Un email de vérification vous a été envoyé. Cliquer sur le lien qui y figure pour activer votre compte puis connectez vous.",
+                buttons: ['OK']
+              });
+              alertVerification.present();
+          }
       }
     }
     catch (e) {
@@ -138,15 +153,27 @@ export class HelloIonicPage {
   goDashboard () {
       var ref = this.fdb.database.ref("/users/"+ this.uid);
       var obj = this;
-      ref.on("value", function(snapshot) {
-          console.log(snapshot.val().statut);
-          if (snapshot.val().statut == "client")
-            obj.navCtrl.setRoot(DashboardPage);
-          else
-            obj.navCtrl.setRoot(PrestaBoardPage);
-        }, function (errorObject) {
-          console.log("The read failed: " + errorObject.code);
-        });
+
+          ref.on("value", function(snapshot) {
+              if (snapshot.val() && snapshot.val().statut) {
+                  if (snapshot.val().statut == "client")
+                    obj.navCtrl.setRoot(DashboardPage);
+                  else
+                    obj.navCtrl.setRoot(PrestaBoardPage);
+              }
+              else {
+                  var userReg = firebase.auth().currentUser;
+                  var ref = obj.fdb.database.ref("/users/"+ userReg.uid);
+                  ref.set({
+                    uid: userReg.uid,
+                    email: userReg.email
+                  });
+                  obj.navCtrl.setRoot(FirstloginTypePage);
+              }
+
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
 
   }
 
@@ -158,13 +185,28 @@ export class HelloIonicPage {
         user.password
       );
       if (result) {
-          var userReg = firebase.auth().currentUser;
-          var ref = this.fdb.database.ref("/users/"+ userReg.uid);
-          ref.set({
-            uid: userReg.uid,
-            email: userReg.email
+          const obj = this;
+          firebase.auth().currentUser.sendEmailVerification()
+          .then(function() {
+            // Verification email sent.
+            firebase.auth().signOut();
+
+            let alertVerification = obj.alertCtrl.create({
+              title: "Mail de vérification envoyé",
+              subTitle: "Un email vient de vous être envoyé. Cliquer sur le lien qui y figure pour activer votre compte puis connectez vous.",
+              buttons: ['OK']
+            });
+            alertVerification.present();
+          })
+          .catch(function(error) {
+            // Error occurred. Inspect error.code.
+            let alertVerification = obj.alertCtrl.create({
+              title: "Echec",
+              subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
+              buttons: ['OK']
+            });
+            alertVerification.present();
           });
-        this.navCtrl.setRoot(FirstloginTypePage);
 
       }
     } catch (e) {

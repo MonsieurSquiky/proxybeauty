@@ -21,8 +21,8 @@
     <ng-template #client_content><p padding>
          Saisissez votre adresse, afin de pouvoir prendre des rendez-vous à domicile. </p> </ng-template>
     <ion-list padding>
-      <ion-item>
-        <ion-input (click)="showAddressModal()" [(ngModel)]="address.place"type="text" placeholder="Entrez votre adresse">              </ion-input>
+      <ion-item (click)="showAddressModal()">
+        <ion-input  [(ngModel)]="address.place" type="text" placeholder="Entrez votre adresse">              </ion-input>
       </ion-item>
     </ion-list>
 
