@@ -3,7 +3,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GooglePlus } from '@ionic-native/google-plus';
-
+import { Camera } from '@ionic-native/camera';
 
 import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
@@ -26,6 +26,7 @@ import { StripeTestPage } from '../pages/stripe-test/stripe-test';
 import { StripeloginPage } from '../pages/stripelogin/stripelogin';
 import { BookingPage } from '../pages/booking/booking';
 import { PaybookingPage } from '../pages/paybooking/paybooking';
+import { ProfilepicPage } from '../pages/profilepic/profilepic';
 
 import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
 import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
@@ -97,7 +98,8 @@ var config = {
     StripeTestPage,
     StripeloginPage,
     BookingPage,
-    PaybookingPage
+    PaybookingPage,
+    ProfilepicPage
   ],
   imports: [
     BrowserModule,
@@ -136,7 +138,8 @@ var config = {
     StripeTestPage,
     StripeloginPage,
     BookingPage,
-    PaybookingPage
+    PaybookingPage,
+    ProfilepicPage
   ],
   providers: [
     StatusBar,
@@ -149,7 +152,8 @@ var config = {
     NativeGeocoder,
     Stripe,
     InAppBrowser,
-    HTTP
+    HTTP,
+    Camera
   ]
 })
 export class AppModule {}

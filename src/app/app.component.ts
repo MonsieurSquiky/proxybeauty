@@ -27,6 +27,7 @@ import { StripeloginPage } from '../pages/stripelogin/stripelogin';
 import { StripeTestPage } from '../pages/stripe-test/stripe-test';
 import { BookingPage } from '../pages/booking/booking';
 import { PaybookingPage } from '../pages/paybooking/paybooking';
+import { ProfilepicPage } from '../pages/profilepic/profilepic';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -39,7 +40,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = HelloIonicPage;
+  rootPage = ProfilepicPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
