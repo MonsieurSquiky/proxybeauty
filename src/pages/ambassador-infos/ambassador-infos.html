@@ -1,0 +1,38 @@
+<!--
+  Generated template for the AmbassadorInfosPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar class="colored-menu">
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>Parrainez et gagnez</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <button *ngIf="!isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Prendre un forfait Ambassadeur à 99 €</button>
+    <p *ngIf="isAmbassador" > Votre code ambassadeur est : <br />
+        <ion-item text-center style="font-size:12px"> {{ uid }} </ion-item>
+    </p>
+
+    <p style="font-size:14px">
+        Devenez Ambassadeur ProxyBeauty en payant une unique fois et récupérer une commission sur
+        chacune des transactions de vos filleuls (prestataires et clients). <br /> <br />
+        Votre mission sera de faire connaître l'application au plus grand nombre de personnes possible,
+         et chaque fois qu'une personne s'inscrit sur l'application et entre votre code parrain, elle devient
+         votre filleul. <br /> <br />
+         Ensuite vous n'avez plus qu'à toucher votre part à chaque transaction que vos filleuls effectuent : <br />
+         <b>
+         -  4 % sur chaque transaction des prestataire de beauté <br />
+         -  2 % sur chaque transaction des clients <br />
+         -  30 % de toute commande sur la boutique ProxyBeauté (prestataire et client) <br />
+         </b>
+    </p>
+</ion-content>

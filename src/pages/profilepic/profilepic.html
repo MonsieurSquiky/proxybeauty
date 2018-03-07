@@ -1,0 +1,42 @@
+<!--
+  Generated template for the ProfilepicPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>profilepic</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <div class="gallery-button" text-center>
+
+            <div class="circle">
+                <img [src]="imageSrc" class="circle"/>
+            </div>
+
+
+    </div>
+
+    <p>Choisissez une photo pour votre profil </p>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col col-6>
+                <button block ion-button (click)="takeSelfie()" style="font-size:10px"> Prendre un selfie </button>
+            </ion-col>
+            <ion-col col-6>
+                <button block outline (click)="openGallery()" style="font-size:10px" ion-button> Chercher une photo </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <button block color="dark" (click)="goNext()" ion-button> Confirmer </button>
+
+</ion-content>

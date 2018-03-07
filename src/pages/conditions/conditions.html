@@ -1,0 +1,35 @@
+<!--
+  Generated template for the ConditionsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title> Conditions Générales </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="" >
+    <textarea readonly class="bloc-only chart" padding>
+    Les services de paiement pour les [terme désignant les détenteurs de compte: marchands, chauffeurs, porteurs de projet…] officiant sur [nom de la plateforme] sont fournis par Stripe et soumis à l’Accord sur les comptes Stripe Connected (Stripe Connected Account Agreement), qui inclut les Modalités de service de Stripe (l’ensemble étant appelé les “Conditions Générales d’Utilisation Stripe” - “Stripe Services Agreement”.) En agréant aux présentes [Conditions Générales d’Utilisation / de Vente] ou en continuant à opérer en tant que [terme désignant les détenteurs de compte] officiant sur [nom de la plateforme], vous acceptez d’être lié aux Conditions Générales d’Utilisation Stripe, celles-ci pouvant occasionnellement faire l’objet de modifications de la part de Stripe. Du fait que [nom de la plateforme] permette d’effectuer les paiements via Stripe, vous acceptez de fournir à [nom de la plateforme] des informations précises et complètes sur vous et votre activité, et autorisez [nom de la plateforme] à partager ces informations ainsi que celles concernant les transactions effectuées via la solution de paiement fournie par Stripe.
+    </textarea>
+    <ion-list class="chart">
+
+      <ion-item >
+        <ion-label>J'accepte les conditions</ion-label>
+        <ion-checkbox [(ngModel)]="accept"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label>Je refuse</ion-label>
+        <ion-checkbox [(ngModel)]="!accept"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+    <div margin>
+        <button ion-button block (click)="goNext()" > Continuer </button>
+    </div>
+
+</ion-content>
