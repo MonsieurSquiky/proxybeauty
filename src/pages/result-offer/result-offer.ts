@@ -11,7 +11,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-result-offer',
   templateUrl: 'result-offer.html',

@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-
+import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
+import { PrestaListPage } from '../presta-list/presta-list';
+import { PrestaRatingsPage } from '../presta-ratings/presta-ratings';
+import { PrestaRdvPage } from '../presta-rdv/presta-rdv';
+import { SchedulePage } from '../schedule/schedule';
 /**
  * Generated class for the PrestaBoardPage page.
  *
@@ -8,9 +12,7 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
  * Ionic pages and navigation.
  */
 
-@IonicPage( {
-    name: 'prestaboard'
-})
+
 @Component({
   selector: 'page-presta-board',
   templateUrl: 'presta-board.html',
@@ -26,6 +28,27 @@ export class PrestaBoardPage {
   }
 
   goToPage(page: string) {
-      this.navCtrl.push(page);
+      switch (page) {
+          case 'prestalist':
+            this.navCtrl.push(PrestaListPage);
+          break;
+
+          case 'schedule':
+            this.navCtrl.push(SchedulePage);
+          break;
+
+          case 'prestardv':
+            this.navCtrl.push(PrestaRdvPage);
+          break;
+
+          case 'gains':
+            this.navCtrl.push(ParrainageGainPage);
+          break;
+
+          case 'prestaratings':
+            this.navCtrl.push(PrestaRatingsPage);
+          break;
+      }
+      //this.navCtrl.push(page);
   }
 }

@@ -9,7 +9,7 @@ import { PaybookingPage } from '../paybooking/paybooking';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-ambassador-infos',
   templateUrl: 'ambassador-infos.html',

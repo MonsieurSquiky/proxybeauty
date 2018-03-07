@@ -11,7 +11,7 @@ import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
  * Ionic pages and navigation.
  */
 //@ViewChild('myTabs') tabRef: Tabs;
-@IonicPage()
+
 @Component({
   selector: 'page-ambassador',
   templateUrl: 'ambassador.html',

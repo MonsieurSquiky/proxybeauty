@@ -14,7 +14,7 @@ import { AmbassadorInfosPage } from '../ambassador-infos/ambassador-infos';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html',

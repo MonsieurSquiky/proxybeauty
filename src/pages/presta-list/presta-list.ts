@@ -13,9 +13,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
  * Ionic pages and navigation.
  */
 
-@IonicPage({
-    name: 'prestalist'
-})
+
 @Component({
   selector: 'page-presta-list',
   templateUrl: 'presta-list.html',

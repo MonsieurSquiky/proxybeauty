@@ -10,9 +10,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
  * Ionic pages and navigation.
  */
 
-@IonicPage({
-    name: 'prestardv'
-})
+
 @Component({
   selector: 'page-presta-rdv',
   templateUrl: 'presta-rdv.html',
@@ -27,6 +25,10 @@ export class PrestaRdvPage {
   address;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase,) {
+
+  }
+
+  ionViewDidLoad() {
       var obj = this;
       this.now = new Date();
 
@@ -35,12 +37,12 @@ export class PrestaRdvPage {
             // User is signed in.
             obj.uid = user.uid;
 
-            let addressRef = fdb.database.ref('/users/'+user.uid+'/address');
+            let addressRef = obj.fdb.database.ref('/users/'+user.uid+'/address');
             addressRef.on('value', function(snapshot) {
                 obj.address = (snapshot.val().place) ? snapshot.val().place : false;
             });
 
-            let rdvRef = fdb.database.ref('/user-rdv/'+obj.uid);
+            let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
             rdvRef.on('value', function(snapshot) {
                 snapshot.forEach( function(childSnapshot) {
                     if (childSnapshot.val().timestamp > obj.now.getTime())
@@ -62,9 +64,6 @@ export class PrestaRdvPage {
             console.log("No user signed");
           }
         });
-  }
-
-  ionViewDidLoad() {
     console.log('ionViewDidLoad PrestaRdvPage');
   }
 

@@ -10,9 +10,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
  * Ionic pages and navigation.
  */
 
- @IonicPage({
-     name: 'gains'
- })
+
 @Component({
   selector: 'page-parrainage-gain',
   templateUrl: 'parrainage-gain.html',

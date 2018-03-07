@@ -14,7 +14,7 @@ import * as $ from 'jquery'
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
     selector: 'page-search-offer',
     templateUrl: 'search-offer.html',
@@ -92,9 +92,11 @@ export class SearchOfferPage {
       for(let i=0; i < this.metatags[this.category].length; i++) {
           this.selectedTags[this.metatags[this.category][i]] = 0;
       }
+  }
 
+  ionViewDidLoad() {
       var obj = this;
-      this.category = navParams.get('category');
+      this.category = this.navParams.get('category');
       firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
@@ -105,10 +107,9 @@ export class SearchOfferPage {
             console.log("No user signed");
           }
         });
-  }
-
-  ionViewDidLoad() {
-
+      this.remote = true;
+      this.home = true;
+      console.log('SearchPage Loaded');
   }
 
   trackByIndex(index: number, obj: any): any {

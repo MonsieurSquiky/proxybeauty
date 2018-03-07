@@ -92,7 +92,9 @@ export class HelloIonicPage {
                 obj.goDashboard();
             });
       }, err => {
-          console.error("Error: ", err);
+          console.log(JSON.stringify(err));
+          console.debug("Error: ", err);
+          console.log(err.toString());
       });
     }
 
@@ -204,8 +206,8 @@ export class HelloIonicPage {
 
                   updates["/users/"+ userReg.uid+"/uid"] = userReg.uid;
                   updates["/users/"+ userReg.uid+"/email"] = userReg.email;
-                  updates["/users/"+ userReg.uid+"/setupStep"] = 0;
-                  updates["/users/"+ userReg.uid+"/ambassador"] = false;
+                  //updates["/users/"+ userReg.uid+"/setupStep"] = 0;
+                  //updates["/users/"+ userReg.uid+"/ambassador"] = false;
 
                   obj.fdb.database.ref().update(updates);
                   obj.navCtrl.setRoot(FirstloginTypePage);

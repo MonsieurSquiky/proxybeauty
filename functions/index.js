@@ -83,7 +83,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
     // Create a Charge:
     return stripe.charges.create({
           amount: amount,
-          currency: "usd",
+          currency: "eur",
           source: charge.source,
           transfer_group: idempotency_key,
       }, {idempotency_key});
@@ -104,13 +104,13 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
       let parrain_prestataire = val.parrain_prestataire;
       let parrain_client = val.parrain_client;
 
-      let amountPresta = Math.floor(amount * 0.82);
+      let amountPresta = Math.floor(amount * 0.85);
       let amount_parrain_prestataire = Math.floor(amount * 0.04);
       let amount_parrain_client = Math.floor(amount * 0.02);
 
       stripe.transfers.create({
                 amount: amountPresta,
-                currency: "usd",
+                currency: "eur",
                 destination: prestataire,
                 transfer_group: idempotency_key,
             }, { idempotency_key: idempotency_key_prestataire })
@@ -132,7 +132,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
         if (parrain_prestataire) {
             stripe.transfers.create({
                       amount: amount_parrain_prestataire,
-                      currency: "usd",
+                      currency: "eur",
                       destination: parrain_prestataire,
                       transfer_group: idempotency_key,
                   }, { idempotency_key: idempotency_key_parrain_prestataire })
@@ -158,7 +158,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
         if (parrain_client) {
             stripe.transfers.create({
                       amount: amount_parrain_client,
-                      currency: "usd",
+                      currency: "eur",
                       destination: parrain_client,
                       transfer_group: idempotency_key,
                   }, { idempotency_key: idempotency_key_parrain_client })
