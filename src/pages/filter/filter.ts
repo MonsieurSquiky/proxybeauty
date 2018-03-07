@@ -14,7 +14,7 @@ import * as $ from 'jquery'
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-filter',
   templateUrl: 'filter.html',
@@ -134,7 +134,7 @@ export class FilterPage {
               }
               obj.home = (snapshot.val().places.indexOf('home') != -1) ? true : false;
               obj.remote = (snapshot.val().places.indexOf('remote') != -1) ? true : false;
-              
+
               obj.prix = offer.prix;
               obj.duree = offer.duree;
               for (let tag of offer.supplements) {
