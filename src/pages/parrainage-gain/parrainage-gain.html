@@ -5,19 +5,21 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title> Parrainage </ion-title>
-  </ion-navbar>
+    <ion-navbar class="colored-menu">
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>Mes Gains</ion-title>
+    </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
     <b> Solde actuel : </b>
     <div class="solde-big">
-            30,83 €
+            <p no-margin>
+                {{ getTotalGain() }} €
+            </p>
 
         <button ion-button icon-left class="align-right" color="light">
             <ion-icon name="card"></ion-icon>
@@ -25,40 +27,16 @@
         </button>
     </div>
     <ion-list>
-      <ion-item>
+      <ion-item *ngFor='let user of userDetails'>
         <ion-avatar item-start>
-          <img src="https://vignette.wikia.nocookie.net/oblivion-film/images/7/7b/Jack_Harper.jpg/revision/latest?cb=20121209080956">
+          <img src="{{ user.profilepic}}">
         </ion-avatar>
         <div class="item-main-content">
-            <h2>Jack Harper</h2>
-            <p>Client</p>
+            <h2>{{ user.firstname + ' ' + user.lastname}}</h2>
+            <p>{{ user.statut }}</p>
         </div>
 
-        <ion-badge class="main-color-button" item-end> 2,05 €</ion-badge>
-      </ion-item>
-
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="https://78.media.tumblr.com/avatar_d22e588f3f23_128.png">
-        </ion-avatar>
-        <div class="item-main-content">
-            <h2>Betty Boop</h2>
-            <p>Cliente</p>
-        </div>
-
-        <ion-badge class="main-color-button" item-end> 6,45 €</ion-badge>
-      </ion-item>
-
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="https://s-media-cache-ak0.pinimg.com/originals/4c/51/66/4c5166d21eabe57cd5181d4ac4ac1e7e.jpg">
-        </ion-avatar>
-        <div class="item-main-content">
-            <h2>Edouard </h2>
-            <p>Prestataire</p>
-        </div>
-
-        <ion-badge class="main-color-button" item-end> 22,33 €</ion-badge>
+        <ion-badge class="main-color-button" item-end> {{ gains[user.uid] }} €</ion-badge>
       </ion-item>
     </ion-list>
 </ion-content>

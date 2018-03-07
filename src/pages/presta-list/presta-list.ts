@@ -23,7 +23,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class PrestaListPage {
     uid;
-    offerCategories = ['Manucure', 'Coiffure', 'Maquillage', 'Cils', 'Massage', 'Epilation', 'Coach Sportif', 'Pedicure'];
+    offerCategories = ['Ongles', 'Coiffure', 'Massage', 'Epilation'];
     offersList = [];
     offersKey = [];
     offersLoad: boolean = false;
@@ -35,7 +35,7 @@ export class PrestaListPage {
           if (user) {
             // User is signed in.
             obj.uid = user.uid;
-
+            console.log('In');
             var offersRef = fdb.database.ref('/user-offers/' + obj.uid);
             offersRef.on('value', function(snapshot) {
                 snapshot.forEach( function(childSnapshot) {
@@ -122,6 +122,10 @@ export class PrestaListPage {
       ]
     });
     confirm.present();
+  }
+
+  changeOffer(category, offerKey) {
+      this.navCtrl.push(FilterPage, { category: category, offerId: offerKey});
   }
 
 }

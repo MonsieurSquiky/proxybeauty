@@ -83,6 +83,7 @@ export class FilterPage {
 
     selectedTags = {};
     tags = [];
+    offerId;
     supplements = [];
     remote: boolean;
     home: boolean;
@@ -122,7 +123,33 @@ export class FilterPage {
       for (let i=0; i <this.tags.length; i++) {
           $( "#supplement"+i).hide();
       }
+      this.offerId = this.navParams.get('offerId');
+      var obj = this;
+      if (this.offerId) {
+          var offersRef = this.fdb.database.ref('/offers/' + this.offerId);
+          offersRef.on('value', function(snapshot) {
+              let offer = snapshot.val();
+              for (let tag of offer.tags) {
+                  obj.switchTag(tag);
+              }
+              obj.home = (snapshot.val().places.indexOf('home') != -1) ? true : false;
+              obj.remote = (snapshot.val().places.indexOf('remote') != -1) ? true : false;
+              
+              obj.prix = offer.prix;
+              obj.duree = offer.duree;
+              for (let tag of offer.supplements) {
+                  for (var j=0; j <obj.tags.length; j++) {
 
+                      if (obj.tags[j]["name"] == tag.name) {
+                          $( "#supplement"+j).show();
+                          obj.tags[j].prix = tag.prix;
+                          obj.tags[j].duree = tag.duree;
+                      }
+
+                  }
+              }
+          });
+      }
   }
 
   trackByIndex(index: number, obj: any): any {
@@ -146,7 +173,6 @@ export class FilterPage {
 
           }
       }
-      console.log(this.tags);
   }
 
   showSupplement() {
@@ -175,7 +201,6 @@ export class FilterPage {
     }
 
     actionSheet.present();
-    console.log(this.selectedTags);
   }
 
   addSupplement(tagCode: string) {
@@ -222,7 +247,7 @@ export class FilterPage {
         supplements: this.supplements
       };
 
-      var newPostKey = firebase.database().ref().child('offers').push().key;
+      var newPostKey = (this.offerId) ? this.offerId : firebase.database().ref().child('offers').push().key;
 
       // Write the new post's data simultaneously in the posts list and the user's post list.
       var updates = {};
@@ -233,7 +258,8 @@ export class FilterPage {
 
       this.fdb.database.ref().update(updates);
       this.navCtrl.pop();
-      //this.navCtrl.push(PrestaListPage);
+      this.navCtrl.pop();
+      this.navCtrl.push(PrestaListPage);
 
   }
 

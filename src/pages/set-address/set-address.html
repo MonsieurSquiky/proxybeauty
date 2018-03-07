@@ -7,7 +7,9 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Votre lieu de travail</ion-title>
+    <ion-title *ngIf="isPresta;else client_content_title">Votre lieu de travail</ion-title>
+    <ng-template #client_content_title><ion-title>
+         Votre domicile </ion-title> </ng-template>
   </ion-navbar>
 
 </ion-header>
@@ -22,7 +24,7 @@
          Saisissez votre adresse, afin de pouvoir prendre des rendez-vous à domicile. </p> </ng-template>
     <ion-list padding>
       <ion-item (click)="showAddressModal()">
-        <ion-input  [(ngModel)]="address.place" type="text" placeholder="Entrez votre adresse">              </ion-input>
+          <ion-label> {{ (address.place) ? address.place : "Entrez votre adresse" }} </ion-label>
       </ion-item>
     </ion-list>
 

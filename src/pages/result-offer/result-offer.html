@@ -14,14 +14,25 @@
 
 
 <ion-content class="background-cloud">
-    <ion-card *ngFor='let offer of results'>
+    <ion-card *ngFor='let offer of results;let i = index'>
         <ion-card-content class="no-padding">
+            <ion-item>
+              <ion-avatar item-start>
+                <img src="{{ offer.profilepic }}">
+              </ion-avatar>
+              <div class="item-main-content">
+                  <h2>{{ offer.firstname + ' ' + offer.lastname}}</h2>
+                  <p>{{ offer.address }}</p>
+              </div>
+
+            </ion-item>
             <ion-grid >
+                <!--
                 <ion-row>
                     <ion-col col-4>
                         <ion-item style="padding-left:0px">
 
-                            <div class="icon-button main-color-button img-background img-background-profilepic pic-profil">
+                            <div class="icon-button main-color-button img-background img-background-profilepic pic-profil" style="background-image: url('{{ offer.profilepic }}')">
 
                             </div>
                         </ion-item>
@@ -42,6 +53,7 @@
                     </ion-col>
 
                 </ion-row>
+            -->
                 <ion-row>
 
                     <ion-col col-12>
@@ -54,10 +66,10 @@
 
                 <ion-row class="info-major">
                     <ion-col col-4 class="bordered-right">
-                        {{offer.distance}} km
+                        {{ (remote) ? "A domicile" : offer.distance + "km"}}
                     </ion-col>
                     <ion-col col-4 class="bordered-right">
-                        {{getDuree(offer)}} min
+                        {{ getDuree(offer) }} min
                     </ion-col>
                     <ion-col col-4>
                             {{getPrix(offer)}} €
@@ -67,7 +79,7 @@
                 <ion-row>
                     <ion-col col-6></ion-col>
                     <ion-col col-6>
-                        <button ion-button icon-left (click)="book(offer)" class="" color="dark">
+                        <button ion-button icon-left (click)="book(offer, keyresults[i])" class="" color="dark">
                             <ion-icon name="card"></ion-icon>
                             Reserver
                         </button>

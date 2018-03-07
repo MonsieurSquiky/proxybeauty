@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
 import { ModalController} from 'ionic-angular';
 import {AutocompletePage} from '../autocomplete/autocomplete';
 import firebase from 'firebase';
@@ -21,10 +21,12 @@ import { AngularFireDatabase } from 'angularfire2/database';
 export class FirstloginTypePage {
     uid: string;
 
-    constructor(public navCtrl: NavController, private fdb: AngularFireDatabase, public navParams: NavParams, private modalCtrl:ModalController) {
-    this.address = {
-      place: ''
-    };
+    constructor(public navCtrl: NavController,
+                private fdb: AngularFireDatabase,
+                public navParams: NavParams,
+                private modalCtrl:ModalController,
+                public alertCtrl: AlertController) {
+
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -38,18 +40,25 @@ export class FirstloginTypePage {
           });
     }
 
-    address;
-
-
-
-
     chooseType(statut) {
         var ref = this.fdb.database.ref("/users/"+ this.uid);
+        var obj = this;
 
         ref.update({
-          statut: statut
+          statut: statut,
+          setupStep: 1
+        }).then(function() {
+          obj.navCtrl.push(FirstloginPage);
+        }).catch(function(error) {
+          // An error happened.
+          let alertVerification = obj.alertCtrl.create({
+            title: "Echec",
+            subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
+            buttons: ['OK']
+          });
+          alertVerification.present();
         });
-        this.navCtrl.push(FirstloginPage);
+        //this.navCtrl.push(FirstloginPage);
     }
 
 }

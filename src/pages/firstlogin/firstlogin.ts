@@ -39,9 +39,6 @@ export class FirstloginPage {
               console.log("No user signed");
             }
           });
-
-
-
     }
 
     save() {
@@ -55,7 +52,8 @@ export class FirstloginPage {
               firstname: this.firstname,
               lastname: this.lastname,
               birthdate: { year: b[0], month: b[1], day: b[2] },
-              phoneNumber: this.phoneNumber
+              phoneNumber: this.phoneNumber,
+              setupStep: 2
             }).then(function() {
               obj.navCtrl.push(SetAddressPage);
             }).catch(function(error) {

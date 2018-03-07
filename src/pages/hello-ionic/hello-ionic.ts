@@ -7,6 +7,11 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { DashboardPage } from '../dashboard/dashboard';
 import { PrestaBoardPage } from '../presta-board/presta-board';
 import { FirstloginTypePage } from '../firstlogin-type/firstlogin-type';
+import { FirstloginPage } from '../firstlogin/firstlogin';
+import { SetAddressPage } from '../set-address/set-address';
+import { ProfilepicPage } from '../profilepic/profilepic';
+import { SetParrainPage } from '../set-parrain/set-parrain';
+import { ConditionsPage } from '../conditions/conditions';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -21,6 +26,7 @@ import { User } from "../../models/user";
 })
 export class HelloIonicPage {
     user = {} as User;
+    onWayToDashboard = false;
     uid;
 
   constructor(  public navCtrl: NavController,
@@ -32,21 +38,27 @@ export class HelloIonicPage {
                 public menu: MenuController) {
 
       this.menu.enable(false);
+  }
+
+  ionViewDidLoad() {
       var obj =this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
               obj.uid = user.uid;
-              console.log(user.uid);
-              if (user.emailVerified)
-                obj.goDashboard();
+
+
+              if (user.emailVerified || user.providerData[0].providerId != 'password') {
+                  console.debug('Provider HERE !!' + user.providerData[0].providerId);
+                  obj.goDashboard();
+              }
               else
                 console.log('Waiting for email to be verified');
             } else {
               // No user is signed in.
               console.log("No user signed");
             }
-          });
+        });
   }
 
   facebookLogin(): Promise<any> {
@@ -99,7 +111,7 @@ export class HelloIonicPage {
         {
           text: 'Annuler',
           handler: data => {
-            console.log("Inscription annulee");
+            console.log("Inscription annulée");
           }
         },
         {
@@ -112,7 +124,7 @@ export class HelloIonicPage {
                 user.password = "";
                 let alert = this.alertCtrl.create({
                   title: 'Erreur de mot de passe',
-                  subTitle: 'Vous avez entrez 2 mots de passes differents, veuillez recommencer et entrer les memes.',
+                  subTitle: 'Vous avez entrez 2 mots de passes différents, veuillez recommencer et entrer les mêmes.',
                   buttons: ['OK']
                 });
                 alert.present();
@@ -151,30 +163,59 @@ export class HelloIonicPage {
   }
 
   goDashboard () {
+      console.log(this.uid);
       var ref = this.fdb.database.ref("/users/"+ this.uid);
       var obj = this;
+      if (!this.onWayToDashboard) {
 
-          ref.on("value", function(snapshot) {
-              if (snapshot.val() && snapshot.val().statut) {
-                  if (snapshot.val().statut == "client")
-                    obj.navCtrl.setRoot(DashboardPage);
-                  else
-                    obj.navCtrl.setRoot(PrestaBoardPage);
+          this.onWayToDashboard = true;
+          ref.once("value", function(snapshot) {
+              if (snapshot.exists()) {
+                  switch (snapshot.val().setupStep) {
+                    case 0:
+                        obj.navCtrl.setRoot(FirstloginTypePage);
+                        break;
+                    case 1:
+                        obj.navCtrl.setRoot(FirstloginPage);
+                        break;
+                    case 2:
+                        obj.navCtrl.setRoot(SetAddressPage);
+                        break;
+                    case 3:
+                        obj.navCtrl.setRoot(ProfilepicPage);
+                        break;
+                    case 4:
+                        obj.navCtrl.setRoot(SetParrainPage);
+                        break;
+                    case 5:
+                        obj.navCtrl.setRoot(ConditionsPage);
+                        break;
+                    case 'complete':
+                        if (snapshot.val().statut == "client")
+                          obj.navCtrl.setRoot(DashboardPage);
+                        else
+                          obj.navCtrl.setRoot(PrestaBoardPage);
+                        break;
+                    }
               }
               else {
-                  var userReg = firebase.auth().currentUser;
-                  var ref = obj.fdb.database.ref("/users/"+ userReg.uid);
-                  ref.set({
-                    uid: userReg.uid,
-                    email: userReg.email
-                  });
+                  let userReg = firebase.auth().currentUser;
+                  let updates = {};
+
+                  updates["/users/"+ userReg.uid+"/uid"] = userReg.uid;
+                  updates["/users/"+ userReg.uid+"/email"] = userReg.email;
+                  updates["/users/"+ userReg.uid+"/setupStep"] = 0;
+                  updates["/users/"+ userReg.uid+"/ambassador"] = false;
+
+                  obj.fdb.database.ref().update(updates);
                   obj.navCtrl.setRoot(FirstloginTypePage);
               }
 
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
-
+            this.onWayToDashboard = false;
+        }
   }
 
   async register(user: User) {

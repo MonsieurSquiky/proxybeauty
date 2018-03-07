@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import firebase from 'firebase';
 import { SearchOfferPage } from '../search-offer/search-offer';
+import { LogoutPage } from '../logout/logout';
+import { PrestaRdvPage } from '../presta-rdv/presta-rdv';
+import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
+import { AmbassadorInfosPage } from '../ambassador-infos/ambassador-infos';
+
 /**
  * Generated class for the DashboardPage page.
  *
@@ -15,19 +20,23 @@ import { SearchOfferPage } from '../search-offer/search-offer';
   templateUrl: 'dashboard.html',
 })
 export class DashboardPage {
-  num : string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public menu: MenuController) {
-      this.menu.enable(true);
-      var page = this;
-      firebase.auth().onAuthStateChanged(function(user) {
-          if (user) {
-            // User is signed in.
-            page.num = user.email;
-          } else {
-            // No user is signed in.
-          }
-        });
+  uid : string;
 
+  constructor(public navCtrl: NavController, public navParams: NavParams, public menu: MenuController) {
+      this.menu.enable(true, 'client');
+  }
+
+  ionViewDidLoad() {
+    var obj = this;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in.
+          obj.uid = user.uid;
+
+        } else {
+          // No user is signed in.
+        }
+      });
   }
 
   getUserName() {
@@ -39,8 +48,13 @@ export class DashboardPage {
       this.navCtrl.push(SearchOfferPage, {category: category});
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DashboardPage');
+  openPage(page) {
+    // close the menu when clicking a link from the menu
+    this.menu.close();
+    // navigate to the new page if it is not the current page
+    this.navCtrl.setRoot(page.component);
   }
+
+
 
 }

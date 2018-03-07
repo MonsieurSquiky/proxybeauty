@@ -28,10 +28,11 @@ import { StripeTestPage } from '../pages/stripe-test/stripe-test';
 import { BookingPage } from '../pages/booking/booking';
 import { PaybookingPage } from '../pages/paybooking/paybooking';
 import { ProfilepicPage } from '../pages/profilepic/profilepic';
+import { AmbassadorInfosPage } from '../pages/ambassador-infos/ambassador-infos';
+import { AmbassadorPage } from '../pages/ambassador/ambassador';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
 
 @Component({
   templateUrl: 'app.html'
@@ -40,8 +41,11 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = ProfilepicPage;
+  rootPage = HelloIonicPage;
   pages: Array<{title: string, component: any}>;
+  clientpages: Array<{title: string, component: any}> = [];
+  prestatairepages: Array<{title: string, component: any}> = [];
+
 
   constructor(
     public platform: Platform,
@@ -54,11 +58,11 @@ export class MyApp {
     // set our app's pages
 
     this.pages = [
-      { title: 'Accueil', component: PrestaBoardPage },
+      { title: 'Accueil', component: HomepagePage },
       { title: 'Se déconnecter', component: LogoutPage },
-      { title: 'Do the payment', component: StripeTestPage },
-      { title: 'Create a Stripe', component: StripeloginPage },
-      { title: 'Settings', component: FirstloginPage },
+      { title: 'Do the payment', component: PaybookingPage },
+      { title: 'Create a Stripe', component: ProfilepicPage },
+      { title: 'Settings', component: PrestaBoardPage },
       { title: 'Mon adresse', component: SetAddressPage },
       /*,
       { title: 'My First List', component: ListPage },
@@ -74,6 +78,12 @@ export class MyApp {
       { title: 'Trouvez offre', component: SearchOfferPage },
       { title: 'une recherche', component: ResultOfferPage } */
     ];
+
+    this.clientpages.push({ title: 'Les prestations', component: DashboardPage });
+    this.clientpages.push({ title: 'Mes réservations', component: PrestaRdvPage });
+    this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
+    this.clientpages.push({ title: 'Mon espace ambassadeur', component: AmbassadorPage });
+
   }
 
   initializeApp() {
@@ -82,6 +92,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
     });
   }
 

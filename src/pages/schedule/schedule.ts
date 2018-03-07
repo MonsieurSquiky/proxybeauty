@@ -12,7 +12,9 @@ import { PrestaBoardPage } from '../presta-board/presta-board';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+ @IonicPage({
+     name: 'schedule'
+ })
 @Component({
   selector: 'page-schedule',
   templateUrl: 'schedule.html',

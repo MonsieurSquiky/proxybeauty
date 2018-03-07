@@ -6,33 +6,38 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
 
 import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { PrestaBoardPage } from '../pages/presta-board/presta-board';
-import { FilterPage } from '../pages/filter/filter';
-import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
-import { MapPage } from '../pages/map/map';
-import { ChooseHomePage } from '../pages/choose-home/choose-home';
-import { AutocompletePage } from '../pages/autocomplete/autocomplete';
-import { FirstloginPage } from '../pages/firstlogin/firstlogin';
-import { FirstloginTypePage } from '../pages/firstlogin-type/firstlogin-type';
-import { SetAddressPage } from '../pages/set-address/set-address';
-import { SchedulePage } from '../pages/schedule/schedule';
+//import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
+//import { MapPage } from '../pages/map/map';
+//import { ChooseHomePage } from '../pages/choose-home/choose-home';
 import { SearchOfferPage } from '../pages/search-offer/search-offer';
 import { ResultOfferPage } from '../pages/result-offer/result-offer';
-import { LogoutPage } from '../pages/logout/logout';
-import { StripeTestPage } from '../pages/stripe-test/stripe-test';
-import { StripeloginPage } from '../pages/stripelogin/stripelogin';
+//import { StripeTestPage } from '../pages/stripe-test/stripe-test';
+//import { StripeloginPage } from '../pages/stripelogin/stripelogin';
 import { BookingPage } from '../pages/booking/booking';
-import { PaybookingPage } from '../pages/paybooking/paybooking';
-import { ProfilepicPage } from '../pages/profilepic/profilepic';
 
+//import { AmbassadorPage } from '../pages/ambassador/ambassador';
+
+import { AutocompletePageModule } from '../pages/autocomplete/autocomplete.module';
+import { FirstloginPageModule } from '../pages/firstlogin/firstlogin.module';
+import { FirstloginTypePageModule } from '../pages/firstlogin-type/firstlogin-type.module';
+import { SetAddressPageModule } from '../pages/set-address/set-address.module';
+import { FilterPageModule } from '../pages/filter/filter.module';
+import { LogoutPageModule } from '../pages/logout/logout.module';
+import { ParrainageGainPageModule } from '../pages/parrainage-gain/parrainage-gain.module';
 import { PrestaListPageModule } from '../pages/presta-list/presta-list.module';
 import { PrestaRatingsPageModule } from '../pages/presta-ratings/presta-ratings.module';
 import { PrestaRdvPageModule } from '../pages/presta-rdv/presta-rdv.module';
 import { HorairePageModule } from '../pages/horaire/horaire.module';
 import { ParrainagePageModule } from '../pages/parrainage/parrainage.module';
+import { SchedulePageModule } from '../pages/schedule/schedule.module';
+import { AmbassadorPageModule } from '../pages/ambassador/ambassador.module';
+import { AmbassadorInfosPageModule } from '../pages/ambassador-infos/ambassador-infos.module';
+import { PaybookingPageModule } from '../pages/paybooking/paybooking.module';
+import { ProfilepicPageModule } from '../pages/profilepic/profilepic.module';
+import { SetParrainPageModule } from '../pages/set-parrain/set-parrain.module';
+import { ConditionsPageModule } from '../pages/conditions/conditions.module';
 import {FormsModule} from '@angular/forms';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -78,28 +83,15 @@ var config = {
   declarations: [
     MyApp,
     HelloIonicPage,
-    ItemDetailsPage,
     DashboardPage,
     PrestaBoardPage,
-    ListPage,
-    FilterPage,
     //PrestaListPage,
-    FirstloginPage,
-    FirstloginTypePage,
-    ParrainageGainPage,
-    MapPage,
-    ChooseHomePage,
-    AutocompletePage,
-    SetAddressPage,
-    SchedulePage,
+    //SchedulePage,
     SearchOfferPage,
     ResultOfferPage,
-    LogoutPage,
-    StripeTestPage,
-    StripeloginPage,
-    BookingPage,
-    PaybookingPage,
-    ProfilepicPage
+    //StripeTestPage,
+    //StripeloginPage,
+    BookingPage
   ],
   imports: [
     BrowserModule,
@@ -110,36 +102,40 @@ var config = {
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    FirstloginPageModule,
+    FirstloginTypePageModule,
+    //ParrainageGainPage,
+    //MapPage,
+    //ChooseHomePage,
+    AutocompletePageModule,
+    SetAddressPageModule,
+    FilterPageModule,
     PrestaRatingsPageModule,
     PrestaRdvPageModule,
-    ParrainagePageModule
+    ParrainagePageModule,
+    SchedulePageModule,
+    ParrainageGainPageModule,
+    AmbassadorPageModule,
+    AmbassadorInfosPageModule,
+    PaybookingPageModule,
+    ProfilepicPageModule,
+    SetParrainPageModule,
+    ConditionsPageModule,
+    LogoutPageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HelloIonicPage,
-    ItemDetailsPage,
     DashboardPage,
     PrestaBoardPage,
-    ListPage,
-    FilterPage,
     //PrestaListPage,
-    FirstloginPage,
-    FirstloginTypePage,
-    ParrainageGainPage,
-    MapPage,
-    ChooseHomePage,
-    AutocompletePage,
-    SetAddressPage,
-    SchedulePage,
+
+    //SchedulePage,
     SearchOfferPage,
     ResultOfferPage,
-    LogoutPage,
-    StripeTestPage,
-    StripeloginPage,
-    BookingPage,
-    PaybookingPage,
-    ProfilepicPage
+
+    BookingPage
   ],
   providers: [
     StatusBar,

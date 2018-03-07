@@ -30,9 +30,10 @@ export class LogoutPage {
           loading.dismiss();
         }, function(error) {
           // An error happened.
+          navCtrl.setRoot(HelloIonicPage);
         });
 
-        
+
   }
 
   ionViewDidLoad() {

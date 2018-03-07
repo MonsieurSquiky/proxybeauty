@@ -24,6 +24,7 @@ export class ResultOfferPage {
     home: boolean;
     usersToCheck = [];
     results = [];
+    keyresults = [];
     address;
 
     constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase) {
@@ -57,6 +58,7 @@ export class ResultOfferPage {
                     if (childSnapshot.val().category == obj.category && obj.checkTags(childSnapshot.val())
                         && ( (obj.remote && childSnapshot.val().places.indexOf('remote') != -1) || (obj.home && childSnapshot.val().places.indexOf('home') != -1)) ) {
                         obj.results.push(childSnapshot.val());
+                        obj.keyresults.push(Object.keys(childSnapshot.val())[0]);
                         if (obj.usersToCheck.indexOf(childSnapshot.val().prestataire) == -1)
                             obj.usersToCheck.push(childSnapshot.val().prestataire);
                         console.log(childSnapshot.val());
@@ -114,7 +116,7 @@ export class ResultOfferPage {
         addrRef.on('value', function (snapshot) {
             let distance = obj.get_distance_m(snapshot.child('/address').val().latitude, snapshot.child('/address').val().longitude, obj.address.latitude, obj.address.longitude);
             console.log(snapshot.child('/address').val());
-            for (var i=0; i < obj.results.length; i++) {
+            for (let i=0; i < obj.results.length; i++) {
                 if (obj.results[i].prestataire == userId) {
                     if (distance > 10000)
                         obj.results.splice(i, 1);
@@ -123,6 +125,12 @@ export class ResultOfferPage {
                         obj.results[i]['firstname'] = snapshot.val().firstname;
                         obj.results[i]['lastname'] = snapshot.val().lastname;
                         obj.results[i]['address'] = snapshot.child('/address').val().place;
+                        obj.results[i]['profilepic'] = (snapshot.child('/profilepic').val()) ? snapshot.child('/profilepic').val().url : "./assets/img/profilePic.png";
+                        /*
+                        obj.fdb.database.ref('/users-profilepics/'+userId+'/url').on('value', function(snapshot) {
+                            obj.results[i]['profilepic'] = (snapshot.val()) ? snapshot.val() : "./assets/img/profilePic.png";
+                        });
+                        */
                     }
                 }
             }
@@ -184,9 +192,10 @@ export class ResultOfferPage {
       return (earth_radius * d);
     }
 
-    book(node) {
+    book(node, key) {
         //console.log(node.parent());
-        this.navCtrl.push(BookingPage, {category: this.category, prestataire: node.prestataire, prix: this.getPrix(node),  duree: this.getDuree(node), tags: this.tags});
+        let place = (this.remote) ? this.address.place : node.address;
+        this.navCtrl.push(BookingPage, {place, offerKey: key, category: this.category, prestataire: node.prestataire, prix: this.getPrix(node),  duree: this.getDuree(node), tags: this.tags});
     }
 }
 

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
-import { PrestaBoardPage } from '../presta-board/presta-board';
-import { DashboardPage } from '../dashboard/dashboard';
+
 import { ModalController } from 'ionic-angular';
 import { AutocompletePage } from '../autocomplete/autocomplete';
 import { HelloIonicPage } from '../hello-ionic/hello-ionic';
+import { ProfilepicPage } from '../profilepic/profilepic';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 import { GeocoderProvider } from '../../providers/geocoder/geocoder';
@@ -28,12 +28,14 @@ export class SetAddressPage {
     latitude: number = 0;
     longitude: number = 0;
     uid: string;
+    loading;
 
     constructor(public navCtrl: NavController,
                 private fdb: AngularFireDatabase,
                 public navParams: NavParams,
                 public alertCtrl: AlertController,
                 private modalCtrl:ModalController,
+                private loadingCtrl: LoadingController,
                 public _GEOCODE   : GeocoderProvider) {
         var obj = this;
 
@@ -73,6 +75,8 @@ export class SetAddressPage {
     }
 
     goToDashboard () {
+        this.navCtrl.push(ProfilepicPage);
+        /*
         var ref = this.fdb.database.ref("/users/"+ this.uid);
         var obj = this;
         ref.on("value", function(snapshot) {
@@ -83,27 +87,29 @@ export class SetAddressPage {
           }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
           });
-
+          */
     }
 
     async saveAddress() {
         const obj = this;
-        var ref = this.fdb.database.ref("/users/"+ this.uid +"/address");
+
+        this.loading = this.loadingCtrl.create({
+        content: 'Sauvegarde en cours...'
+        });
+
+        this.loading.present();
+
         let geocoder = new google.maps.Geocoder();
         geocoder.geocode({ 'address': this.address.place }, (results, status) => {
-            ref.update({
-
-                'latitude': results[0].geometry.location.lat(),
-                'longitude': results[0].geometry.location.lng()
-            });
 
             obj.performReverseGeocoding(results[0].geometry.location.lat(), results[0].geometry.location.lng());
 
         });
+        /*
         ref.update({
             'place': this.address.place
         }).then(function() {
-          obj.navCtrl.push(SetAddressPage);
+          //obj.navCtrl.push(SetAddressPage);
         }).catch(function(error) {
           // An error happened.
           let alertVerification = obj.alertCtrl.create({
@@ -113,12 +119,13 @@ export class SetAddressPage {
           });
           alertVerification.present();
         });
-        this.goToDashboard();
+        */
     }
 
     async performReverseGeocoding(latitude, longitude)
     {
-          let ref = this.fdb.database.ref("/users/"+ this.uid +"/address");
+          var obj = this;
+          let ref = this.fdb.database.ref("/users/"+ this.uid);
            /*
           let latitude     : any = parseFloat(this.geoForm.controls["latitude"].value),
               longitude    : any = parseFloat(this.geoForm.controls["longitude"].value);
@@ -129,14 +136,38 @@ export class SetAddressPage {
              //this.geocoded      = true;
              console.log("Happens HERE "+ data.countryCode);
              ref.update({
-                 'details': data
+                 'address': {
+                     'place': obj.address.place,
+                     'latitude': latitude,
+                     'longitude': longitude,
+                     'details': data
+                 },
+                 'setupStep': 3
+             }).then(function() {
+                 obj.loading.dismiss();
+                 obj.navCtrl.push(ProfilepicPage);
+             }).catch(function(error) {
+               // An error happened.
+               console.log(error);
+               obj.loading.dismiss();
+               let alertVerification = obj.alertCtrl.create({
+                 title: "Echec",
+                 subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",
+                 buttons: ['OK']
+               });
+               alertVerification.present();
              });
 
           })
           .catch((error : any)=>
           {
-             //this.geocoded      = true;
-
+              // An error happened.
+              let alertVerification = obj.alertCtrl.create({
+                title: "Echec",
+                subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",
+                buttons: ['OK']
+              });
+              alertVerification.present();
              console.log(error.message);
           });
     }
