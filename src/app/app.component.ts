@@ -58,11 +58,7 @@ export class MyApp {
 
     this.pages = [
       { title: 'Accueil', component: HomepagePage },
-      { title: 'Se déconnecter', component: LogoutPage },
-      { title: 'Do the payment', component: PaybookingPage },
-      { title: 'Create a Stripe', component: ProfilepicPage },
-      { title: 'Settings', component: PrestaBoardPage },
-      { title: 'Mon adresse', component: SetAddressPage },
+      { title: 'Se déconnecter', component: LogoutPage }
       /*,
       { title: 'My First List', component: ListPage },
       { title: 'Da Dashboard', component: DashboardPage },
