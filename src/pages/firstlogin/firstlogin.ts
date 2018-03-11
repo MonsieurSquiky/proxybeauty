@@ -23,7 +23,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 export class FirstloginPage {
     firstname: string;
     lastname: string;
-    phoneNumber: string;
     birthdate;
     uid: string;
 
@@ -52,7 +51,6 @@ export class FirstloginPage {
               firstname: this.firstname,
               lastname: this.lastname,
               birthdate: { year: b[0], month: b[1], day: b[2] },
-              phoneNumber: this.phoneNumber,
               setupStep: 2
             }).then(function() {
               obj.navCtrl.push(SetAddressPage);
@@ -87,6 +85,7 @@ export class FirstloginPage {
             alertDob.present();
             return false;
         }
+        /*
         else {
             let regExp = /^[0-9]{10}$/;
 
@@ -101,11 +100,9 @@ export class FirstloginPage {
             }
             return true;
         }
+        */
 
     }
 
-    showDate() {
-        //console.debug(this.birthdate.split('-'));
-    }
 
 }
