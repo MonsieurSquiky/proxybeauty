@@ -83,6 +83,8 @@
     <engine name="browser" spec="^4.1.0" />
     <plugin name="cordova-plugin-advanced-http" spec="^1.10.1" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à votre caméra pour que vous puissiez vous prendre en photo et ainsi compléter votre profil." />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à vos photos pour que vous puissiez en désigner une comme votre photo de profil." />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-facebook4" spec="^1.9.1">
@@ -90,7 +92,7 @@
         <variable name="APP_NAME" value="ProxyBeauty" />
     </plugin>
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
-        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="ProxyBeauty a besoin de localiser votre position et ainsi vous proposer les services les plus proches de vous." />
     </plugin>
     <plugin name="cordova-plugin-googleplus" spec="^5.2.1">
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.1090914691423-qtt5ni1abgqmdfce235blum8vfl5p8tk" />
