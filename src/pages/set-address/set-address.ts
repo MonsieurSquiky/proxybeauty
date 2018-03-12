@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
 
 import { ModalController } from 'ionic-angular';
@@ -9,6 +9,9 @@ import { ProfilepicPage } from '../profilepic/profilepic';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 import { GeocoderProvider } from '../../providers/geocoder/geocoder';
+import { Geolocation } from '@ionic-native/geolocation';
+
+declare var google;
 /**
  * Generated class for the SetAddressPage page.
  *
@@ -36,12 +39,18 @@ export class SetAddressPage {
                 public alertCtrl: AlertController,
                 private modalCtrl:ModalController,
                 private loadingCtrl: LoadingController,
-                public _GEOCODE   : GeocoderProvider) {
-        var obj = this;
+                public geolocation: Geolocation,
+                public _GEOCODE   : GeocoderProvider,
+                private platform : Platform) {
 
         this.address = {
-          place: ''
+          place: null
         };
+    }
+
+    ionViewDidLoad() {
+
+        var obj = this;
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -58,7 +67,7 @@ export class SetAddressPage {
             } else {
               // No user is signed in.
               console.log("No user signed");
-              navCtrl.setRoot(HelloIonicPage);
+              obj.navCtrl.setRoot(HelloIonicPage);
             }
           });
     }
@@ -67,9 +76,8 @@ export class SetAddressPage {
       let modal = this.modalCtrl.create(AutocompletePage);
       let me = this;
       modal.onDidDismiss(data => {
-        this.address.place = data['address'];
-        this.latitude = data['lat'];
-        this.longitude = data['long'];
+        this.address.place = data['address'] ? data['address'] : null;
+        this.address['details'] = null;
       });
       modal.present();
     }
@@ -89,7 +97,23 @@ export class SetAddressPage {
           });
           */
     }
+    findMe() {
+        this.loading = this.loadingCtrl.create({
+        content: 'Localisation en cours...'
+        });
+        const obj = this;
 
+        this.loading.present();
+        this.geolocation.getCurrentPosition().then((position) => {
+            obj.latitude = position.coords.latitude;
+            obj.longitude = position.coords.longitude;
+            this.performReverseGeocoding(position.coords.latitude, position.coords.longitude, 'show');
+
+        }, (err) => {
+            obj.loading.dismiss();
+            console.log(err);
+        });
+    }
     async saveAddress() {
         const obj = this;
 
@@ -99,12 +123,40 @@ export class SetAddressPage {
 
         this.loading.present();
 
-        let geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'address': this.address.place }, (results, status) => {
+        if (this.address.details) {
+            this.fdb.database.ref("/users/"+ this.uid).update({
+                'address': {
+                    'place': obj.address.place,
+                    'latitude': this.latitude,
+                    'longitude': this.longitude,
+                    'details': this.address.details
+                },
+                'setupStep': 3
+            }).then(function() {
+                obj.loading.dismiss();
+               obj.navCtrl.push(ProfilepicPage);
 
-            obj.performReverseGeocoding(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+            }).catch(function(error) {
+              // An error happened.
+              console.log(error);
+              obj.loading.dismiss();
+              let alertVerification = obj.alertCtrl.create({
+                title: "Echec",
+                subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",
+                buttons: ['OK']
+              });
+              alertVerification.present();
+            });
+        }
+        else {
+            let geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': this.address.place }, (results, status) => {
 
-        });
+                obj.performReverseGeocoding(results[0].geometry.location.lat(), results[0].geometry.location.lng(), 'save');
+
+            });
+        }
+
         /*
         ref.update({
             'place': this.address.place
@@ -122,7 +174,7 @@ export class SetAddressPage {
         */
     }
 
-    async performReverseGeocoding(latitude, longitude)
+    async performReverseGeocoding(latitude, longitude, task)
     {
           var obj = this;
           let ref = this.fdb.database.ref("/users/"+ this.uid);
@@ -134,29 +186,38 @@ export class SetAddressPage {
           .then((data : any) =>
           {
              //this.geocoded      = true;
-             console.log("Happens HERE "+ data.countryCode);
-             ref.update({
-                 'address': {
-                     'place': obj.address.place,
-                     'latitude': latitude,
-                     'longitude': longitude,
-                     'details': data
-                 },
-                 'setupStep': 3
-             }).then(function() {
-                 obj.loading.dismiss();
-                 obj.navCtrl.push(ProfilepicPage);
-             }).catch(function(error) {
-               // An error happened.
-               console.log(error);
-               obj.loading.dismiss();
-               let alertVerification = obj.alertCtrl.create({
-                 title: "Echec",
-                 subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",
-                 buttons: ['OK']
-               });
-               alertVerification.present();
-             });
+             //console.log("Happens HERE "+ data.countryCode);
+             if (task == 'save') {
+
+                 ref.update({
+                     'address': {
+                         'place': obj.address.place,
+                         'latitude': latitude,
+                         'longitude': longitude,
+                         'details': data
+                     },
+                     'setupStep': 3
+                 }).then(function() {
+                     obj.loading.dismiss();
+                    obj.navCtrl.push(ProfilepicPage);
+
+                 }).catch(function(error) {
+                   // An error happened.
+                   console.log(error);
+                   obj.loading.dismiss();
+                   let alertVerification = obj.alertCtrl.create({
+                     title: "Echec",
+                     subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",
+                     buttons: ['OK']
+                   });
+                   alertVerification.present();
+                 });
+             }
+             else {
+                obj.address.place = data.subThoroughfare + data.thoroughfare + ', ' + data.locality + ', ' + data.countryName;
+                obj.address['details'] = data;
+                obj.loading.dismiss();
+             }
 
           })
           .catch((error : any)=>

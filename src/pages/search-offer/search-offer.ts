@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ActionSheetController } from 'ionic-angular'
 import firebase from 'firebase';
 import { ResultOfferPage } from '../result-offer/result-offer';
+import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as $ from 'jquery'
@@ -83,8 +84,13 @@ export class SearchOfferPage {
     selectedTags = {};
     remote: boolean;
     home: boolean;
+    closeHome: boolean = true;
+    locate: boolean = false;
+    city;
     category;
     uid;
+    addressExist: boolean = false;
+    subLocality;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
       this.category = navParams.get('category');
@@ -101,15 +107,38 @@ export class SearchOfferPage {
           if (user) {
             // User is signed in.
             obj.uid = user.uid;
+
+            var addressRef = firebase.database().ref('users/' + user.uid + '/address');
+              addressRef.on('value', function(snapshot) {
+                obj.addressExist = (snapshot.val()) ? true : false;
+              });
+
+
             //navCtrl.setRoot(PrestaBoardPage);
           } else {
             // No user is signed in.
             console.log("No user signed");
+            obj.navCtrl.setRoot(HelloIonicPage);
           }
         });
       this.remote = true;
-      this.home = true;
+      this.home = false;
       console.log('SearchPage Loaded');
+  }
+
+  updateClose(field) {
+      if (field == 'home') {
+          this.locate = (this.closeHome) ? false : (this.subLocality ? false : this.locate);
+          //this.subLocality = null;
+      }
+      else if (field == 'locate') {
+          this.closeHome = (this.locate) ? false : (this.subLocality ? false : this.closeHome);
+          //this.subLocality = null;
+      }
+      else if (field == 'other'){
+          this.closeHome = false;
+          this.locate = false;
+      }
   }
 
   trackByIndex(index: number, obj: any): any {
@@ -140,7 +169,7 @@ export class SearchOfferPage {
         }
     }
 
-      this.navCtrl.push(ResultOfferPage, { category: this.category, tags: finaltags, remote: this.remote, home: this.home});
+      this.navCtrl.push(ResultOfferPage, { category: this.category, tags: finaltags, remote: this.remote, home: this.home, close: {home: this.closeHome, locate: this.locate, zipcode: this.subLocality} });
 
   }
 

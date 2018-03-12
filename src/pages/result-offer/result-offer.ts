@@ -26,33 +26,41 @@ export class ResultOfferPage {
     results = [];
     keyresults = [];
     address;
+    close;
+    loading;
 
     constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase) {
-        let loading = this.loadingCtrl.create({
+        this.loading = this.loadingCtrl.create({
         content: 'Recherche en cours...'
         });
 
-        loading.present();
+        this.loading.present();
 
 
         this.category = navParams.get('category');
         this.tags = navParams.get('tags');
         this.remote = navParams.get('remote');
         this.home = navParams.get('home');
+        this.close = navParams.get('close');
 
+    }
+
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad ResultOfferPage');
 
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
             obj.uid = user.uid;
+            if (obj.close.home) {
+                var addressRef = obj.fdb.database.ref('/users/'+user.uid+'/address');
+                addressRef.on('value', function(snapshot) {
+                    obj.address = snapshot.val();
+                });
+            }
 
-            var addressRef = fdb.database.ref('/users/'+user.uid+'/address');
-            addressRef.on('value', function(snapshot) {
-                obj.address = snapshot.val();
-            });
-
-            var offersRef = fdb.database.ref('/offers/');
+            var offersRef = obj.fdb.database.ref('/offers/');
             offersRef.on('value', function(snapshot) {
                 snapshot.forEach( function(childSnapshot) {
                     if (childSnapshot.val().category == obj.category && obj.checkTags(childSnapshot.val())
@@ -70,7 +78,7 @@ export class ResultOfferPage {
                 for (let presta of obj.usersToCheck)
                     obj.checkDistance(presta);
                 console.log(obj.results);
-                loading.dismiss();
+                obj.loading.dismiss();
             });
             //navCtrl.setRoot(PrestaBoardPage);
           } else {
@@ -78,10 +86,7 @@ export class ResultOfferPage {
             console.log("No user signed");
           }
         });
-    }
 
-    ionViewDidLoad() {
-    console.log('ionViewDidLoad ResultOfferPage');
     }
 
     checkTags(node) {
@@ -112,29 +117,83 @@ export class ResultOfferPage {
 
     checkDistance(userId) {
         var obj = this;
-        var addrRef = this.fdb.database.ref('/users/'+ userId);
-        addrRef.on('value', function (snapshot) {
-            let distance = obj.get_distance_m(snapshot.child('/address').val().latitude, snapshot.child('/address').val().longitude, obj.address.latitude, obj.address.longitude);
-            console.log(snapshot.child('/address').val());
-            for (let i=0; i < obj.results.length; i++) {
-                if (obj.results[i].prestataire == userId) {
-                    if (distance > 10000)
-                        obj.results.splice(i, 1);
-                    else {
-                        obj.results[i]['distance'] = precisionRound(distance / 1000, 1);
-                        obj.results[i]['firstname'] = snapshot.val().firstname;
-                        obj.results[i]['lastname'] = snapshot.val().lastname;
-                        obj.results[i]['address'] = snapshot.child('/address').val().place;
-                        obj.results[i]['profilepic'] = (snapshot.child('/profilepic').val()) ? snapshot.child('/profilepic').val().url : "./assets/img/profilePic.png";
-                        /*
-                        obj.fdb.database.ref('/users-profilepics/'+userId+'/url').on('value', function(snapshot) {
-                            obj.results[i]['profilepic'] = (snapshot.val()) ? snapshot.val() : "./assets/img/profilePic.png";
-                        });
-                        */
+
+        if (this.close.home) {
+            var addrRef = this.fdb.database.ref('/users/'+ userId);
+            addrRef.on('value', function (snapshot) {
+                let distance = obj.get_distance_m(snapshot.child('/address').val().latitude, snapshot.child('/address').val().longitude, obj.address.latitude, obj.address.longitude);
+                //console.log(snapshot.child('/address').val());
+                for (let i=0; i < obj.results.length; i++) {
+                    if (obj.results[i].prestataire == userId) {
+                        if (distance > 10000)
+                            obj.results.splice(i, 1);
+                        else {
+                            obj.results[i]['distance'] = precisionRound(distance / 1000, 1);
+                            obj.results[i]['firstname'] = snapshot.val().firstname;
+                            obj.results[i]['lastname'] = snapshot.val().lastname;
+                            obj.results[i]['address'] = snapshot.child('/address').val().place;
+                            obj.results[i]['profilepic'] = (snapshot.child('/profilepic').val()) ? snapshot.child('/profilepic').val().url : "./assets/img/profilePic.png";
+                            /*
+                            obj.fdb.database.ref('/users-profilepics/'+userId+'/url').on('value', function(snapshot) {
+                                obj.results[i]['profilepic'] = (snapshot.val()) ? snapshot.val() : "./assets/img/profilePic.png";
+                            });
+                            */
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        else if (this.close.locate) {
+            var addrRef = this.fdb.database.ref('/users/'+ userId);
+            addrRef.on('value', function (snapshot) {
+                let distance = obj.get_distance_m(snapshot.child('/address').val().latitude, snapshot.child('/address').val().longitude, obj.address.latitude, obj.address.longitude);
+                //console.log(snapshot.child('/address').val());
+                for (let i=0; i < obj.results.length; i++) {
+                    if (obj.results[i].prestataire == userId) {
+                        if (distance > 10000)
+                            obj.results.splice(i, 1);
+                        else {
+                            obj.results[i]['distance'] = precisionRound(distance / 1000, 1);
+                            obj.results[i]['firstname'] = snapshot.val().firstname;
+                            obj.results[i]['lastname'] = snapshot.val().lastname;
+                            obj.results[i]['address'] = snapshot.child('/address').val().place;
+                            obj.results[i]['profilepic'] = (snapshot.child('/profilepic').val()) ? snapshot.child('/profilepic').val().url : "./assets/img/profilePic.png";
+                            /*
+                            obj.fdb.database.ref('/users-profilepics/'+userId+'/url').on('value', function(snapshot) {
+                                obj.results[i]['profilepic'] = (snapshot.val()) ? snapshot.val() : "./assets/img/profilePic.png";
+                            });
+                            */
+                        }
+                    }
+                }
+            });
+        }
+        else if (this.close.zipcode) {
+            var addrRef = this.fdb.database.ref('/users/'+ userId);
+            addrRef.on('value', function (snapshot) {
+                //let distance = obj.get_distance_m(snapshot.child('/address').val().latitude, snapshot.child('/address').val().longitude, obj.address.latitude, obj.address.longitude);
+                let zipCodeValid = (obj.close.zipcode == snapshot.child('/address/details/postalCode').val().slice(0, obj.close.zipcode.length -1) );
+                //console.log(snapshot.child('/address').val());
+                for (let i=0; i < obj.results.length; i++) {
+                    if (obj.results[i].prestataire == userId) {
+                        if (zipCodeValid)
+                            obj.results.splice(i, 1);
+                        else {
+                            //obj.results[i]['distance'] = precisionRound(distance / 1000, 1);
+                            obj.results[i]['firstname'] = snapshot.val().firstname;
+                            obj.results[i]['lastname'] = snapshot.val().lastname;
+                            obj.results[i]['address'] = snapshot.child('/address').val().place;
+                            obj.results[i]['profilepic'] = (snapshot.child('/profilepic').val()) ? snapshot.child('/profilepic').val().url : "./assets/img/profilePic.png";
+                            /*
+                            obj.fdb.database.ref('/users-profilepics/'+userId+'/url').on('value', function(snapshot) {
+                                obj.results[i]['profilepic'] = (snapshot.val()) ? snapshot.val() : "./assets/img/profilePic.png";
+                            });
+                            */
+                        }
+                    }
+                }
+            });
+        }
     }
 
     getPrix(node) {

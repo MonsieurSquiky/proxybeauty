@@ -32,7 +32,7 @@ export class AutocompletePage {
 
         this.geo = item;
         //this.geoCode(this.geo);//convert Address to lat and long
-        this.viewCtrl.dismiss({'address': item, 'lat': this.latitude, 'long': this.longitude });
+        this.viewCtrl.dismiss({'address': item});
     }
 
     updateSearch() {

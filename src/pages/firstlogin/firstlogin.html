@@ -27,7 +27,7 @@
             <ion-input [(ngModel)]="lastname" type="text"></ion-input>
           </ion-item>
 
-          <ion-item>
+          <ion-item *ngIf="isPresta">
               <ion-label floating>Date de naissance</ion-label>
               <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="birthdate"></ion-datetime>
             </ion-item>

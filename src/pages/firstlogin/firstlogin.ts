@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { AlertController } from 'ionic-angular';
 import { SetAddressPage } from '../set-address/set-address';
+import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 
 import $ from "jquery";
 import 'intl-tel-input';
@@ -23,19 +24,32 @@ import { AngularFireDatabase } from 'angularfire2/database';
 export class FirstloginPage {
     firstname: string;
     lastname: string;
-    birthdate;
+    birthdate = null;
     uid: string;
+    isPresta: boolean = false;
 
     constructor(public navCtrl: NavController, public alertCtrl: AlertController, private fdb: AngularFireDatabase, public navParams: NavParams) {
+
+    }
+
+    ionViewDidLoad() {
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
               obj.uid = user.uid;
+
+              var statut = firebase.database().ref('users/' + user.uid + '/statut');
+                statut.on('value', function(snapshot) {
+                  obj.isPresta = (snapshot.val() == "prestataire") ? true : false;
+                });
+
+
               //navCtrl.setRoot(PrestaBoardPage);
             } else {
               // No user is signed in.
               console.log("No user signed");
+              obj.navCtrl.setRoot(HelloIonicPage);
             }
           });
     }
@@ -44,18 +58,20 @@ export class FirstloginPage {
 
         if (this.invariant()) {
             var ref = this.fdb.database.ref("/users/"+ this.uid);
-            var b = this.birthdate.split('-');
+            var b = (this.birthdate) ? this.birthdate.split('-') : null;
             const obj = this;
+            //console.debug(b ? { year: b[0], month: b[1], day: b[2] } : null);
 
             ref.update({
               firstname: this.firstname,
               lastname: this.lastname,
-              birthdate: { year: b[0], month: b[1], day: b[2] },
+              birthdate: b ? { year: b[0], month: b[1], day: b[2] } : null,
               setupStep: 2
             }).then(function() {
               obj.navCtrl.push(SetAddressPage);
             }).catch(function(error) {
               // An error happened.
+              //console.debug(error);
               let alertVerification = obj.alertCtrl.create({
                 title: "Echec",
                 subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
@@ -76,7 +92,7 @@ export class FirstloginPage {
             alert.present();
             return false;
         }
-        else if (!this.birthdate || this.birthdate == null || this.birthdate == "") {
+        if (this.isPresta && (!this.birthdate || this.birthdate == null || this.birthdate == "")) {
             let alertDob = this.alertCtrl.create({
               title: "Date de naissance non fournie",
               subTitle: "N'oubliez pas de rentrez votre date de naissance et de la confirmer.",
@@ -101,7 +117,7 @@ export class FirstloginPage {
             return true;
         }
         */
-
+        return true;
     }
 
 

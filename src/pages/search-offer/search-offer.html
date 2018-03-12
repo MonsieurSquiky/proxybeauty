@@ -31,19 +31,150 @@
 
     </ion-row>
 
-    <p>
-        Quels types de prestation vous conviennent ?
-    </p>
+    <div>
+        <p>
+            Quels types de prestation vous conviennent ?
+        </p>
 
-    <ion-item no-padding>
-      <ion-label no-padding><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
-      <ion-checkbox [(ngModel)]="remote"></ion-checkbox>
-    </ion-item>
+        <ion-item no-padding>
+          <ion-label no-padding><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
+          <ion-checkbox disabled="{{ !addressExist }}" [(ngModel)]="remote"></ion-checkbox>
+        </ion-item>
 
-    <ion-item no-padding>
-      <ion-label no-padding><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le prestataire</ion-label>
-      <ion-checkbox [(ngModel)]="home"></ion-checkbox>
-    </ion-item>
+        <ion-item no-padding>
+          <ion-label no-padding><span class="icon-left"><ion-icon name="pin" color="black"></ion-icon></span> Chez le prestataire</ion-label>
+          <ion-checkbox [(ngModel)]="home"></ion-checkbox>
+        </ion-item>
+
+    </div>
+
+    <div>
+        <p>
+            Qu'est ce qui vous arrange ?
+        </p>
+        <ion-list>
+            <ion-item no-padding>
+              <ion-label no-padding> Proche de mon domicile</ion-label>
+              <ion-checkbox disabled="{{ !addressExist }}" [(ngModel)]="closeHome" (ionChange)="updateClose('home')"></ion-checkbox>
+            </ion-item>
+
+            <ion-item no-padding>
+              <ion-label no-padding> Proche de ma position </ion-label>
+              <ion-checkbox [(ngModel)]="locate" (ionChange)="updateClose('locate')"></ion-checkbox>
+            </ion-item>
+
+            <ion-item no-padding>
+                <ion-label no-padding> Autre part : </ion-label>
+                <ion-select (ionChange)="updateClose('other')" [(ngModel)]="subLocality">
+
+                    <ion-option value="00">(00) Hors France</ion-option>
+                    <ion-option value="01">(01) Ain </ion-option>
+                    <ion-option value="02">(02) Aisne </ion-option>
+                    <ion-option value="03">(03) Allier </ion-option>
+                    <ion-option value="04">(04) Alpes de Haute Provence </ion-option>
+                    <ion-option value="05">(05) Hautes Alpes </ion-option>
+                    <ion-option value="06">(06) Alpes Maritimes </ion-option>
+                    <ion-option value="07">(07) Ardèche </ion-option>
+                    <ion-option value="08">(08) Ardennes </ion-option>
+                    <ion-option value="09">(09) Ariège </ion-option>
+                    <ion-option value="10">(10) Aube </ion-option>
+                    <ion-option value="11">(11) Aude </ion-option>
+                    <ion-option value="12">(12) Aveyron </ion-option>
+                    <ion-option value="13">(13) Bouches du Rhône </ion-option>
+                    <ion-option value="14">(14) Calvados </ion-option>
+                    <ion-option value="15">(15) Cantal </ion-option>
+                    <ion-option value="16">(16) Charente </ion-option>
+                    <ion-option value="17">(17) Charente Maritime </ion-option>
+                    <ion-option value="18">(18) Cher </ion-option>
+                    <ion-option value="19">(19) Corrèze </ion-option>
+                    <ion-option value="2A">(2A) Corse du Sud </ion-option>
+                    <ion-option value="2B">(2B) Haute-Corse </ion-option>
+                    <ion-option value="21">(21) Côte d'Or </ion-option>
+                    <ion-option value="22">(22) Côtes d'Armor </ion-option>
+                    <ion-option value="23">(23) Creuse </ion-option>
+                    <ion-option value="24">(24) Dordogne </ion-option>
+                    <ion-option value="25">(25) Doubs </ion-option>
+                    <ion-option value="26">(26) Drôme </ion-option>
+                    <ion-option value="27">(27) Eure </ion-option>
+                    <ion-option value="28">(28) Eure et Loir </ion-option>
+                    <ion-option value="29">(29) Finistère </ion-option>
+                    <ion-option value="30">(30) Gard </ion-option>
+                    <ion-option value="31">(31) Haute Garonne </ion-option>
+                    <ion-option value="32">(32) Gers </ion-option>
+                    <ion-option value="33">(33) Gironde </ion-option>
+                    <ion-option value="34">(34) Hérault </ion-option>
+                    <ion-option value="35">(35) Ille et Vilaine </ion-option>
+                    <ion-option value="36">(36) Indre </ion-option>
+                    <ion-option value="37">(37) Indre et Loire </ion-option>
+                    <ion-option value="38">(38) Isère </ion-option>
+                    <ion-option value="39">(39) Jura </ion-option>
+                    <ion-option value="40">(40) Landes </ion-option>
+                    <ion-option value="41">(41) Loir et Cher </ion-option>
+                    <ion-option value="42">(42) Loire </ion-option>
+                    <ion-option value="43">(43) Haute Loire </ion-option>
+                    <ion-option value="44">(44) Loire Atlantique </ion-option>
+                    <ion-option value="45">(45) Loiret </ion-option>
+                    <ion-option value="46">(46) Lot </ion-option>
+                    <ion-option value="47">(47) Lot et Garonne </ion-option>
+                    <ion-option value="48">(48) Lozère </ion-option>
+                    <ion-option value="49">(49) Maine et Loire </ion-option>
+                    <ion-option value="50">(50) Manche </ion-option>
+                    <ion-option value="51">(51) Marne </ion-option>
+                    <ion-option value="52">(52) Haute Marne </ion-option>
+                    <ion-option value="53">(53) Mayenne </ion-option>
+                    <ion-option value="54">(54) Meurthe et Moselle </ion-option>
+                    <ion-option value="55">(55) Meuse </ion-option>
+                    <ion-option value="56">(56) Morbihan </ion-option>
+                    <ion-option value="57">(57) Moselle </ion-option>
+                    <ion-option value="58">(58) Nièvre </ion-option>
+                    <ion-option value="59">(59) Nord </ion-option>
+                    <ion-option value="60">(60) Oise </ion-option>
+                    <ion-option value="61">(61) Orne </ion-option>
+                    <ion-option value="62">(62) Pas de Calais </ion-option>
+                    <ion-option value="63">(63) Puy de Dôme </ion-option>
+                    <ion-option value="64">(64) Pyrénées Atlantiques </ion-option>
+                    <ion-option value="65">(65) Hautes Pyrénées </ion-option>
+                    <ion-option value="66">(66) Pyrénées Orientales </ion-option>
+                    <ion-option value="67">(67) Bas Rhin </ion-option>
+                    <ion-option value="68">(68) Haut Rhin </ion-option>
+                    <ion-option value="69">(69) Rhône </ion-option>
+                    <ion-option value="70">(70) Haute Saône </ion-option>
+                    <ion-option value="71">(71) Saône et Loire </ion-option>
+                    <ion-option value="72">(72) Sarthe </ion-option>
+                    <ion-option value="73">(73) Savoie </ion-option>
+                    <ion-option value="74">(74) Haute Savoie </ion-option>
+                    <ion-option value="75">(75) Paris </ion-option>
+                    <ion-option value="76">(76) Seine Maritime </ion-option>
+                    <ion-option value="77">(77) Seine et Marne </ion-option>
+                    <ion-option value="78">(78) Yvelines </ion-option>
+                    <ion-option value="79">(79) Deux Sèvres </ion-option>
+                    <ion-option value="80">(80) Somme </ion-option>
+                    <ion-option value="81">(81) Tarn </ion-option>
+                    <ion-option value="82">(82) Tarn et Garonne </ion-option>
+                    <ion-option value="83">(83) Var </ion-option>
+                    <ion-option value="84">(84) Vaucluse </ion-option>
+                    <ion-option value="85">(85) Vendée </ion-option>
+                    <ion-option value="86">(86) Vienne </ion-option>
+                    <ion-option value="87">(87) Haute Vienne </ion-option>
+                    <ion-option value="88">(88) Vosges </ion-option>
+                    <ion-option value="89">(89) Yonne </ion-option>
+                    <ion-option value="90">(90) Territoire de Belfort </ion-option>
+                    <ion-option value="91">(91) Essonne </ion-option>
+                    <ion-option value="92">(92) Hauts de Seine </ion-option>
+                    <ion-option value="93">(93) Seine Saint Denis </ion-option>
+                    <ion-option value="94">(94) Val de Marne </ion-option>
+                    <ion-option value="95">(95) Val d'Oise </ion-option>
+                    <ion-option value="971">(971) Guadeloupe </ion-option>
+                    <ion-option value="972">(972) Martinique </ion-option>
+                    <ion-option value="973">(973) Guyane </ion-option>
+                    <ion-option value="974">(974) Réunion </ion-option>
+                    <ion-option value="975">(975) Saint Pierre et Miquelon </ion-option>
+                    <ion-option value="976">(976) Mayotte </ion-option>
+                </ion-select>
+            </ion-item>
+        </ion-list>
+
+    </div>
     <!--
     <p>
         A quelle(s) date(s) souhaitez vous réserver ?

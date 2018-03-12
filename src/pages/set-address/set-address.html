@@ -22,11 +22,28 @@
     </p>
     <ng-template #client_content><p padding>
          Saisissez votre adresse, afin de pouvoir prendre des rendez-vous à domicile. </p> </ng-template>
+
+     <div padding>
+
+       <button block ion-button icon-left class='main-color-button' (click)="findMe()">
+           <ion-icon name="pin"></ion-icon>
+           Me geolocaliser
+       </button>
+       <br />
+       <button block (click)="showAddressModal()" icon-left ion-button outline>
+           <ion-icon name="create"></ion-icon>
+           Entrez mon adresse
+       </button>
+     </div>
+
+
     <ion-list padding>
       <ion-item (click)="showAddressModal()">
           <ion-label> {{ (address.place) ? address.place : "Entrez votre adresse" }} </ion-label>
       </ion-item>
     </ion-list>
+
+
 
     <div padding>
 

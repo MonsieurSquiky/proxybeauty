@@ -58,7 +58,8 @@ export class MyApp {
 
     this.pages = [
       { title: 'Accueil', component: HomepagePage },
-      { title: 'Se déconnecter', component: LogoutPage }
+      { title: 'Se déconnecter', component: LogoutPage },
+      { title: 'Adresse', component: SetAddressPage }
       /*,
       { title: 'My First List', component: ListPage },
       { title: 'Da Dashboard', component: DashboardPage },
