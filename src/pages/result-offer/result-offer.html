@@ -66,7 +66,7 @@
 
                 <ion-row class="info-major">
                     <ion-col col-4 class="bordered-right">
-                        {{ (remote) ? "A domicile" : offer.distance + "km"}}
+                        {{ (remote) ? "A domicile" : (offer.distance ? offer.distance + "km" : offer.locality) }}
                     </ion-col>
                     <ion-col col-4 class="bordered-right">
                         {{ getDuree(offer) }} min

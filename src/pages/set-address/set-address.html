@@ -18,7 +18,9 @@
 <ion-content class="" padding>
     <p *ngIf="isPresta;else client_content" padding>
         Saisissez l'adresse que vous utiliserez pour effectuer vos prestations. <br />
-        Vous pourrez également proposez à vos clients des prestations à domicile.
+        Vous pourrez également proposez à vos clients des prestations à domicile. <br />
+        <b> Si vous ne souhaitez effectuer que des prestations à domicile </b> (chez le client), rentrez l'adresse de votre domicile
+         afin que nous puissions vous proposez des clients pas trop loin de chez vous.
     </p>
     <ng-template #client_content><p padding>
          Saisissez votre adresse, afin de pouvoir prendre des rendez-vous à domicile. </p> </ng-template>
@@ -49,6 +51,6 @@
 
       <button block ion-button (click)="saveAddress()"> Confirmer </button>
       <br />
-      <button block color="dark" (click)="goToDashboard()" ion-button> Passer cette étape </button>
+      <button *ngIf="!isPresta" block color="dark" (click)="goToDashboard()" ion-button> Passer cette étape </button>
     </div>
 </ion-content>

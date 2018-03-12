@@ -84,8 +84,8 @@ export class SearchOfferPage {
     selectedTags = {};
     remote: boolean;
     home: boolean;
-    closeHome: boolean = true;
-    locate: boolean = false;
+    closeHome: boolean = false;
+    locate: boolean = true;
     city;
     category;
     uid;
@@ -121,8 +121,8 @@ export class SearchOfferPage {
             obj.navCtrl.setRoot(HelloIonicPage);
           }
         });
-      this.remote = true;
-      this.home = false;
+      this.remote = false;
+      this.home = true;
       console.log('SearchPage Loaded');
   }
 
