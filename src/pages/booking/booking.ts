@@ -24,6 +24,7 @@ export class BookingPage {
     //disableHour = false;
     today;
     horaire= [];
+    schedule = [];
     picked = [];
     pickCols = [];
     category: string;
@@ -59,7 +60,7 @@ export class BookingPage {
             for (let i=6; i< 23; i++) {
                 let date = new Date();
                 date.setDate(day);
-                date.setHours(i+1);
+                date.setHours(i);
                 date.setMinutes(0);
                 date.setSeconds(0);
                 date.setMilliseconds(0);
@@ -73,11 +74,14 @@ export class BookingPage {
         }
 
         for (let i=0; i < this.days.length; i++) {
-            var row = [];
+            let row1 = [];
+            let row2 = [];
             for (let j=0; j < this.horaire.length; j++) {
-                row.push(false);
+                row1.push(false);
+                row2.push({});
             }
-            this.picked.push(row);
+            this.schedule.push(row1);
+            this.picked.push(row2);
         }
 
         for (let i=0; i < this.days.length; i++) {
@@ -91,9 +95,37 @@ export class BookingPage {
               // User is signed in.
               obj.uid = user.uid;
 
-              var horairesRef = fdb.database.ref('/user-horaires/'+obj.uid);
+              let horairesRef = fdb.database.ref('/user-horaires/'+obj.prestataire);
               horairesRef.on('value', function(snapshot) {
-                  obj.picked = (snapshot.val()) ? snapshot.val() : obj.picked;
+                  obj.schedule = (snapshot.val()) ? snapshot.val() : obj.schedule;
+                  //console.log(snapshot.val());
+              });
+
+              let rdvPrestaRef = fdb.database.ref('/user-rdv/'+obj.prestataire);
+              rdvPrestaRef.on('value', function(snapshot) {
+                  snapshot.forEach( function(childSnapshot) {
+                      if (childSnapshot.exists()) {
+                          console.log(childSnapshot.val().timestamp);
+                          let date = new Date(childSnapshot.val().timestamp);
+
+                          let dayNumber = ( date.getDay() > 0) ?  date.getDay() - 1 : 6;
+                          let hourIndice = date.getHours() - 6;
+
+                          console.log(dayNumber, hourIndice);
+
+                          let day = date.getDate();
+                          let month = date.getMonth();
+                          let year = date.getFullYear();
+
+                          // On met le timestamp du rendez vous a la bonne place dans le tableau picked (de la semaine)
+                          // En plus on lui met en cle la date exacte en chaine de caractere pour pouvoir comparer avec le tableau date
+                          obj.picked[dayNumber][hourIndice][day+month+year] = childSnapshot.val().timestamp;
+
+                      }
+
+
+                    return false;
+                  });
                   console.log(snapshot.val());
               });
               //navCtrl.setRoot(PrestaBoardPage);
@@ -103,7 +135,6 @@ export class BookingPage {
             }
           });
 
-        console.log(this.picked);
     }
     book(event: any, hour, day) {
         var obj = this;

@@ -41,11 +41,16 @@
       </tr>
 
       <tr *ngFor="let hour of horaire;let index = index;">
-        <td> {{ hour }} </td>
+        <td> {{ hour }}
+        </td>
         <td *ngFor="let obj of days;let col = index;">
-            <ion-checkbox (click)="book($event, index, col)" disabled="{{ dates[col][index].getTime() < today.getTime() + 2*3600*1000 }}" [(ngModel)]="picked[col][index]">
+            <ion-checkbox (click)="book($event, index, col)"
+                            disabled="{{ (dates[col][index].getTime() < today.getTime() + 2*3600*1000) || !schedule[col][index]
+                                 || ( picked[col][index][ dates[col][index].getDate() + dates[col][index].getMonth() + dates[col][index].getFullYear() ] == dates[col][index].getTime() ) }}"
+                            [(ngModel)]="picked[col][index][ dates[col][index].getDate() + dates[col][index].getMonth() + dates[col][index].getFullYear() ]">
 
             </ion-checkbox>
+            
         </td>
             <!--
         <td> <ion-checkbox disabled="{{ (disable[0] || !picked[0][index]) }}" [(ngModel)]="picked[0][index]"></ion-checkbox> </td>

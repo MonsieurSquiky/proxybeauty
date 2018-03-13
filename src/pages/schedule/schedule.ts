@@ -42,13 +42,18 @@ export class SchedulePage {
             this.pickCols.push(false);
         }
 
+
+    }
+
+    ionViewDidLoad() {
+    console.log('ionViewDidLoad SchedulePage');
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
               obj.uid = user.uid;
 
-              var horairesRef = fdb.database.ref('/user-horaires/' + obj.uid);
+              var horairesRef = obj.fdb.database.ref('/user-horaires/' + obj.uid);
               horairesRef.on('value', function(snapshot) {
                   obj.picked = (snapshot.val()) ? snapshot.val() : obj.picked;
                   console.log(snapshot.val());
@@ -61,10 +66,6 @@ export class SchedulePage {
           });
 
         console.log(this.picked);
-    }
-
-    ionViewDidLoad() {
-    console.log('ionViewDidLoad SchedulePage');
     }
 
     goBoard() {
