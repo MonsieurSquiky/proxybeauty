@@ -91,7 +91,9 @@
       "cordova-plugin-geolocation": {
         "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
       },
-      "cordova-plugin-nativegeocoder": {},
+      "cordova-plugin-nativegeocoder": {
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "ProxyBeauty a besoin de localiser votre position pour ainsi vous proposer les services les plus proches de vous."
+      },
       "cordova-plugin-stripe": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-camera": {}
