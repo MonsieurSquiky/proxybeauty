@@ -26,6 +26,9 @@ import { AmbassadorInfosPage } from '../pages/ambassador-infos/ambassador-infos'
 //import { StripeTestPage } from '../pages/stripe-test/stripe-test';
 //import { StripeloginPage } from '../pages/stripelogin/stripelogin';
 import { BookingPage } from '../pages/booking/booking';
+import { BoutiquePage } from '../pages/boutique/boutique';
+import { ProductPage } from '../pages/product/product';
+import { ProfilePage } from '../pages/profile/profile';
 
 //import { AmbassadorPage } from '../pages/ambassador/ambassador';
 
@@ -98,7 +101,10 @@ var config = {
     AmbassadorInfosPage,
     //StripeTestPage,
     //StripeloginPage,
-    BookingPage
+    BookingPage,
+    BoutiquePage,
+    ProductPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -139,7 +145,10 @@ var config = {
     ParrainageGainPage,
     AmbassadorPage,
     AmbassadorInfosPage,
-    BookingPage
+    BookingPage,
+    BoutiquePage,
+    ProductPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,

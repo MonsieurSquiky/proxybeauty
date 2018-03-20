@@ -31,22 +31,23 @@ export class ProfilepicPage {
                 public alertCtrl: AlertController,
                 private fdb: AngularFireDatabase) {
 
-        var obj =this;
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-              // User is signed in.
-              obj.uid = user.uid;
-              console.log(user.uid);
-            } else {
-              // No user is signed in.
-              console.log("No user signed");
-              navCtrl.setRoot(HelloIonicPage);
-            }
-          });
+    this.imageSrc = navParams.get('profilepic') ? navParams.get('profilepic') : this.imageSrc;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilepicPage');
+    var obj =this;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in.
+          obj.uid = user.uid;
+          console.log(user.uid);
+        } else {
+          // No user is signed in.
+          console.log("No user signed");
+          obj.navCtrl.setRoot(HelloIonicPage);
+        }
+      });
   }
 
   private openGallery(): void {
@@ -104,7 +105,7 @@ export class ProfilepicPage {
                 var updates = {};
                 updates['/users-profilepics/'+this.uid] = {url: savedProfilePicture.downloadURL};
                 updates['/users/' + this.uid + '/profilepic'] = {url: savedProfilePicture.downloadURL};
-                updates['/users/' + this.uid + '/setupStep'] = 4;
+                updates['/users/' + this.uid + '/setupStep'] = ob.navParams.get('update') ? 'complete' : 4;
 
                 ob.fdb.database.ref().update(updates);
 
@@ -124,6 +125,10 @@ export class ProfilepicPage {
     }
 
     goNext() {
-        this.navCtrl.push(SetParrainPage);
+        if (this.navParams.get('update'))
+            this.navCtrl.pop();
+        else
+            this.navCtrl.push(SetParrainPage);
+
     }
 }

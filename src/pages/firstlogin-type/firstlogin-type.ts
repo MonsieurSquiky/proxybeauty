@@ -27,6 +27,10 @@ export class FirstloginTypePage {
                 private modalCtrl:ModalController,
                 public alertCtrl: AlertController) {
 
+
+    }
+
+    ionViewDidLoad() {
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {

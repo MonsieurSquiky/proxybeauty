@@ -24,6 +24,82 @@ admin.initializeApp(functions.config().firebase);
 const stripe = require('stripe')(functions.config().stripe.token);
 const currency = functions.config().stripe.currency || 'USD';
 
+
+// [START chargecustomer]
+// Charge the Stripe customer whenever an amount is written to the Realtime database
+exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/shopping/{id}').onWrite((event) => {
+  const val = event.data.val();
+  // This onWrite will trigger whenever anything is written to the path, so
+  // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+  if (val === null || val.id || val.error) return null;
+
+  return admin.database().ref(`/products/${val.idProduct}/prix`).once('value').then((snapshot) => {
+    return snapshot.val();
+  }).then((prix) => {
+
+        // Create a charge using the pushId as the idempotency key, protecting against double charges
+        const amount = prix * val.qte * 100;
+        const idempotency_key = event.params.id;
+
+        return stripe.charges.create({
+              amount: amount,
+              currency: "eur",
+              source: val.source,
+              transfer_group: idempotency_key,
+          }, {idempotency_key});
+        }).then((charge) => {
+            // If the result is successful, write it back to the database
+            let updates = {};
+            updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultCharge`] = charge;
+
+            // send a mail to Nadir so he can send product
+
+            admin.database().ref('').update(updates);
+
+            if (val.parrainId) {
+                let amount_parrain = Math.floor(amount * 0.3);
+                let idempotency_key_parrain = event.params.id+'-parrain';
+
+                stripe.transfers.create({
+                          amount: amount_parrain,
+                          currency: "eur",
+                          destination: val.parrainAccount,
+                          transfer_group: idempotency_key,
+                      }, { idempotency_key: idempotency_key_parrain })
+                  .then( function(transfer) {
+                      let newKey = firebase.database().ref(`/parrain-gains/${event.data.val().parrainId}/${event.params.userId}`).push().key;
+                      let updates = {};
+                      updates[`/parrain-gains/${event.data.val().parrainId}/${event.params.userId}/${newKey}`] = {
+                          amount: transfer.amount,
+                          date: transfer.created,
+                          currency: transfer.currency,
+                          transaction: transfer.transfer_group
+                      };
+                      updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultTransfer`] = transfer;
+                      
+
+                      return admin.database().ref('').update(updates);
+
+                  }).catch( (error) => {
+                      console.log(error);
+                      // Send mail to support
+
+                      return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorTransferParrain').set(error.raw);
+                  });
+            }
+
+          }).catch((error) => {
+              console.log(error);
+            // We want to capture errors and render them in a user-friendly way, while
+            // still logging an exception with Stackdriver
+            return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorCharge').set(error.raw);
+          }).then(() => {
+            return reportError(error, {user: event.params.userId});
+          });
+
+});
+// [END chargecustomer]]
+
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
 exports.createStripeSubmit = functions.database.ref('/stripe_customers/{userId}/abonnement/{id}').onWrite((event) => {

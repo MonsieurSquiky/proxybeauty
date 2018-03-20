@@ -29,6 +29,8 @@ import { PaybookingPage } from '../pages/paybooking/paybooking';
 import { ProfilepicPage } from '../pages/profilepic/profilepic';
 import { AmbassadorInfosPage } from '../pages/ambassador-infos/ambassador-infos';
 import { AmbassadorPage } from '../pages/ambassador/ambassador';
+import { ProfilePage } from '../pages/profile/profile';
+import { BoutiquePage } from '../pages/boutique/boutique';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -57,9 +59,9 @@ export class MyApp {
     // set our app's pages
 
     this.pages = [
-      { title: 'Accueil', component: HomepagePage },
-      { title: 'Se déconnecter', component: LogoutPage },
-      { title: 'Adresse', component: SetAddressPage }
+      { title: 'Accueil', component: PrestaBoardPage },
+      { title: 'Mon Profil', component: ProfilePage },
+      { title: 'Se déconnecter', component: LogoutPage }
       /*,
       { title: 'My First List', component: ListPage },
       { title: 'Da Dashboard', component: DashboardPage },
@@ -77,8 +79,10 @@ export class MyApp {
 
     this.clientpages.push({ title: 'Les prestations', component: DashboardPage });
     this.clientpages.push({ title: 'Mes réservations', component: PrestaRdvPage });
-    this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
+    this.clientpages.push({ title: 'Mon Profil', component: ProfilePage });
+    this.clientpages.push({ title: 'La Boutique', component: BoutiquePage });
     this.clientpages.push({ title: 'Mon espace ambassadeur', component: AmbassadorPage });
+    this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
 
   }
 

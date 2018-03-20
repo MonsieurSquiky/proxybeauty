@@ -44,7 +44,7 @@ export class SetAddressPage {
                 private platform : Platform) {
 
         this.address = {
-          place: null
+          place: navParams.get('place')
         };
     }
 
@@ -76,14 +76,18 @@ export class SetAddressPage {
       let modal = this.modalCtrl.create(AutocompletePage);
       let me = this;
       modal.onDidDismiss(data => {
-        this.address.place = data['address'] ? data['address'] : null;
+        this.address.place = data ? data['address'] : null;
         this.address['details'] = null;
       });
       modal.present();
     }
 
     goToDashboard () {
-        this.navCtrl.push(ProfilepicPage);
+        if (this.navParams.get('update'))
+            this.navCtrl.pop();
+        else
+            this.navCtrl.push(ProfilepicPage);
+
         /*
         var ref = this.fdb.database.ref("/users/"+ this.uid);
         var obj = this;
@@ -131,10 +135,10 @@ export class SetAddressPage {
                     'longitude': this.longitude,
                     'details': this.address.details
                 },
-                'setupStep': 3
+                setupStep: this.navParams.get('update') ? 'complete' : 3
             }).then(function() {
                 obj.loading.dismiss();
-               obj.navCtrl.push(ProfilepicPage);
+               obj.goToDashboard();
 
             }).catch(function(error) {
               // An error happened.
@@ -223,6 +227,7 @@ export class SetAddressPage {
           .catch((error : any)=>
           {
               // An error happened.
+              obj.loading.dismiss();
               let alertVerification = obj.alertCtrl.create({
                 title: "Echec",
                 subTitle: "Une erreur est survenue, assurez vous d'avoir autorisé les permissions demandées par l'application et veuillez vérifier votre connexion internet puis réessayer.",

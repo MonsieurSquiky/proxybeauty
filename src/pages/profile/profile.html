@@ -1,0 +1,56 @@
+<!--
+  Generated template for the ProfilePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar #content class="colored-menu">
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title> Mon Profil </ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+    <div class="gallery-button" text-center>
+
+            <div class="circle" (click)="update('profilepic')">
+                <img src="{{ data.profilepic ? data.profilepic.url : './assets/img/profilePic.png' }}" class="circle"/>
+            </div>
+
+
+    </div>
+
+    <ion-list>
+        <ion-item (click)="update('name')">
+            <ion-icon name="contact" item-start></ion-icon>
+            <h2>
+                {{ data.firstname + ' ' + data.lastname }} <br />
+                <span *ngIf='data.birthdate'> {{ data.birthdate.day + '/' + data.birthdate.month + '/' + data.birthdate.year }}</span>
+            </h2>
+            <ion-icon name="create" item-end></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="update('address')">
+            <ion-icon name="home" item-start></ion-icon>
+
+                {{ data.address ? data.address.place : 'Non indiqué' }}
+
+            <ion-icon name="create" item-end></ion-icon>
+        </ion-item>
+
+        <ion-item *ngIf='data.ambassador'>
+            <ion-icon name="cash" item-start></ion-icon>
+            Abonnement
+            <h2 item-end>
+                Ambassadeur
+            </h2>
+        </ion-item>
+    </ion-list>
+
+    
+</ion-content>

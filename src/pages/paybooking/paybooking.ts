@@ -37,6 +37,8 @@ export class PaybookingPage {
   rdvTimestamp
   prix;
   type;
+  place;
+  statut;
   loading;
 
   constructor(  public navCtrl: NavController,
@@ -53,7 +55,8 @@ export class PaybookingPage {
       this.destinataire = navParams.get('destinataire');
       this.prix = navParams.get('prix');
       this.type = navParams.get('type');
-
+      this.place = navParams.get('place');
+      this.statut = navParams.get('statut');
 
 
         var obj = this;
@@ -98,6 +101,8 @@ export class PaybookingPage {
            .then(token => {
                if (obj.type == 'abonnement')
                  obj.newSubmit(token.id);
+               else if (obj.type == 'shopProduct')
+                 obj.buyProduct(token.id);
                else
                 obj.newCharge(token.id);
            }).catch(error => {
@@ -116,6 +121,68 @@ export class PaybookingPage {
 
     saveCard(token) {
         this.fdb.database.ref(`/stripe_customers/${this.uid}/sources`).push({token: token});
+    }
+
+    async buyProduct(sourceToken) {
+        var obj=this;
+        var parrainId;
+        var parrainAccount;
+
+        await this.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value', function(snapshot) {
+            parrainId = (snapshot.val()) ? snapshot.val() : false;
+        }).catch( (error) => { console.log(error) });
+
+
+        if (parrainId) {
+            await firebase.database().ref('/stripe_sellers/' + parrainId + '/token/id').once('value', function(snapshot) {
+                parrainAccount = snapshot.val();
+            }).catch( (error) => { console.log(error) });
+        }
+
+        let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/shopping`).push().key;
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopping/${newKey}`).set({
+          source: sourceToken,
+          idProduct: this.product.id,
+          qte: this.product.qte,
+          deliveryPlace: this.place,
+          parrainId,
+          parrainAccount
+        });
+
+        // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/resultCharge`).on('value', function(snapshot) {
+            if (snapshot.val().status == "succeeded") {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Paiement effectué avec succès',
+                  subTitle: "Le paiement a bien été pris en compte et votre commande est enregistrée",
+                  buttons: [{
+                      text: 'Parfait !',
+                      handler: () => {
+                        obj.navCtrl.setRoot(AmbassadorPage);
+                      }
+                    }]
+                });
+                alert.present();
+            }
+        });
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/errorCharge`).on('value', function(snapshot) {
+            obj.loading.dismiss();
+            let alert = obj.alertCtrl.create({
+              title: 'Erreur lors du paiement',
+              subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+              buttons: [{
+                  text: 'Ok',
+                  handler: () => {
+                    obj.navCtrl.setRoot(AmbassadorPage);
+                  }
+                }]
+            });
+            alert.present();
+
+        });
     }
 
     newSubmit(sourceToken) {

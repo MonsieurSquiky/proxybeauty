@@ -29,7 +29,9 @@ export class FirstloginPage {
     isPresta: boolean = false;
 
     constructor(public navCtrl: NavController, public alertCtrl: AlertController, private fdb: AngularFireDatabase, public navParams: NavParams) {
-
+        this.firstname = navParams.get('firstname') ? navParams.get('firstname') : null;
+        this.lastname = navParams.get('lastname') ? navParams.get('lastname') : null;
+        this.birthdate = navParams.get('birthdate') ? navParams.get('birthdate').year + '-' + navParams.get('birthdate').month + '-'+ navParams.get('birthdate').day : null;
     }
 
     ionViewDidLoad() {
@@ -54,6 +56,13 @@ export class FirstloginPage {
           });
     }
 
+    goNextPage() {
+        if (this.navParams.get('update'))
+            this.navCtrl.pop();
+        else
+            this.navCtrl.push(SetAddressPage);
+    }
+
     save() {
 
         if (this.invariant()) {
@@ -66,9 +75,9 @@ export class FirstloginPage {
               firstname: this.firstname,
               lastname: this.lastname,
               birthdate: b ? { year: b[0], month: b[1], day: b[2] } : null,
-              setupStep: 2
+              setupStep: this.navParams.get('update') ? 'complete' : 2
             }).then(function() {
-              obj.navCtrl.push(SetAddressPage);
+              obj.goNextPage();
             }).catch(function(error) {
               // An error happened.
               //console.debug(error);

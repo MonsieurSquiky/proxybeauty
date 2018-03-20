@@ -5,6 +5,9 @@ import { PrestaListPage } from '../presta-list/presta-list';
 import { PrestaRatingsPage } from '../presta-ratings/presta-ratings';
 import { PrestaRdvPage } from '../presta-rdv/presta-rdv';
 import { SchedulePage } from '../schedule/schedule';
+import { BoutiquePage } from '../boutique/boutique';
+
+
 /**
  * Generated class for the PrestaBoardPage page.
  *
@@ -47,6 +50,10 @@ export class PrestaBoardPage {
 
           case 'prestaratings':
             this.navCtrl.push(PrestaRatingsPage);
+          break;
+
+          case 'boutique':
+            this.navCtrl.push(BoutiquePage);
           break;
       }
       //this.navCtrl.push(page);

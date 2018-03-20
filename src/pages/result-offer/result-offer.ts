@@ -37,11 +37,7 @@ export class ResultOfferPage {
                 private fdb: AngularFireDatabase,
                 private platform : Platform) {
 
-        this.loading = this.loadingCtrl.create({
-        content: 'Recherche en cours...'
-        });
 
-        this.loading.present();
 
 
         this.category = navParams.get('category');
@@ -54,6 +50,12 @@ export class ResultOfferPage {
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad ResultOfferPage');
+
+        this.loading = this.loadingCtrl.create({
+        content: 'Recherche en cours...'
+        });
+
+        this.loading.present();
 
         var obj = this;
         firebase.auth().onAuthStateChanged(function(user) {

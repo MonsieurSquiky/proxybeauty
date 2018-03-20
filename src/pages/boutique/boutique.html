@@ -1,0 +1,25 @@
+<!--
+  Generated template for the BoutiquePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar #content class="colored-menu">
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title> La Boutique </ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+<div class="grid-centered">
+
+    <div *ngFor="let product of products" class="half-width" (click)="seeProduct(product.id)">
+        <img src="{{ product.pictureUrl }}" class="full-width" />
+    </div>
+
+</div>
+</ion-content>

@@ -96,7 +96,10 @@
       },
       "cordova-plugin-stripe": {},
       "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-camera": {}
+      "cordova-plugin-camera": {
+        "CAMERA_USAGE_DESCRIPTION": "ProxyBeauty a besoin d'accéder à votre caméra pour que vous puissiez vous prendre en photo et ainsi compléter votre profil.",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "ProxyBeauty a besoin d'accéder à vos photos pour que vous puissiez en désigner une comme votre photo de profil."
+      }
     },
     "platforms": [
       "android",

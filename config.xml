@@ -79,7 +79,7 @@
     <allow-navigation href="http://192.168.43.225:8100" />
     <allow-navigation href="http://192.168.99.140:8100" />
     <plugin name="cordova-plugin-advanced-http" spec="^1.10.1" />
-    <plugin name="cordova-plugin-camera" spec="^4.0.2" >
+    <plugin name="cordova-plugin-camera" spec="^4.0.2">
         <variable name="CAMERA_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à votre caméra pour que vous puissiez vous prendre en photo et ainsi compléter votre profil." />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à vos photos pour que vous puissiez en désigner une comme votre photo de profil." />
     </plugin>
