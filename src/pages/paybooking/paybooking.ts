@@ -100,7 +100,7 @@ export class PaybookingPage {
         this.stripe.createCardToken(card)
            .then(token => {
                if (obj.type == 'abonnement')
-                 obj.newSubmit(token.id);
+                 obj.saveCard(token.id);
                else if (obj.type == 'shopProduct')
                  obj.buyProduct(token.id);
                else
@@ -120,43 +120,114 @@ export class PaybookingPage {
     }
 
     saveCard(token) {
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/sources`).push({token: token});
+        var obj = this;
+        let sourceKey = firebase.database().ref(`/stripe_customers/${this.uid}/sources`).push().key;
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/sources/${sourceKey}`).set({token: token});
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/sources/${sourceKey}/result`).on('value', function(snapshot) {
+            if (snapshot.exists())
+                obj.newSubmit(token);
+        });
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/sources/${sourceKey}/error`).on('value', function(snapshot) {
+            if (snapshot.exists()) {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Erreur lors du paiement',
+                  subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+                  buttons: [{
+                      text: 'Ok',
+                      handler: () => {
+                        //obj.navCtrl.setRoot(AmbassadorPage);
+                      }
+                    }]
+                });
+                alert.present();
+            }
+        });
     }
 
     async buyProduct(sourceToken) {
         var obj=this;
         var parrainId;
-        var parrainAccount;
-
+        var parrainAccount = null;
+        console.log('In');
         await this.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value', function(snapshot) {
             parrainId = (snapshot.val()) ? snapshot.val() : false;
-        }).catch( (error) => { console.log(error) });
+        }).catch( (error) => { console.log('Parrain id ' + error) });
 
 
         if (parrainId) {
             await firebase.database().ref('/stripe_sellers/' + parrainId + '/token/id').once('value', function(snapshot) {
                 parrainAccount = snapshot.val();
-            }).catch( (error) => { console.log(error) });
+            }).catch( (error) => { console.log('Parrain account ' + error) });
         }
-
+        console.log('Parrain correct');
         let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/shopping`).push().key;
-
+        console.log('Key correct' + newKey);
         this.fdb.database.ref(`/stripe_customers/${this.uid}/shopping/${newKey}`).set({
           source: sourceToken,
           idProduct: this.product.id,
           qte: this.product.qte,
           deliveryPlace: this.place,
-          parrainId,
-          parrainAccount
-        });
+          parrainId : parrainId,
+          parrainAccount : parrainAccount
+      }).catch( (error) => { console.log('Fdb shopping ' + error) });
 
         // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
         this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/resultCharge`).on('value', function(snapshot) {
-            if (snapshot.val().status == "succeeded") {
+            if (snapshot.exists() && snapshot.val().status == "succeeded") {
                 obj.loading.dismiss();
                 let alert = obj.alertCtrl.create({
                   title: 'Paiement effectué avec succès',
                   subTitle: "Le paiement a bien été pris en compte et votre commande est enregistrée",
+                  buttons: [{
+                      text: 'Parfait !',
+                      handler: () => {
+                        obj.navCtrl.pop();
+                        obj.navCtrl.pop();
+                      }
+                    }]
+                });
+                alert.present();
+            }
+        });
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/errorCharge`).on('value', function(snapshot) {
+            if (snapshot.exists()) {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Erreur lors du paiement',
+                  subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+                  buttons: [{
+                      text: 'Ok',
+                      handler: () => {
+                        //obj.navCtrl.setRoot(AmbassadorPage);
+                      }
+                    }]
+                });
+                alert.present();
+            }
+        });
+    }
+
+    newSubmit(sourceToken) {
+        var obj=this;
+        let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/abonnement`).push().key;
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/abonnement/${newKey}`).set({
+          plan: 'ambassador'
+        });
+
+
+        // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/submitResponse/${newKey}/resultSubscription`).on('value', function(snapshot) {
+            if (snapshot.exists() && snapshot.val().status == "active") {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Paiement effectué avec succès',
+                  subTitle: "Le paiement a bien été pris en compte et vous avez désormais le statut d'ambassadeur",
                   buttons: [{
                       text: 'Parfait !',
                       handler: () => {
@@ -168,64 +239,21 @@ export class PaybookingPage {
             }
         });
 
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/errorCharge`).on('value', function(snapshot) {
-            obj.loading.dismiss();
-            let alert = obj.alertCtrl.create({
-              title: 'Erreur lors du paiement',
-              subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
-              buttons: [{
-                  text: 'Ok',
-                  handler: () => {
-                    obj.navCtrl.setRoot(AmbassadorPage);
-                  }
-                }]
-            });
-            alert.present();
-
-        });
-    }
-
-    newSubmit(sourceToken) {
-        var obj=this;
-        let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/abonnement`).push().key;
-
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/abonnement/${newKey}`).set({
-          source: sourceToken,
-          amount: this.prix,
-          idClient: this.uid
-        });
-
-
         // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/submitResponse/${newKey}/resultCharge`).on('value', function(snapshot) {
-            if (snapshot.val().status == "succeeded") {
-                // On passe le client en ambassadeur dans la bdd
-
-                // Write the new rdv's data simultaneously in the rdv list and the users datas.
-                let updates = {};
-                updates['/parrains/' + obj.uid+'/ambassador'] = true;
-                updates['/users/' + obj.uid + '/ambassador'] = true;
-
-                obj.fdb.database.ref().update(updates)
-                    .then(() => {
-                        obj.loading.dismiss();
-                        let alert = obj.alertCtrl.create({
-                          title: 'Paiement effectué avec succès',
-                          subTitle: "Le paiement a bien été pris en compte et vous avez désormais le statut d'ambassadeur",
-                          buttons: [{
-                              text: 'Parfait !',
-                              handler: () => {
-                                obj.navCtrl.setRoot(AmbassadorPage);
-                              }
-                            }]
-                        });
-                        alert.present();
-                    }).catch((error) => {
-                        // il faut refaire la sauvegarde en bdd
-                        console.log(error);
-                    });
-
-
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/submitResponse/${newKey}/errorSubscription`).on('value', function(snapshot) {
+            if (snapshot.exists()) {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Erreur lors du paiement',
+                  subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+                  buttons: [{
+                      text: 'Ok',
+                      handler: () => {
+                        //obj.navCtrl.setRoot(AmbassadorPage);
+                      }
+                    }]
+                });
+                alert.present();
             }
         });
     }

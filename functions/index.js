@@ -22,7 +22,7 @@ const logging = require('@google-cloud/logging')();
 admin.initializeApp(functions.config().firebase);
 
 const stripe = require('stripe')(functions.config().stripe.token);
-const currency = functions.config().stripe.currency || 'USD';
+const currency = functions.config().stripe.currency || 'EUR';
 
 
 // [START chargecustomer]
@@ -38,7 +38,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
   }).then((prix) => {
 
         // Create a charge using the pushId as the idempotency key, protecting against double charges
-        const amount = prix * val.qte * 100;
+        const amount = Math.ceil(prix * val.qte * 100);
         const idempotency_key = event.params.id;
 
         return stripe.charges.create({
@@ -54,20 +54,22 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
 
             // send a mail to Nadir so he can send product
 
-            admin.database().ref('').update(updates);
+            admin.database().ref().update(updates);
 
-            if (val.parrainId) {
-                let amount_parrain = Math.floor(amount * 0.3);
-                let idempotency_key_parrain = event.params.id+'-parrain';
+            if (event.data.val().parrainId) {
+                let amount_parrain = Math.floor(charge.amount * 0.3);
+                let idempotency_key = event.params.id;
+                let idempotency_key_parrain = idempotency_key+'-parrain';
 
                 stripe.transfers.create({
                           amount: amount_parrain,
                           currency: "eur",
-                          destination: val.parrainAccount,
+                          destination: event.data.val().parrainAccount,
                           transfer_group: idempotency_key,
+                          source_transaction: charge.id
                       }, { idempotency_key: idempotency_key_parrain })
                   .then( function(transfer) {
-                      let newKey = firebase.database().ref(`/parrain-gains/${event.data.val().parrainId}/${event.params.userId}`).push().key;
+                      let newKey = admin.database().ref(`/parrain-gains/${event.data.val().parrainId}/${event.params.userId}`).push().key;
                       let updates = {};
                       updates[`/parrain-gains/${event.data.val().parrainId}/${event.params.userId}/${newKey}`] = {
                           amount: transfer.amount,
@@ -76,9 +78,9 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
                           transaction: transfer.transfer_group
                       };
                       updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultTransfer`] = transfer;
-                      
 
-                      return admin.database().ref('').update(updates);
+
+                      return admin.database().ref().update(updates);
 
                   }).catch( (error) => {
                       console.log(error);
@@ -93,8 +95,6 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
             // We want to capture errors and render them in a user-friendly way, while
             // still logging an exception with Stackdriver
             return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorCharge').set(error.raw);
-          }).then(() => {
-            return reportError(error, {user: event.params.userId});
           });
 
 });
@@ -111,29 +111,48 @@ exports.createStripeSubmit = functions.database.ref('/stripe_customers/{userId}/
   return admin.database().ref(`/stripe_customers/${event.params.userId}/customer_id`).once('value').then((snapshot) => {
     return snapshot.val();
   }).then((customer) => {
-    // Create a charge using the pushId as the idempotency key, protecting against double charges
-    const amount = val.amount * 100;
-    const idempotency_key = event.params.id;
-    let charge = {amount, currency, customer};
-    if (val.source !== null) charge.source = val.source;
+      // On inscrit simplement le client qui a deja une carte enregistree
+      return stripe.subscriptions.create({
+          customer: customer,
+          items: [{plan: 'plan_CWun8RT9CsGdh4'}],
+        });
+    }).then((susbcription) => {
+        // If the result is successful, write it back to the database
+        let updates = {};
+        updates[`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}/resultSubscription`] = susbcription;
+        updates['/parrains/' + event.params.userId+'/ambassador'] = true;
+        updates['/users/' + event.params.userId + '/ambassador'] = true;
+        return admin.database().ref().update(updates);
 
-    return stripe.charges.create({
-          amount: amount,
-          currency: "eur",
-          source: charge.source,
-          transfer_group: idempotency_key,
-      }, {idempotency_key});
-}).then((charge) => {
-    // If the result is successful, write it back to the database
-    return admin.database().ref(`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}`).child('resultCharge').set(charge);
+      }).catch((error) => {
+        // We want to capture errors and render them in a user-friendly way, while
+        // still logging an exception with Stackdriver
+        return admin.database().ref(`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}`).child('errorSubscription').set(error.raw);
+    });
+    /*
+        // Create a charge using the pushId as the idempotency key, protecting against double charges
+        const amount = Math.ceil(val.amount * 100);
+        const idempotency_key = event.params.id;
+        let charge = {amount, currency, customer};
+        if (val.source !== null) charge.source = val.source;
 
-  }).catch((error) => {
-    // We want to capture errors and render them in a user-friendly way, while
-    // still logging an exception with Stackdriver
-    return admin.database().ref(`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}`).child('errorCharge').set(error.raw);
-  }).then(() => {
-    return reportError(error, {user: event.params.userId});
-  });
+        return stripe.charges.create({
+              amount: amount,
+              currency: "eur",
+              source: charge.source,
+              transfer_group: idempotency_key,
+          }, {idempotency_key});
+    }).then((charge) => {
+        // If the result is successful, write it back to the database
+        return admin.database().ref(`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}`).child('resultCharge').set(charge);
+
+      }).catch((error) => {
+        // We want to capture errors and render them in a user-friendly way, while
+        // still logging an exception with Stackdriver
+        return admin.database().ref(`/stripe_customers/${event.params.userId}/submitResponse/${event.params.id}`).child('errorCharge').set(error.raw);
+      }).then(() => {
+        return reportError(error, {user: event.params.userId});
+    }); */
 });
 // [END chargecustomer]]
 
@@ -149,7 +168,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
     return snapshot.val();
   }).then((customer) => {
     // Create a charge using the pushId as the idempotency key, protecting against double charges
-    const amount = val.amount * 100;
+    const amount = Math.ceil(val.amount * 100);
     const idempotency_key = event.params.id;
 
     let charge = {amount, currency, customer};
@@ -170,7 +189,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
       admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('resultCharge').set(charge);
 
       let val = event.data.val();
-      let amount = val.amount * 100;
+      let amount = Math.ceil(val.amount * 100);
       let idempotency_key = event.params.id;
       let idempotency_key_prestataire = event.params.id+'-prestataire';
       let idempotency_key_parrain_prestataire = event.params.id+'-parrain_prestataire';
@@ -189,6 +208,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
                 currency: "eur",
                 destination: prestataire,
                 transfer_group: idempotency_key,
+                source_transaction: charge.id
             }, { idempotency_key: idempotency_key_prestataire })
         .then( function(transfer) {
             admin.database().ref(`/prestataire-gains/${event.data.val().ids.prestataire}/${event.params.userId}`).push({
@@ -211,6 +231,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
                       currency: "eur",
                       destination: parrain_prestataire,
                       transfer_group: idempotency_key,
+                      source_transaction: charge.id
                   }, { idempotency_key: idempotency_key_parrain_prestataire })
               .then( function(transfer) {
                   admin.database().ref(`/parrain-gains/${event.data.val().ids.parrain_prestataire}/${event.data.val().ids.prestataire}`).push({
@@ -237,6 +258,7 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
                       currency: "eur",
                       destination: parrain_client,
                       transfer_group: idempotency_key,
+                      source_transaction: charge.id
                   }, { idempotency_key: idempotency_key_parrain_client })
               .then( function(transfer) {
                   admin.database().ref(`/parrain-gains/${event.data.val().ids.parrain_client}/${event.params.userId}`).push({
@@ -335,7 +357,7 @@ exports.addPaymentSource = functions.database.ref('/stripe_customers/{userId}/so
   }).then((customer) => {
     return stripe.customers.createSource(customer, {source});
   }).then((response) => {
-    return event.data.adminRef.parent.set(response);
+    return event.data.adminRef.parent.child('result').set(response);
   }, (error) => {
     return event.data.adminRef.parent.child('error').set(userFacingMessage(error));
   }).then(() => {
