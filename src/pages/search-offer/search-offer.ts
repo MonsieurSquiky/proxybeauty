@@ -79,7 +79,29 @@ export class SearchOfferPage {
             		"Visage (au fil)",
             		"A la cire",
             		"Orientale",
-            		"Lumière pulsée"]
+            		"Lumière pulsée"],
+            "Visage" : ["Extension de cils",
+            	    "Permanente de cils",
+            	    "Rehaussement de cils",
+            	    "Teinture des cils et des sourcils",
+            	    "Soin du visage micro-aiguilles",
+            	    "Soin du visage anti-acné",
+            	    "Épilation des sourcils au fil",
+            	    "Épilation des sourcils à la cire",
+            	    "Maquillage",
+            	    "Soin acupuncture rajeunissement",
+            	    "Soin du visage homme",
+            	    "Lifting visage non chirurgical",
+            	    "Peeling du visage",
+            	    "Thérapie lumineuse LED",
+            	    "Soin du visage peaux jeunes",
+            	    "Maquillage permanent et semi-permanent",
+            	    "Microblading",
+            	    "Soin des cils et sourcils",
+            	    "Microdermabrasion",
+            	    "Soin du visage femme",
+            	    "Soin du visage à l'oxygène",
+            	    "Consultation de la peau"]
             };
     selectedTags = {};
     remote: boolean;
@@ -91,6 +113,7 @@ export class SearchOfferPage {
     uid;
     addressExist: boolean = false;
     subLocality;
+    remoteAllowed: boolean = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
       this.category = navParams.get('category');
@@ -129,15 +152,16 @@ export class SearchOfferPage {
   updateClose(field) {
       if (field == 'home') {
           this.locate = (this.closeHome) ? false : (this.subLocality ? false : this.locate);
+          this.remoteAllowed = (this.closeHome) ? true : this.remoteAllowed;
           //this.subLocality = null;
       }
       else if (field == 'locate') {
           this.closeHome = (this.locate) ? false : (this.subLocality ? false : this.closeHome);
+          this.remoteAllowed = (this.locate) ? true : this.remoteAllowed;
           //this.subLocality = null;
       }
       else if (field == 'other'){
-          this.closeHome = false;
-          this.locate = false;
+          [this.remoteAllowed, this.remote, this.closeHome, this.locate ] = [false, false, false, false];
       }
   }
 

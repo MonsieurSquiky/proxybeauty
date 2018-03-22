@@ -38,7 +38,8 @@
 
         <ion-item no-padding>
           <ion-label no-padding><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
-          <ion-checkbox disabled="{{ !addressExist }}" [(ngModel)]="remote"></ion-checkbox>
+          <ion-checkbox disabled="{{ !addressExist || !remoteAllowed }}" [(ngModel)]="remote"></ion-checkbox>
+          <p *ngIf="!addressExist || !remoteAllowed" style="font-size:12px" > Il faut entrer votre adresse dans votre profil pour pouvoir réserver à domicile. </p>
         </ion-item>
 
         <ion-item no-padding>

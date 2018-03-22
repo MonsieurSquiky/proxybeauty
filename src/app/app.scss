@@ -29,7 +29,7 @@ $button-radius: 60px;
 }
 @font-face {
     font-family: Cooper Black;
-    src: url('./assets/fonts/CooperBlackRegular.ttf');
+    src: url('../assets/fonts/CooperBlackRegular.ttf');
 }
 .container {
     display: flex;
@@ -42,12 +42,30 @@ $button-radius: 60px;
     padding: 0px 15px;
     color: $text-color;
 }
+
+.input-right-aligned .text-input {
+    text-align: right !important;
+    padding-right: 5px !important;
+}
+.stylish-font {
+    font-family: "Cooper Black";
+}
+
+.list-menu {
+    margin-top: 30px;
+    font-family: "Cooper Black";
+}
 .alone {
     margin-top: 10vh;
     color: black;
 
 }
-
+.selectable {
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
+}
 .circle {
   width: 100px;
   height: 100px;
@@ -61,6 +79,11 @@ $button-radius: 60px;
   text-transform: uppercase;
   font-weight: 700;
   margin: 0 auto 30px;
+}
+.shopPic {
+    text-align: center;
+    height: 150px;
+    margin: 0 auto 0;
 }
 
 .full-width {
@@ -245,6 +268,18 @@ ion-badge {
 .toolbar-title {
     font-family: "Cooper Black";
     font-size: 22px;
+}
+
+.toolbar-ios ion-title {
+    padding: 0 5px !important;
+    padding-left: 15px !important;
+}
+
+.title-ios, .toolbar-title-ios {
+    font-family: "Cooper Black";
+    font-size: 18px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 .beauty-font {

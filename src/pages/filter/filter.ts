@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { ActionSheetController } from 'ionic-angular'
 import firebase from 'firebase';
 import { PrestaListPage } from '../presta-list/presta-list';
@@ -78,7 +78,29 @@ export class FilterPage {
             		"Visage (au fil)",
             		"A la cire",
             		"Orientale",
-            		"Lumière pulsée"]
+            		"Lumière pulsée"],
+            "Visage" : ["Extension de cils",
+            	    "Permanente de cils",
+            	    "Rehaussement de cils",
+            	    "Teinture des cils et des sourcils",
+            	    "Soin du visage micro-aiguilles",
+            	    "Soin du visage anti-acné",
+            	    "Épilation des sourcils au fil",
+            	    "Épilation des sourcils à la cire",
+            	    "Maquillage",
+            	    "Soin acupuncture rajeunissement",
+            	    "Soin du visage homme",
+            	    "Lifting visage non chirurgical",
+            	    "Peeling du visage",
+            	    "Thérapie lumineuse LED",
+            	    "Soin du visage peaux jeunes",
+            	    "Maquillage permanent et semi-permanent",
+            	    "Microblading",
+            	    "Soin des cils et sourcils",
+            	    "Microdermabrasion",
+            	    "Soin du visage femme",
+            	    "Soin du visage à l'oxygène",
+            	    "Consultation de la peau"]
             };
 
     selectedTags = {};
@@ -93,7 +115,7 @@ export class FilterPage {
     supplementsNode: any;
     uid;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,  public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
       var obj = this;
       this.category = navParams.get('category');
 
@@ -103,6 +125,10 @@ export class FilterPage {
       }
 
       this.supplementsNode = $( "#supplement_template").clone();
+
+  }
+
+  ionViewDidLoad() {
       for (let i=0; i <this.tags.length; i++) {
           $( "#supplement"+i).hide();
       }
@@ -117,35 +143,33 @@ export class FilterPage {
             console.log("No user signed");
           }
         });
-  }
 
-  ionViewDidLoad() {
-      for (let i=0; i <this.tags.length; i++) {
-          $( "#supplement"+i).hide();
-      }
       this.offerId = this.navParams.get('offerId');
       var obj = this;
       if (this.offerId) {
           var offersRef = this.fdb.database.ref('/offers/' + this.offerId);
           offersRef.on('value', function(snapshot) {
               let offer = snapshot.val();
-              for (let tag of offer.tags) {
-                  obj.switchTag(tag);
+              if (offer.tags) {
+                  for (let tag of offer.tags)
+                      obj.switchTag(tag);
               }
               obj.home = (snapshot.val().places.indexOf('home') != -1) ? true : false;
               obj.remote = (snapshot.val().places.indexOf('remote') != -1) ? true : false;
 
               obj.prix = offer.prix;
               obj.duree = offer.duree;
-              for (let tag of offer.supplements) {
-                  for (var j=0; j <obj.tags.length; j++) {
+              if (offer.supplements && obj.tags) {
+                  for (let tag of offer.supplements) {
+                      for (var j=0; j < obj.tags.length; j++) {
 
-                      if (obj.tags[j]["name"] == tag.name) {
-                          $( "#supplement"+j).show();
-                          obj.tags[j].prix = tag.prix;
-                          obj.tags[j].duree = tag.duree;
+                          if (obj.tags[j]["name"] == tag.name) {
+                              $( "#supplement"+j).show();
+                              obj.tags[j].prix = tag.prix;
+                              obj.tags[j].duree = tag.duree;
+                          }
+
                       }
-
                   }
               }
           });
@@ -226,7 +250,7 @@ export class FilterPage {
     var finaltags = [];
 
     for (var i=0; i < this.tags.length; i++) {
-        if (this.tags[i]["duree"])
+        if (this.tags[i]["prix"] && this.supplements.indexOf(this.tags[i]) == -1)
             this.supplements.push(this.tags[i]);
     }
 
@@ -236,31 +260,86 @@ export class FilterPage {
             finaltags.push(key);
         }
     }
+    if (this.invariant()) {
+        var postData = {
+            prestataire: this.uid,
+            tags: finaltags,
+            prix: this.prix,
+            duree: this.duree,
+            places: [ (this.remote) ? "remote" : null, (this.home) ? "home" : null],
+            category: this.category,
+            supplements: this.supplements
+          };
 
-    var postData = {
-        prestataire: this.uid,
-        tags: finaltags,
-        prix: this.prix,
-        duree: this.duree,
-        places: [ (this.remote) ? "remote" : null, (this.home) ? "home" : null],
-        category: this.category,
-        supplements: this.supplements
-      };
+          var newPostKey = (this.offerId) ? this.offerId : firebase.database().ref().child('offers').push().key;
 
-      var newPostKey = (this.offerId) ? this.offerId : firebase.database().ref().child('offers').push().key;
-
-      // Write the new post's data simultaneously in the posts list and the user's post list.
-      var updates = {};
-      updates['/offers/' + newPostKey] = postData;
-      updates['/user-offers/' + this.uid + '/' + newPostKey] = postData;
+          // Write the new post's data simultaneously in the posts list and the user's post list.
+          var updates = {};
+          updates['/offers/' + newPostKey] = postData;
+          updates['/user-offers/' + this.uid + '/' + newPostKey] = postData;
 
 
 
-      this.fdb.database.ref().update(updates);
-      this.navCtrl.pop();
-      this.navCtrl.pop();
-      this.navCtrl.push(PrestaListPage);
+          this.fdb.database.ref().update(updates);
+          this.navCtrl.pop();
+          this.navCtrl.pop();
+          this.navCtrl.push(PrestaListPage);
+      }
+  }
 
+  invariant() {
+      if (!(this.home || this.remote )) {
+          let alert = this.alertCtrl.create({
+            title: "Sélectionnez au moins un mode",
+            subTitle: "Vous devez indiquer si vous effectuerez les prestations sur votre lieu de travail ou à domicile chez vos clients; ou les deux.",
+            buttons: ['OK']
+          });
+          alert.present();
+          return false;
+      }
+      if (!this.prix || this.prix < 10) {
+          let alert = this.alertCtrl.create({
+            title: "Prix invalide",
+            subTitle: "Veuillez entrer un prix non nul supérieur à 10€.",
+            buttons: ['OK']
+          });
+          alert.present();
+          return false;
+      }
+
+      if (!this.duree) {
+          let alert = this.alertCtrl.create({
+            title: "Durée de la prestation non indiquée",
+            subTitle: "Veuillez entrer la durée estimée de votre prestation.",
+            buttons: ['OK']
+          });
+          alert.present();
+          return false;
+      }
+
+      for (var i=0; i < this.supplements.length; i++) {
+          if (!this.supplements[i].prix) {
+              let alert = this.alertCtrl.create({
+                title: this.supplements[i].name + " : prix invalide",
+                subTitle: "Veuillez entrer un prix non nul pour le supplément "+ this.supplements[i].name,
+                buttons: ['OK']
+              });
+              alert.present();
+              return false;
+          }
+
+          if (!this.supplements[i].duree) {
+              let alert = this.alertCtrl.create({
+                title: this.supplements[i].name + " : durée invalide",
+                subTitle: "Veuillez entrer la durée estimée de votre supplément "+ this.supplements[i].name,
+                buttons: ['OK']
+              });
+              alert.present();
+              return false;
+          }
+      }
+
+      return true;
   }
 
 

@@ -16,19 +16,36 @@
 <ion-content >
     <div class="container" style="color:black">
         <ion-list>
+            <ion-item *ngIf="isPresta" no-padding>
+              <ion-label no-padding> Particulier</ion-label>
+              <ion-checkbox [(ngModel)]="!isPro"></ion-checkbox>
+              <p style="font-size:12px"> Vous êtes un prestataire indépendant qui exercez à votre domicile ou au domicile de vos clients. </p>
+            </ion-item>
+
+            <ion-item *ngIf="isPresta" no-padding>
+              <ion-label no-padding> Salon </ion-label>
+              <ion-checkbox [(ngModel)]="isPro"></ion-checkbox>
+              <p style="font-size:12px" > Vous êtes un professionel qui exercez dans votre salon de beauté (et possiblement chez des clients).</p>
+
+            </ion-item>
 
           <ion-item>
-            <ion-label floating>Nom</ion-label>
+            <ion-label floating>Nom <span *ngIf="isPro"> du représentant </span> </ion-label>
             <ion-input [(ngModel)]="firstname" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label floating>Prénom</ion-label>
+            <ion-label floating>Prénom <span *ngIf="isPro"> du représentant </span> </ion-label>
             <ion-input [(ngModel)]="lastname" type="text"></ion-input>
           </ion-item>
 
+          <ion-item *ngIf="isPro">
+            <ion-label floating> Nom de votre salon</ion-label>
+            <ion-input [(ngModel)]="salon" type="text"></ion-input>
+          </ion-item>
+
           <ion-item *ngIf="isPresta">
-              <ion-label floating>Date de naissance</ion-label>
+              <ion-label floating>Date de naissance<span *ngIf="isPro"> du représentant </span></ion-label>
               <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="birthdate"></ion-datetime>
             </ion-item>
 

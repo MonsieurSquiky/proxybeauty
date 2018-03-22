@@ -19,11 +19,11 @@
 <ion-content padding>
     <button *ngIf="!isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Prendre un forfait Ambassadeur à 19,90€ /mois</button>
     <p *ngIf="isAmbassador" > Votre code ambassadeur est : <br />
-        <ion-item text-center style="font-size:12px"> {{ uid }} </ion-item>
+        <ion-item text-center style="font-size:12px" class="selectable"> {{ uid }} </ion-item>
     </p>
 
     <p style="font-size:14px">
-        Devenez Ambassadeur ProxyBeauty en payant une unique fois et récupérer une commission sur
+        Devenez Ambassadeur ProxyBeauty en payant seulement 19,90€ /mois (correspondant au frais de maintien de votre plateforme Ambassadeur) et récupérer une commission sur
         chacune des transactions de vos filleuls (prestataires et clients). <br /> <br />
         Votre mission sera de faire connaître l'application au plus grand nombre de personnes possible,
          et chaque fois qu'une personne s'inscrit sur l'application et entre votre code parrain, elle devient

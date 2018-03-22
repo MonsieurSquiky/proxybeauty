@@ -108,7 +108,7 @@ export class SetAddressPage {
         const obj = this;
 
         this.loading.present();
-        this.geolocation.getCurrentPosition().then((position) => {
+        this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 15000}).then((position) => {
             obj.latitude = position.coords.latitude;
             obj.longitude = position.coords.longitude;
             this.performReverseGeocoding(position.coords.latitude, position.coords.longitude, 'show');
@@ -116,6 +116,12 @@ export class SetAddressPage {
         }, (err) => {
             obj.loading.dismiss();
             console.log(err);
+            let alertVerification = obj.alertCtrl.create({
+              title: "Echec de la géolocalisation",
+              subTitle: "Le service de géolocalisation ne répond pas, veuillez réessayer ultérieurement ou entrez votre adresse manuellement",
+              buttons: ['OK']
+            });
+            alertVerification.present();
         });
     }
     async saveAddress() {
@@ -218,7 +224,10 @@ export class SetAddressPage {
                  });
              }
              else {
-                obj.address.place = data.subThoroughfare + data.thoroughfare + ', ' + data.locality + ', ' + data.countryName;
+                obj.address.place = (data.subThoroughfare ? data.subThoroughfare : '') + ' ' +
+                                    (data.thoroughfare ? data.thoroughfare : '') + ', ' +
+                                    (data.locality ? data.locality : '') + ', ' +
+                                    (data.countryName ? data.countryName : '');
                 obj.address['details'] = data;
                 obj.loading.dismiss();
              }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { PrestaBoardPage } from '../presta-board/presta-board';
 import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -24,11 +24,12 @@ export class PrestaRdvPage {
   now;
   address;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase,) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private fdb: AngularFireDatabase,) {
 
   }
 
   ionViewDidLoad() {
+      console.log('ionViewDidLoad PrestaRdvPage');
       var obj = this;
       this.now = new Date();
 
@@ -52,11 +53,24 @@ export class PrestaRdvPage {
                   return false;
                 });
 
+                if (obj.rdvList.length == 0) {
+                    let alertVerification = obj.alertCtrl.create({
+                      title: "Pas de rendez-vous",
+                      subTitle: "Vous n'avez aucun rendez vous à venir pour le moment.",
+                      buttons: ['OK']
+                    });
+                    alertVerification.present();
+                    
+                }
+
                 obj.rdvList.sort(function (a, b) {
                   return a.timestamp - b.timestamp;
                 });
 
                 obj.setRdvDays();
+
+
+
             });
             //navCtrl.setRoot(PrestaBoardPage);
           } else {
@@ -64,7 +78,7 @@ export class PrestaRdvPage {
             console.log("No user signed");
           }
         });
-    console.log('ionViewDidLoad PrestaRdvPage');
+
   }
 
   goBoard() {

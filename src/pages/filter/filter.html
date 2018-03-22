@@ -48,7 +48,7 @@
         </ion-col>
         <ion-col class="subtitle close-subtitles right-align" col-5>
             <ion-item no-margin>
-              <ion-input no-margin [(ngModel)]="prix" type="number" min="1" placeholder="Prix"></ion-input>
+              <ion-input no-margin [(ngModel)]="prix" type="number" min=10 value=10 placeholder="Prix"></ion-input>
             </ion-item>
         </ion-col>
 
@@ -107,7 +107,7 @@
           <ion-col class="subtitle close-subtitles" col-4 no-padding>
               <ion-item>
 
-                <ion-input type="number" min="0" [(ngModel)]="tags[index]['prix']" placeholder="Prix"></ion-input>
+                <ion-input type="number" min=0 [(ngModel)]="tags[index]['prix']" placeholder="Prix"></ion-input>
               </ion-item>
           </ion-col>
 

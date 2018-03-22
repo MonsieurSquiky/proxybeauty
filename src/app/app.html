@@ -7,7 +7,7 @@
   </ion-header>
 
   <ion-content>
-    <ion-list>
+    <ion-list class="list-menu">
       <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
       </button>
@@ -25,7 +25,7 @@
   </ion-header>
 
   <ion-content>
-    <ion-list>
+    <ion-list class="list-menu">
       <button ion-item *ngFor="let p of clientpages" (click)="openPage(p)">
         {{p.title}}
       </button>

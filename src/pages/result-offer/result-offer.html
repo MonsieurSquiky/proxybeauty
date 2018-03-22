@@ -21,7 +21,7 @@
                 <img src="{{ offer.profilepic }}">
               </ion-avatar>
               <div class="item-main-content">
-                  <h2>{{ offer.firstname + ' ' + offer.lastname}}</h2>
+                  <h2 >{{ (offer.salonName) ? offer.salonName : (offer.firstname + ' ' + offer.lastname )}}</h2>
                   <p>{{ offer.address }}</p>
               </div>
 
@@ -66,7 +66,7 @@
 
                 <ion-row class="info-major">
                     <ion-col col-4 class="bordered-right">
-                        {{ (remote) ? "A domicile" : (offer.distance ? offer.distance + "km" : offer.locality) }}
+                        {{ (remote && offer.places.indexOf('remote') != -1) ? "A domicile" : (offer.distance ? offer.distance + "km" : offer.city) }}
                     </ion-col>
                     <ion-col col-4 class="bordered-right">
                         {{ getDuree(offer) }} min

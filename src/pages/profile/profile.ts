@@ -14,7 +14,7 @@ import firebase from 'firebase';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -67,7 +67,8 @@ export class ProfilePage {
               this.navCtrl.push(FirstloginPage, { update: true,
                                                   firstname: this.data['firstname'],
                                                   lastname: this.data['lastname'],
-                                                  birthdate: this.data['birthdate']  });
+                                                  birthdate: this.data['birthdate'],
+                                                  name: this.data['salonName'] ? this.data['salonName'] : null});
             break;
 
 

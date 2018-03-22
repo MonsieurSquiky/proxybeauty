@@ -24,13 +24,16 @@ import { AngularFireDatabase } from 'angularfire2/database';
 export class FirstloginPage {
     firstname: string;
     lastname: string;
+    salon: string;
     birthdate = null;
     uid: string;
     isPresta: boolean = false;
+    isPro: boolean = false;
 
     constructor(public navCtrl: NavController, public alertCtrl: AlertController, private fdb: AngularFireDatabase, public navParams: NavParams) {
         this.firstname = navParams.get('firstname') ? navParams.get('firstname') : null;
         this.lastname = navParams.get('lastname') ? navParams.get('lastname') : null;
+        this.salon = navParams.get('salon') ? navParams.get('salon') : null;
         this.birthdate = navParams.get('birthdate') ? navParams.get('birthdate').year + '-' + navParams.get('birthdate').month + '-'+ navParams.get('birthdate').day : null;
     }
 
@@ -39,14 +42,17 @@ export class FirstloginPage {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-              obj.uid = user.uid;
+                obj.uid = user.uid;
 
-              var statut = firebase.database().ref('users/' + user.uid + '/statut');
-                statut.on('value', function(snapshot) {
-                  obj.isPresta = (snapshot.val() == "prestataire") ? true : false;
+                var statut = firebase.database().ref('users/' + user.uid + '/statut');
+                    statut.on('value', function(snapshot) {
+                      obj.isPresta = (snapshot.val() == "prestataire") ? true : false;
                 });
 
-
+                var pro = firebase.database().ref('users/' + user.uid + '/proMode');
+                  pro.on('value', function(snapshot) {
+                    obj.isPro = (snapshot.exists() && snapshot.val()) ? true : false;
+                  });
               //navCtrl.setRoot(PrestaBoardPage);
             } else {
               // No user is signed in.
@@ -75,6 +81,8 @@ export class FirstloginPage {
               firstname: this.firstname,
               lastname: this.lastname,
               birthdate: b ? { year: b[0], month: b[1], day: b[2] } : null,
+              proMode: this.isPro,
+              salonName: (this.isPro) ? this.salon : null,
               setupStep: this.navParams.get('update') ? 'complete' : 2
             }).then(function() {
               obj.goNextPage();
@@ -92,7 +100,7 @@ export class FirstloginPage {
     }
 
     invariant() {
-        if (this.lastname == null || this.lastname == "" || this.firstname == null || this.firstname == "") {
+        if (this.lastname == null || this.lastname == "" || this.firstname == null || this.firstname == "" || ( this.isPro && (this.salon == null || this.salon == ""))) {
             let alert = this.alertCtrl.create({
               title: "Nom ou prénom invalide",
               subTitle: "Veuillez remplir les champs nom et prénom correctement.",

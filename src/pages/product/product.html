@@ -18,17 +18,22 @@
 
     <div class="gallery-button" text-center>
 
-            <div class="circle">
-                <img src="{{product.pictureUrl}}" class="circle"/>
+            <div class="">
+                <img src="{{product.pictureUrl}}" class="shopPic"/>
             </div>
 
 
     </div>
+    <div padding>
+        <button ion-button block class='main-color-button' (click)='buy()'>
+            Commander
+        </button>
+    </div>
 
-    <ion-list padding>
+    <ion-list>
         <ion-item >
           <ion-label> Quantité </ion-label>
-          <ion-input type="number" value=1 min=1 [(ngModel)]='qte'></ion-input>
+          <ion-input class="input-right-aligned" type="number" value=1 min=1 [(ngModel)]='qte'></ion-input>
         </ion-item>
 
         <ion-item >
@@ -38,11 +43,24 @@
                 {{ product.prix * qte | number:'1.2-2'}} €
             </h2>
         </ion-item>
-    </ion-list>
 
-    <div padding>
-        <button ion-button block class='main-color-button' (click)='buy()'>
-            Commander
-        </button>
-    </div>
+        <ion-item style='white-space: normal !important;'>
+            <h2> Ingrédients </h2>
+            <p>
+                {{ product.components }}
+            </p>
+        </ion-item>
+        <ion-item >
+            <h2>Description </h2>
+            <p style='white-space: normal !important;'>
+                {{ product.description }}
+            </p>
+        </ion-item>
+        <ion-item >
+            <h2> Utilisation </h2>
+            <p style='white-space: normal !important;'>
+                {{ product.usage }}
+            </p>
+        </ion-item>
+    </ion-list>
 </ion-content>

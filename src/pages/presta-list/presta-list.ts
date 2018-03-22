@@ -21,7 +21,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class PrestaListPage {
     uid;
-    offerCategories = ['Ongles', 'Coiffure', 'Massage', 'Epilation'];
+    offerCategories = ['Ongles', 'Coiffure', 'Massage', 'Epilation', 'Visage'];
     offersList = [];
     offersKey = [];
     offersLoad: boolean = false;
@@ -46,6 +46,15 @@ export class PrestaListPage {
                   return false;
                 });
 
+                if (obj.offersList.length == 0) {
+                    let alertVerification = obj.alertCtrl.create({
+                      title: "Ajoutez vos prestatations",
+                      subTitle: "Touchez le bouton en bas à droite pour ajouter les prestations que vous pratiquez.",
+                      buttons: ['OK']
+                    });
+                    alertVerification.present();
+
+                }
 
             });
             //navCtrl.setRoot(PrestaBoardPage);
