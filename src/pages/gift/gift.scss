@@ -90,6 +90,15 @@ page-gift {
         margin-right: 30px;
         right: 0px;
     }
+    .ios .bar-fab {
+        top: 34px !important;
+    }
+    .ios {
+        .bar-fab {
+            top: 34px !important;
+        }
+    }
+
     .gift-icon {
         fill: white;
     }
@@ -196,4 +205,8 @@ page-gift {
         }
       }
     }
+}
+
+.ios .bar-fab {
+    top: 34px !important;
 }

@@ -126,6 +126,8 @@ ion-tabs[tabs-only] {
     width: $button-radius;
     height: $button-radius;
     border-radius: $button-radius;
+    padding-left: 0;
+    padding-right: 0;
     //font-size: 35px;
 }
 
@@ -217,7 +219,7 @@ ion-badge {
 }
 
 .img-background {
-    position:absolute;
+    //position:absolute;
     background-size: cover;
     opacity: 0.7;
     z-index: 1000;
