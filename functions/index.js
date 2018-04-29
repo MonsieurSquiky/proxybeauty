@@ -24,6 +24,89 @@ admin.initializeApp(functions.config().firebase);
 const stripe = require('stripe')(functions.config().stripe.token);
 const currency = functions.config().stripe.currency || 'EUR';
 
+const giftRdv = [3, 10, 25, 50, 100];
+const giftComment = [3, 10, 25, 50, 100];
+const giftValue = [5, 10, 20, 45, 90];
+const giftProducts = [  {ids: [1, 2, 3], qte: 1, title:'1 masque au choix' },
+                        {ids: [1, 2, 3], qte: 2, title:'1 masque au choix' },
+                        {ids: [1, 2, 3], qte: 4, title:'1 masque au choix' },
+                        {ids: [1, 2, 3], qte: 9, title:'1 masque au choix' },
+                        {ids: [1, 2, 3], qte: 18, title:'1 masque au choix' }];
+
+const products = [ null, {
+                  "components" : "Vitamine B6, charbon actif",
+                  "description" : "Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
+                  "id" : 1,
+                  "name" : "Masque tissu charbon puri-détox",
+                  "pictureUrl" : "./assets/img/masque-charbon.jpg",
+                  "prix" : 4.9,
+                  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                }, {
+                  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
+                  "description" : "  Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
+                  "id" : 2,
+                  "name" : "Masque tissu anti-âge",
+                  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
+                  "prix" : 4.9,
+                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                }, {
+                  "components" : "Vitamine E, collagène",
+                  "description" : "Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
+                  "id" : 3,
+                  "name" : "Masque tissu collagène",
+                  "pictureUrl" : "./assets/img/masque-collagene.jpg",
+                  "prix" : 4.9,
+                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                } ];
+
+exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrite((event) => {
+    // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
+    const val = event.data.val();
+    // This onWrite will trigger whenever anything is written to the path, so
+    // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+    if (val === null || val.id || val.error || val == 'failed' || val == 'success' || !Number.isInteger(val)) return null;
+
+    let nbRdv = 0;
+    let nbComment = 0;
+
+    admin.database().ref('/user-rdv/' + event.params.userId).once('value', function(snapshot) {
+        snapshot.forEach( function(childSnapshot) {
+            nbRdv += 1;
+            if (childSnapshot.hasChild('review'))
+                nbComment += 1;
+
+          return false;
+        });
+        return true;
+    }).then( () => {
+        if (nbRdv >= giftRdv[val] && nbComment >= giftComment[val]) {
+            // send a mail to Nadir so he can send product
+
+            // Le user peut passer au palier supplementaire et debloquer son cadeau
+            let updates = {};
+            let newKey = admin.database().ref(`/user-gift/${event.params.userId}/gifts`).push().key;
+
+            let newGift = JSON.parse(JSON.stringify(giftProducts[val]));
+            newGift['pictureUrl'] = products[newGift.ids[0]].pictureUrl;
+            newGift['palier'] = val + 1;
+            newGift['value'] = giftValue[val];
+            newGift['state'] = 'available';
+
+            updates['/user-gift/'+event.params.userId+'/palier'] = val +1;
+            updates['/user-gift/'+event.params.userId+'/gifts/'+newKey] = newGift;
+            updates['/user-gift/'+event.params.userId+'/checkin'] = 'success';
+
+            return admin.database().ref().update(updates);
+        }
+        else {
+            return admin.database().ref('/user-gift/'+event.params.userId+'/checkin').set('failed');
+        }
+
+    }).catch( (error) => {
+        return admin.database().ref('/user-gift/'+event.params.userId+'/checkin').set(error);
+    });
+
+});
 
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database

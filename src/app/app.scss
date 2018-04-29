@@ -42,7 +42,9 @@ $button-radius: 60px;
     padding: 0px 15px;
     color: $text-color;
 }
-
+.content-centered {
+    margin: auto;
+}
 .input-right-aligned .text-input {
     text-align: right !important;
     padding-right: 5px !important;
@@ -142,6 +144,8 @@ ion-badge {
     font-weight: bold;
     border-left: 5px solid black;
     border-bottom: 1px solid gray;
+    background-color: #57606f;
+    color: white;
 }
 .align-right {
     text-align: right;

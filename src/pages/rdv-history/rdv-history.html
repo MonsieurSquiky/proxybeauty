@@ -1,5 +1,5 @@
 <!--
-  Generated template for the PrestaRdvPage page.
+  Generated template for the RdvHistoryPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -10,30 +10,28 @@
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-    <ion-title>Mes prochains RDV</ion-title>
+    <ion-title>Mes RDV passés</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content >
+<ion-content class="background-cloud">
 <div *ngFor="let day of dates">
     <div class="tab-day">
-        
         <ion-grid>
             <ion-row>
                 <ion-col col-6>
-                    {{ (now.getDate() == day[1] && now.getMonth() == day[2] ) ? "Aujourd'hui" : 'Dans '+ diffdate(now.getTime(), day[3]) +' jour(s)'}}
+                    {{ daysName[day[0]] + ' ' + day[1] + ' ' + months[day[2]]}}
                 </ion-col>
-                <ion-col col-6 class="align-right info-minor">
-                    <span >{{ daysName[day[0]] + ' ' + day[1] + ' ' + months[day[2]]}}</span>
-                </ion-col>
+
             </ion-row>
         </ion-grid>
     </div>
     <ng-container *ngFor="let rdv of rdvList;let index = index">
     <ion-card  *ngIf="(diffdate(rdv.timestamp, day[3]) == 0)">
         <ion-card-content class="no-padding rdv-content "  >
+
             <ion-grid>
                 <ion-row>
                     <ion-col col-12>
@@ -65,7 +63,33 @@
                         {{ (rdv.place == address) ? 'Chez moi' : rdv.place }}
                     </ion-col>
                 </ion-row>
+
+                <ion-row *ngIf="!rdv.state;else confirmed_content">
+                    <ion-col col-6>
+                        <button ion-button icon-left color="dark" (click)="reclamation()" outline>
+                            <ion-icon name="alert"></ion-icon>
+                            Réclamations
+                        </button>
+
+                    </ion-col>
+                    <ion-col col-6>
+                        <button ion-button icon-left color="dark" (click)="prestaConfirm(rdv.key, rdv.prestataire, rdv.client)">
+                            <ion-icon name="checkmark"></ion-icon>
+                            Confirmer
+                        </button>
+                    </ion-col>
+                </ion-row>
+
+                <ng-template #confirmed_content>
+                    <button *ngIf="rdv.state == 'confirmed';else review" ion-button icon-left class="align-right" color="dark" (click)="rate(rdv.key, rdv.prestataire, rdv.timestamp, rdv.category, rdv.tags)">
+                        <ion-icon name="card"></ion-icon>
+                        Noter la prestation
+                    </button>
+                </ng-template>
+                <ng-template #review>
+                </ng-template>
             </ion-grid>
+
         </ion-card-content>
     </ion-card>
     </ng-container>

@@ -46,7 +46,10 @@ export class HelloIonicPage {
             if (user) {
               // User is signed in.
               obj.uid = user.uid;
-
+              /*
+              firebase.auth().currentUser.getIdToken().then(function(token) {
+                  console.log(token);
+              }); */
 
               if (user.emailVerified || user.providerData[0].providerId != 'password') {
                   console.debug('Provider HERE !!' + user.providerData[0].providerId);

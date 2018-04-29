@@ -1,0 +1,123 @@
+{
+  "project_info": {
+    "project_number": "1090914691423",
+    "firebase_url": "https://proxybeauty.firebaseio.com",
+    "project_id": "proxybeauty",
+    "storage_bucket": "proxybeauty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090914691423:android:5dd25229d8a69305",
+        "android_client_info": {
+          "package_name": "io.ionic.proxybeauty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090914691423-g2s12ig4r26sa2m24bm01go25l7erro4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.ionic.proxybeauty",
+            "certificate_hash": "a4e1ed8a1c6e6f45b8ecf1e5f02c062ea2b5bfbd"
+          }
+        },
+        {
+          "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1090914691423-2f0jq4veuqv86d424f548fvi6mp7e5ro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu40QIwgWbFQhNqPm-_6P-9UJQIjiag70"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090914691423-qqdocg2thovlajoe1u91g4g8u31572c9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.ionic.proxybeauty",
+                "app_store_id": "1357193819"
+              }
+            },
+            {
+              "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090914691423:android:764d2cb7da3280eb",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090914691423-4se28hmi4vlrnkfju07jj7vrvcpnbptg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.ionic.starter",
+            "certificate_hash": "562c55238ba368e1ff1bd8ee017f77ffde54c6a4"
+          }
+        },
+        {
+          "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1090914691423-2f0jq4veuqv86d424f548fvi6mp7e5ro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu40QIwgWbFQhNqPm-_6P-9UJQIjiag70"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090914691423-qqdocg2thovlajoe1u91g4g8u31572c9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.ionic.proxybeauty",
+                "app_store_id": "1357193819"
+              }
+            },
+            {
+              "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

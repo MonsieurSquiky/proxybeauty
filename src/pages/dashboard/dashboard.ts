@@ -6,7 +6,7 @@ import { LogoutPage } from '../logout/logout';
 import { PrestaRdvPage } from '../presta-rdv/presta-rdv';
 import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
 import { AmbassadorInfosPage } from '../ambassador-infos/ambassador-infos';
-
+import { BoutiquePage } from '../boutique/boutique';
 /**
  * Generated class for the DashboardPage page.
  *
@@ -46,6 +46,10 @@ export class DashboardPage {
 
   goSearch(category) {
       this.navCtrl.push(SearchOfferPage, {category: category});
+  }
+
+  goToShop() {
+      this.navCtrl.push(BoutiquePage);
   }
 
   openPage(page) {

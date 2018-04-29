@@ -115,4 +115,5 @@
         <variable name="CAMERA_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à votre caméra pour que vous puissiez vous prendre en photo et ainsi compléter votre profil." />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="ProxyBeauty a besoin d'accéder à vos photos pour que vous puissiez en désigner une comme votre photo de profil." />
     </plugin>
+    <plugin name="cordova-plugin-firebase" spec="^1.0.0" />
 </widget>

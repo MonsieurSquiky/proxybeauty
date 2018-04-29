@@ -31,9 +31,20 @@ import { AmbassadorInfosPage } from '../pages/ambassador-infos/ambassador-infos'
 import { AmbassadorPage } from '../pages/ambassador/ambassador';
 import { ProfilePage } from '../pages/profile/profile';
 import { BoutiquePage } from '../pages/boutique/boutique';
+import { RdvPage } from '../pages/rdv/rdv';
+import { GiftPage } from '../pages/gift/gift';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { TranslateService } from '@ngx-translate/core';
+
+import { FcmProvider } from '../providers/fcm/fcm';
+
+import { ToastController } from 'ionic-angular';
+import { Subject } from 'rxjs/Subject';
+import { tap } from 'rxjs/operators';
+
+import firebase from 'firebase';
 
 @Component({
   templateUrl: 'app.html'
@@ -52,7 +63,10 @@ export class MyApp {
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public translate: TranslateService,
+    public fcm: FcmProvider,
+    public toastCtrl: ToastController
   ) {
     this.initializeApp();
 
@@ -78,20 +92,43 @@ export class MyApp {
     ];
 
     this.clientpages.push({ title: 'Les prestations', component: DashboardPage });
-    this.clientpages.push({ title: 'Mes réservations', component: PrestaRdvPage });
+    this.clientpages.push({ title: 'Mes réservations', component: RdvPage });
     this.clientpages.push({ title: 'Mon Profil', component: ProfilePage });
-    this.clientpages.push({ title: 'La Boutique', component: BoutiquePage });
+    this.clientpages.push({ title: 'Mes cadeaux', component: GiftPage });
     this.clientpages.push({ title: 'Mon espace ambassadeur', component: AmbassadorPage });
     this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
 
   }
 
   initializeApp() {
+      const obj = this;
+    this.translate.setDefaultLang('fr');
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+      firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+            // Get a FCM token
+              obj.fcm.getToken(user.uid);
+
+              // Listen to incoming messages
+              obj.fcm.listenToNotifications().pipe(
+                tap(msg => {
+                  // show a toast
+                  const toast = obj.toastCtrl.create({
+                    message: msg['body'],
+                    duration: 3000
+                  });
+                  toast.present();
+                })
+              )
+              .subscribe();
+          }
+        });
 
     });
   }

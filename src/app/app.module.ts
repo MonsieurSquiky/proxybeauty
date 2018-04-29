@@ -4,6 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { Camera } from '@ionic-native/camera';
+import { Firebase } from '@ionic-native/firebase';
 
 import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
 import { DashboardPage } from '../pages/dashboard/dashboard';
@@ -17,6 +18,9 @@ import { ResultOfferPage } from '../pages/result-offer/result-offer';
 import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
 import { PrestaListPage } from '../pages/presta-list/presta-list';
 import { PrestaRatingsPage } from '../pages/presta-ratings/presta-ratings';
+import { RatePage } from '../pages/rate/rate';
+import { RdvPage } from '../pages/rdv/rdv';
+import { RdvHistoryPage } from '../pages/rdv-history/rdv-history';
 import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
 import { HorairePage } from '../pages/horaire/horaire';
 //import { ParrainagePage } from '../pages/parrainage/parrainage';
@@ -29,6 +33,7 @@ import { BookingPage } from '../pages/booking/booking';
 import { BoutiquePage } from '../pages/boutique/boutique';
 import { ProductPage } from '../pages/product/product';
 import { ProfilePage } from '../pages/profile/profile';
+import { GiftPage } from '../pages/gift/gift';
 
 //import { AmbassadorPage } from '../pages/ambassador/ambassador';
 
@@ -42,7 +47,7 @@ import { PaybookingPageModule } from '../pages/paybooking/paybooking.module';
 import { ProfilepicPageModule } from '../pages/profilepic/profilepic.module';
 import { SetParrainPageModule } from '../pages/set-parrain/set-parrain.module';
 import { ConditionsPageModule } from '../pages/conditions/conditions.module';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -54,8 +59,16 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
 import { Stripe } from '@ionic-native/stripe';
 import { GeocoderProvider } from '../providers/geocoder/geocoder';
+import { FcmProvider } from '../providers/fcm/fcm';
 import { InAppBrowser, InAppBrowserOptions } from "@ionic-native/in-app-browser";
 
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function setTranslateLoader(http: HttpClient) {
+ return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 //import { DatabaseserviceProvider } from '../providers/databaseservice/databaseservice';
 import { HttpModule } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
@@ -104,13 +117,26 @@ var config = {
     BookingPage,
     BoutiquePage,
     ProductPage,
-    ProfilePage
+    ProfilePage,
+    RdvHistoryPage,
+    RdvPage,
+    RatePage,
+    GiftPage
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
+    HttpClientModule,
+    HttpModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (setTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
@@ -148,7 +174,11 @@ var config = {
     BookingPage,
     BoutiquePage,
     ProductPage,
-    ProfilePage
+    ProfilePage,
+    RdvHistoryPage,
+    RdvPage,
+    RatePage,
+    GiftPage
   ],
   providers: [
     StatusBar,
@@ -162,7 +192,9 @@ var config = {
     Stripe,
     InAppBrowser,
     HTTP,
-    Camera
+    Camera,
+    Firebase,
+    FcmProvider
   ]
 })
 export class AppModule {}

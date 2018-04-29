@@ -22,22 +22,22 @@ export class ConditionsPage {
     uid;
     accept;
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+
+  }
+
+  ionViewDidLoad() {
+
       var obj =this;
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
               obj.uid = user.uid;
-              console.log(user.uid);
             } else {
               // No user is signed in.
-              console.log("No user signed");
-              navCtrl.setRoot(HelloIonicPage);
+              obj.navCtrl.setRoot(HelloIonicPage);
             }
           });
-  }
-
-  ionViewDidLoad() {
     console.log('ionViewDidLoad ConditionsPage');
   }
 
@@ -45,20 +45,24 @@ export class ConditionsPage {
       console.log('Clicked');
       if (this.accept) {
           var obj = this;
-          firebase.database().ref('/users/'+ this.uid +'/setupStep').set('complete')
-          .then(function() {
-              obj.goDashboard();
-          }, error => {
-              let alertVerification = obj.alertCtrl.create({
-                title: "Echec",
-                subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
-                buttons: ['OK']
-              });
-              alertVerification.present();
 
-            // Log an error to the console if something goes wrong.
-            console.log("ERROR -> " + JSON.stringify(error));
-          });
+          firebase.database().ref('/user-gift/'+ this.uid+'/palier').set(0).then(function() {
+              firebase.database().ref('/users/'+ obj.uid +'/setupStep').set('complete')
+              .then(function() {
+                  obj.goDashboard();
+              }, error => {
+                  let alertVerification = obj.alertCtrl.create({
+                    title: "Echec",
+                    subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
+                    buttons: ['OK']
+                  });
+                  alertVerification.present();
+
+                // Log an error to the console if something goes wrong.
+                console.log("ERROR -> " + JSON.stringify(error));
+              });
+          }).catch( (error) => { console.log("ERROR -> " + JSON.stringify(error)); });
+
       }
       else {
           let alertVerification = this.alertCtrl.create({
