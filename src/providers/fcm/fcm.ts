@@ -12,7 +12,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 */
 @Injectable()
 export class FcmProvider {
-
+    public currentToken;
     constructor(
       public firebaseNative: Firebase,
       public fdb: AngularFireDatabase,
@@ -31,7 +31,7 @@ export class FcmProvider {
             token = await this.firebaseNative.getToken();
             await this.firebaseNative.grantPermission();
         }
-
+        this.currentToken = token;
         return this.saveTokenToFirebase(token, userId);
     }
 
@@ -41,11 +41,18 @@ export class FcmProvider {
 
           // User is signed in.
             var ref = firebase.database().ref('devices/' + userId);
-            const docData = {
-              token,
-              userId: userId,
-            }
-            return ref.set(docData);
+
+            return ref.once('value', function(snapshot) {
+                let tokenList = [token];
+                if (snapshot.exists()) {
+                    if (snapshot.hasChild('tokenList')) {
+                        tokenList = snapshot.child('tokenList').val().length >= 1 ? snapshot.child('tokenList').val() : tokenList ;
+                        if (tokenList.indexOf(token) == -1)
+                            tokenList.push(token);
+                    }
+                }
+                return ref.child('tokenList').set(tokenList);
+            });
     }
 
     listenToNotifications() {

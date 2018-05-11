@@ -38,8 +38,7 @@ export class BoutiquePage {
   }
 
   seeProduct(idProduct) {
-      console.log(idProduct);
-      this.navCtrl.push(ProductPage, { idProduct });
+      this.navCtrl.push(ProductPage, { idList: [idProduct] });
   }
 
 }

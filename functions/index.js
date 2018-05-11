@@ -23,6 +23,15 @@ admin.initializeApp(functions.config().firebase);
 
 const stripe = require('stripe')(functions.config().stripe.token);
 const currency = functions.config().stripe.currency || 'EUR';
+const nodemailer = require('nodemailer');
+
+const mailAuth = {
+    service: 'gmail',
+    auth: {
+         user: 'myproxybeauty@gmail.com',
+         pass: 'Slimani13'
+     }
+};
 
 const giftRdv = [3, 10, 25, 50, 100];
 const giftComment = [3, 10, 25, 50, 100];
@@ -64,7 +73,7 @@ exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrit
     const val = event.data.val();
     // This onWrite will trigger whenever anything is written to the path, so
     // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
-    if (val === null || val.id || val.error || val == 'failed' || val == 'success' || !Number.isInteger(val)) return null;
+    if (val === null || val == 'failed' || val == 'success' || !Number.isInteger(val)) return null;
 
     let nbRdv = 0;
     let nbComment = 0;
@@ -80,7 +89,6 @@ exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrit
         return true;
     }).then( () => {
         if (nbRdv >= giftRdv[val] && nbComment >= giftComment[val]) {
-            // send a mail to Nadir so he can send product
 
             // Le user peut passer au palier supplementaire et debloquer son cadeau
             let updates = {};
@@ -108,6 +116,39 @@ exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrit
 
 });
 
+exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').onWrite((event) => {
+    // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
+    const val = event.data.val();
+    // This onWrite will trigger whenever anything is written to the path, so
+    // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+    if (val.state === null || val.state == 'error' || val === null) return null;
+
+    admin.database().ref('/user-gift/' + event.params.userId + '/gifts/'+ val.giftKey).once('value', function(snapshot) {
+        if (snapshot.val().state == 'available') {
+            // Send mail to Nadir
+            var val = event.data.val();;
+            const mailToNadirOptions = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: 'myproxybeauty@gmail.com', // list of receivers
+              subject: 'Proxybeauty produit à expedier', // Subject line
+              html: '<p> Produit a envoyer : '+ products[val.product.id].name +' x'+ snapshot.val().qte+' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+'</p>'// plain text body
+            };
+            let transporter = nodemailer.createTransport(mailAuth);
+            transporter.sendMail(mailToNadirOptions, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+
+            return admin.database().ref('/user-gift/' + event.params.userId + '/gifts/'+ val.giftKey + '/state').set('retrieved');
+        }
+        else {
+            return admin.database().ref('/user-gift/' + event.params.userId + '/retrieving').set('notAvailable');
+        }
+    });
+});
+
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
 exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/shopping/{id}').onWrite((event) => {
@@ -132,10 +173,25 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
           }, {idempotency_key});
         }).then((charge) => {
             // If the result is successful, write it back to the database
+            var val = event.data.val();
             let updates = {};
             updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultCharge`] = charge;
 
             // send a mail to Nadir so he can send product
+            const mailToNadirOptions = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: 'myproxybeauty@gmail.com', // list of receivers
+              subject: 'Proxybeauty produit à expedier', // Subject line
+              html: '<p> Produit a envoyer : '+ products[val.idProduct].name +' x'+ val.qte+' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+'</p>'// plain text body
+            };
+            let transporter = nodemailer.createTransport(mailAuth);
+            transporter.sendMail(mailToNadirOptions, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+            /////////////////
 
             admin.database().ref().update(updates);
 
@@ -168,6 +224,19 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
                   }).catch( (error) => {
                       console.log(error);
                       // Send mail to support
+                      const mailToNadirOptions = {
+                        from: 'myproxybeauty@gmail.com', // sender address
+                        to: 'myproxybeauty@gmail.com', // list of receivers
+                        subject: 'WARNING : Payment or Transfer error', // Subject line
+                        html: '<p> customer ID : '+ event.params.userId +' <br /> operation ID' + event.params.id+'</p>'// plain text body
+                      };
+                      let transporter = nodemailer.createTransport(mailAuth);
+                      transporter.sendMail(mailToNadirOptions, function (err, info) {
+                         if(err)
+                           console.error(err);
+                         else
+                           console.log(info);
+                      });
 
                       return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorTransferParrain').set(error.raw);
                   });

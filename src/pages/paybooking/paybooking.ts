@@ -170,7 +170,7 @@ export class PaybookingPage {
           source: sourceToken,
           idProduct: this.product.id,
           qte: this.product.qte,
-          deliveryPlace: this.place,
+          place: this.place,
           parrainId : parrainId,
           parrainAccount : parrainAccount
       }).catch( (error) => { console.log('Fdb shopping ' + error) });

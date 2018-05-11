@@ -9,7 +9,8 @@
         <button ion-button menuToggle>
           <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title> La Boutique </ion-title>
+        <ion-title *ngIf="!isGift"> La Boutique </ion-title>
+        <ion-title *ngIf="isGift"> Mon Cadeau </ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -19,7 +20,7 @@
     <div class="gallery-button" text-center>
 
             <div class="">
-                <img src="{{product.pictureUrl}}" class="shopPic"/>
+                <img src="{{product[selected].pictureUrl}}" class="shopPic"/>
             </div>
 
 
@@ -33,33 +34,43 @@
     <ion-list>
         <ion-item >
           <ion-label> Quantité </ion-label>
-          <ion-input class="input-right-aligned" type="number" value=1 min=1 [(ngModel)]='qte'></ion-input>
+          <ion-input class="input-right-aligned" *ngIf="!isGift" type="number" value=1 min=1 [(ngModel)]='qte'></ion-input>
+          <p *ngIf="isGift" item-end>
+              {{ qte }}
+          </p>
         </ion-item>
 
-        <ion-item >
+        <ion-item *ngIf="idList.length > 1">
+            <ion-label> Choisir </ion-label>
+            <ion-select [(ngModel)]="selected">
+              <ion-option *ngFor="let id of idList;let i = index" [attr.data-index]="i" value="{{i}}">{{ product[i].name }}</ion-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="!isGift">
             <ion-icon name="cash" item-start></ion-icon>
             Prix
             <h2 item-end>
-                {{ product.prix * qte | number:'1.2-2'}} €
+                {{ product[selected].prix * qte | number:'1.2-2'}} €
             </h2>
         </ion-item>
 
         <ion-item style='white-space: normal !important;'>
             <h2> Ingrédients </h2>
             <p>
-                {{ product.components }}
+                {{ product[selected].components }}
             </p>
         </ion-item>
         <ion-item >
             <h2>Description </h2>
             <p style='white-space: normal !important;'>
-                {{ product.description }}
+                {{ product[selected].description }}
             </p>
         </ion-item>
         <ion-item >
             <h2> Utilisation </h2>
             <p style='white-space: normal !important;'>
-                {{ product.usage }}
+                {{ product[selected].usage }}
             </p>
         </ion-item>
     </ion-list>

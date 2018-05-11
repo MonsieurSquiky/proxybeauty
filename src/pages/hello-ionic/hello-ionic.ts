@@ -209,6 +209,7 @@ export class HelloIonicPage {
 
                   updates["/users/"+ userReg.uid+"/uid"] = userReg.uid;
                   updates["/users/"+ userReg.uid+"/email"] = userReg.email;
+                  updates["/user-gift/"+ userReg.uid+"/palier"] = 0;
                   //updates["/users/"+ userReg.uid+"/setupStep"] = 0;
                   //updates["/users/"+ userReg.uid+"/ambassador"] = false;
 

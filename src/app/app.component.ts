@@ -91,11 +91,12 @@ export class MyApp {
       { title: 'une recherche', component: ResultOfferPage } */
     ];
 
-    this.clientpages.push({ title: 'Les prestations', component: DashboardPage });
-    this.clientpages.push({ title: 'Mes réservations', component: RdvPage });
+    this.clientpages.push({ title: 'Les Prestations', component: DashboardPage });
+    this.clientpages.push({ title: 'Mes Réservations', component: RdvPage });
     this.clientpages.push({ title: 'Mon Profil', component: ProfilePage });
-    this.clientpages.push({ title: 'Mes cadeaux', component: GiftPage });
-    this.clientpages.push({ title: 'Mon espace ambassadeur', component: AmbassadorPage });
+    this.clientpages.push({ title: 'La Boutique', component: BoutiquePage });
+    this.clientpages.push({ title: 'Mes Cadeaux', component: GiftPage });
+    this.clientpages.push({ title: 'Mon Espace Ambassadeur', component: AmbassadorPage });
     this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
 
   }

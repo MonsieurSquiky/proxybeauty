@@ -23,7 +23,7 @@
         <span class="stat-bar-rating" role="stat-bar" [ngStyle]="{'width.%': widthBar}">></span>
       </div>
       <button ion-fab class="bar-fab main-color-button" (click)='unlockGift()'>
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 512 512">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 512 512" style="width:30px;height:30px">
             <title></title>
             <g id="icomoon-ignore">
             </g>
@@ -61,7 +61,7 @@
                 Valeur : <b> {{gift.value}} € </b> <br />
                 Etat : <b> {{ (gift.state == 'available') ? 'A récupérer' : 'Déjà commandé'}} </b>
             </p>
-            <button *ngIf="gift.state == 'available'" class="main-color-button"ion-button small> <b>Récupérer</b></button>
+            <button *ngIf="gift.state == 'available'" (click)="getGift(gift)" class="main-color-button"ion-button small> <b>Récupérer</b></button>
         </ion-card-content>
     </ion-card>
 </ion-content>

@@ -20,28 +20,39 @@ export class ProductPage {
   uid: string;
   statut;
   place;
-  id: number;
-  product = {};
+  idList;
+  selected = 0;
+  isGift: boolean = false;
+  product = [{}];
   qte: number = 1;
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private fdb: AngularFireDatabase) {
-      this.id = navParams.get('idProduct');
+      this.qte = navParams.get('qte') ? navParams.get('qte') : 1;
+      this.idList = navParams.get('idList') ? navParams.get('idList') : null;
+      this.isGift = navParams.get('isGift') ? navParams.get('isGift') : false;
+
+      for (let i=0; i<this.idList.length; i++)
+         this.product[i] = {};
   }
 
   ionViewDidLoad() {
       console.log('ionViewDidLoad ProductPage');
+
       const obj = this;
 
-      var boutiqueRef = this.fdb.database.ref('/products/'+this.id);
-      boutiqueRef.once('value', function(snapshot) {
-         obj.product = snapshot.val();
-      });
+      for (let i=0; i<this.idList.length; i++) {
+          var boutiqueRef = this.fdb.database.ref('/products/'+this.idList[i]);
+          boutiqueRef.once('value', function(snapshot) {
+             obj.product[i] = snapshot.val();
+             console.log( obj.product);
+          });
+      }
+
       firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
               obj.uid = user.uid;
 
               var adresseRef = obj.fdb.database.ref('/users/'+obj.uid);
               adresseRef.once('value', function(snapshot) {
-                 obj.place = (snapshot.hasChild('address/place')) ? snapshot.child('/address/place').val() : null;
                  obj.statut = snapshot.child('statut');
               });
 
@@ -54,10 +65,14 @@ export class ProductPage {
 
   }
 
+  takeGift() {
+
+  }
+
   buy() {
-      if (this.place) {
-          this.navCtrl.push('PaybookingPage', {product: { id: this.id, qte: this.qte }, type: 'shopProduct', statut : this.statut, place: this.place });
-      }
+      //if (this.place) {
+          this.navCtrl.push('AddressFormPage', {product: { id: this.idList[this.selected], qte: this.qte }, type: this.isGift ? 'gift' : 'shopProduct', statut : this.statut, giftId: this.isGift ? this.navParams.get('giftId') : null });
+      /*}
       else {
           let alertVerification = this.alertCtrl.create({
             title: "Adresse non fournie",
@@ -68,5 +83,6 @@ export class ProductPage {
           this.navCtrl.push('SetAddressPage', {update: true});
 
       }
+      */
   }
 }

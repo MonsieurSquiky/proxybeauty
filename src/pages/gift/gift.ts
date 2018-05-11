@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 
+import { ProductPage } from '../product/product'
+
 
 import { AngularFireDatabase } from 'angularfire2/database';
 /**
@@ -59,7 +61,9 @@ export class GiftPage {
                 obj.palier = snapshot.child('palier').val();
                 obj.giftList = [];
                 snapshot.child('gifts').forEach( function(childSnapshot) {
-                    obj.giftList.push(childSnapshot.val());
+                    let g = childSnapshot.val();
+                    g['key'] = childSnapshot.key;
+                    obj.giftList.push(g);
                   return false;
                 });
                 obj.giftList.sort(function (a, b) {
@@ -85,7 +89,14 @@ export class GiftPage {
     console.log('ionViewDidLoad GiftPage');
   }
 
+  getGift(gift) {
+      this.navCtrl.push(ProductPage, {isGift: true, idList: gift.ids, qte: gift.qte, giftId: gift['key'] });
+  }
+
   unlockGift() {
+      if (this.nbRdv < this.nextStep[0] || this.nbComment < this.nextStep[1])
+          return null;
+
       this.fdb.database.ref('/user-gift/' + this.uid+'/checkin').set(this.palier);
 
       let loading = this.loadingCtrl.create({

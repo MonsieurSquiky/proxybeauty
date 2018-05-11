@@ -33,7 +33,7 @@ import { BookingPage } from '../pages/booking/booking';
 import { BoutiquePage } from '../pages/boutique/boutique';
 import { ProductPage } from '../pages/product/product';
 import { ProfilePage } from '../pages/profile/profile';
-import { GiftPage } from '../pages/gift/gift';
+
 
 //import { AmbassadorPage } from '../pages/ambassador/ambassador';
 
@@ -48,6 +48,8 @@ import { ProfilepicPageModule } from '../pages/profilepic/profilepic.module';
 import { SetParrainPageModule } from '../pages/set-parrain/set-parrain.module';
 import { ConditionsPageModule } from '../pages/conditions/conditions.module';
 import { FormsModule } from '@angular/forms';
+import { AddressFormPageModule } from '../pages/address-form/address-form.module';
+import { GiftPageModule } from '../pages/gift/gift.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -120,8 +122,7 @@ var config = {
     ProfilePage,
     RdvHistoryPage,
     RdvPage,
-    RatePage,
-    GiftPage
+    RatePage
   ],
   imports: [
     BrowserModule,
@@ -152,6 +153,8 @@ var config = {
     SetParrainPageModule,
     ConditionsPageModule,
     LogoutPageModule,
+    AddressFormPageModule,
+    GiftPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -177,8 +180,7 @@ var config = {
     ProfilePage,
     RdvHistoryPage,
     RdvPage,
-    RatePage,
-    GiftPage
+    RatePage
   ],
   providers: [
     StatusBar,
