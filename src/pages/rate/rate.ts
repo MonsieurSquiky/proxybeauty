@@ -62,7 +62,7 @@ export class RatePage {
         updates['rdv/'+this.idRdv+'/state'] = 'reviewed';
 
         updates['user-rdv/'+this.uid+'/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment };
-        updates['user-rdv/'+this.idPresta+'/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment };
+        updates['user-rdv/'+this.idPresta+'/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment ? this.comment : null};
         updates['rdv/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment };
 
         let reviewKey = this.fdb.database.ref('reviews/'+this.idPresta).push().key;

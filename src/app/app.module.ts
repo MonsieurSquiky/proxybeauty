@@ -50,6 +50,7 @@ import { ConditionsPageModule } from '../pages/conditions/conditions.module';
 import { FormsModule } from '@angular/forms';
 import { AddressFormPageModule } from '../pages/address-form/address-form.module';
 import { GiftPageModule } from '../pages/gift/gift.module';
+import { BankaccountPageModule } from '../pages/bankaccount/bankaccount.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -154,7 +155,8 @@ var config = {
     ConditionsPageModule,
     LogoutPageModule,
     AddressFormPageModule,
-    GiftPageModule
+    GiftPageModule,
+    BankaccountPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

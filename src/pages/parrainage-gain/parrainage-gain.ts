@@ -105,4 +105,8 @@ export class ParrainageGainPage {
       return s;
   }
 
+  goToAccounts() {
+      this.navCtrl.push('BankaccountPage');
+  }
+
 }

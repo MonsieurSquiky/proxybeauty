@@ -1,0 +1,78 @@
+<!--
+  Generated template for the BankaccountPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title> Mes Comptes </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content class="" style="color:black" padding>
+    <h2 text-center margin> Compte bancaire lié </h2>
+    <p *ngIf="noAccount">
+        Vous n'avez pas encore ajouté de compte.
+    </p>
+    <div *ngIf="noAccount">
+        <form action="/charge" method="post" id="payment-form">
+          <div class="form-row inline">
+            <div class="col">
+              <label for="name">
+                Propriétaire du compte
+              </label>
+              <input id="name" name="name" placeholder="Jane Doe" [(ngModel)]="accountName" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="iban-element">
+              IBAN
+            </label>
+            <div id="iban-element">
+              <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <div id="bank-name"></div>
+          </div>
+
+          <button class="accountButton">Ajouter un compte</button>
+
+          <!-- Used to display form errors. -->
+        <div id="error-message" role="alert"></div>
+
+        <!-- Display mandate acceptance text.
+        <div id="mandate-acceptance">
+          By providing your IBAN and confirming this payment, you are
+          authorizing Rocketship Inc. and Stripe, our payment service
+          provider, to send instructions to your bank to debit your account and
+          your bank to debit your account in accordance with those instructions.
+          You are entitled to a refund from your bank under the terms and
+          conditions of your agreement with your bank. A refund must be claimed
+          within 8 weeks starting from the date on which your account was debited.
+        </div> -->
+        </form>
+    </div>
+
+    <ion-list *ngIf="!noAccount">
+
+
+        <ion-item margin>
+            <h2> {{ accountName }}</h2>
+            <p>
+                {{ accountBank }}
+            </p>
+        </ion-item>
+
+        <ion-item  margin>
+            <h2> Détails </h2>
+            <p style='white-space: normal !important;'>
+                Vos gains vous sont envoyés automatiquement sur ce compte 7 à 10 jours après que le paiement du client ait été confirmé
+                (au moment du rendez-vous dans le cas d'une prestation et immédiatement dans le cas d'un achat boutique).
+            </p>
+        </ion-item>
+
+    </ion-list>
+</ion-content>

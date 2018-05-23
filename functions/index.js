@@ -149,6 +149,28 @@ exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').
     });
 });
 
+exports.setBankAccount = functions.database.ref('/user-bankaccount/{userId}/accountList').onWrite((event) => {
+    // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
+    const val = event.data.val();
+    // This onWrite will trigger whenever anything is written to the path, so
+    // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+    if (val.state === null || val.state == 'error' || val === null) return null;
+
+    admin.database().ref('/stripe_sellers/' + event.params.userId + '/token/id').once('value', function(snapshot) {
+        let CONNECTED_STRIPE_ACCOUNT_ID = snapshot.val();
+        console.log(val);
+        stripe.accounts.update(
+            CONNECTED_STRIPE_ACCOUNT_ID,
+            {
+                external_account : val
+            }
+        ).then(function(acct) {
+          // asynchronously called
+          console.log(acct);
+        });
+    });
+});
+
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
 exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/shopping/{id}').onWrite((event) => {
@@ -306,7 +328,121 @@ exports.createStripeSubmit = functions.database.ref('/stripe_customers/{userId}/
         return reportError(error, {user: event.params.userId});
     }); */
 });
-// [END chargecustomer]]
+// [END submit]]
+
+exports.payPresta = functions.database.ref('rdv/{idRdv}/state').onWrite((event) => {
+  const val = event.data.val();
+  // This onWrite will trigger whenever anything is written to the path, so
+  // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+  if (val === null || val !== 'confirmed') return null;
+  // on recup les infos rdv
+  return admin.database().ref(`/rdv/${event.params.idRdv}`).once('value').then((snapshot) => {
+    return snapshot.val();
+}).then((data) => {
+      // On recup le montant de la charge associee
+      var rdv = data;
+
+      admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}/resultCharge`).once('value').then((snapshot) => {
+          let charge = snapshot.val();
+          let amount = charge.amount;
+          let idempotency_key = rdv.charge;
+        let idempotency_key_prestataire = rdv.charge+'-prestataire';
+        let idempotency_key_parrain_prestataire = rdv.charge+'-parrain_prestataire';
+        let idempotency_key_parrain_client = rdv.charge+'-parrain_client';
+
+        let prestataire = charge.destinataire;
+        let parrain_prestataire = charge.parrain_prestataire;
+        let parrain_client = charge.parrain_client;
+
+        let amountPresta = Math.floor(amount * 0.82);
+        let amount_parrain_prestataire = Math.floor(amount * 0.04);
+        let amount_parrain_client = Math.floor(amount * 0.02);
+        console.log(amount);
+        console.log(prestataire);
+        console.log(idempotency_key);
+        console.log(charge.id);
+
+        stripe.transfers.create({
+                  amount: amountPresta,
+                  currency: "eur",
+                  destination: prestataire,
+                  transfer_group: idempotency_key,
+                  source_transaction: charge.id
+              }, { idempotency_key: idempotency_key_prestataire })
+          .then( function(transfer) {
+              console.log('In');
+              console.log(rdv.client);
+              admin.database().ref(`/prestataire-gains/${charge.ids.prestataire}/${rdv.client}`).push({
+                  amount: transfer.amount,
+                  date: transfer.created,
+                  currency: transfer.currency,
+                  transaction: transfer.transfer_group
+              });
+              console.log('Still In');
+              return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('resultTransferPrestataire').set(transfer);
+          }).catch( (error) => {
+              console.log(error);
+
+              return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('errorTransferPrestataire').set(error.raw);
+          });
+
+          console.log(parrain_prestataire);
+
+          if (parrain_prestataire) {
+              console.log('Presta parrain in');
+              stripe.transfers.create({
+                        amount: amount_parrain_prestataire,
+                        currency: "eur",
+                        destination: parrain_prestataire,
+                        transfer_group: idempotency_key,
+                        source_transaction: charge.id
+                    }, { idempotency_key: idempotency_key_parrain_prestataire })
+                .then( function(transfer) {
+                    admin.database().ref(`/parrain-gains/${charge.ids.parrain_prestataire}/${charge.ids.prestataire}`).push({
+                        amount: transfer.amount,
+                        date: transfer.created,
+                        currency: transfer.currency,
+                        transaction: transfer.transfer_group
+                    });
+
+                    return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('resultTransferParrainPrestataire').set(transfer);
+                }).catch( (error) => {
+                    console.log(error);
+
+                    return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('errorTransferParrainPrestataire').set(error.raw);
+                }).catch( (error) => {
+                    console.log(error);
+                });
+          }
+
+          console.log(parrain_client);
+          if (parrain_client) {
+              stripe.transfers.create({
+                        amount: amount_parrain_client,
+                        currency: "eur",
+                        destination: parrain_client,
+                        transfer_group: idempotency_key,
+                        source_transaction: charge.id
+                    }, { idempotency_key: idempotency_key_parrain_client })
+                .then( function(transfer) {
+                    admin.database().ref(`/parrain-gains/${charge.ids.parrain_client}/${rdv.client}`).push({
+                        amount: transfer.amount,
+                        date: transfer.created,
+                        currency: transfer.currency,
+                        transaction: transfer.transfer_group
+                    });
+
+                    return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('resultTransferParrainClient').set(transfer);
+                }).catch( (error) => {
+
+                    return admin.database().ref(`/stripe_customers/${rdv.client}/response/${rdv.charge}`).child('errorTransferParrainClient').set(error.raw);
+                });
+          }
+      });
+    });
+
+});
+// [END submit]]
 
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
@@ -338,94 +474,38 @@ exports.createStripeCharge = functions.database.ref('/stripe_customers/{userId}/
       // si on recupere le paiement, on transfere
       // Create a Transfer to the connected account (later):
       console.log('Charge Success');
-      admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('resultCharge').set(charge);
-
       let val = event.data.val();
-      let amount = Math.ceil(val.amount * 100);
-      let idempotency_key = event.params.id;
-      let idempotency_key_prestataire = event.params.id+'-prestataire';
-      let idempotency_key_parrain_prestataire = event.params.id+'-parrain_prestataire';
-      let idempotency_key_parrain_client = event.params.id+'-parrain_client';
 
-      let prestataire = val.destinataire;
-      let parrain_prestataire = val.parrain_prestataire;
-      let parrain_client = val.parrain_client;
+      charge['destinataire'] = val.destinataire;
+      charge['parrain_prestataire'] = val.parrain_prestataire;
+      charge['parrain_client'] = val.parrain_client;
+      charge['ids'] = val.ids;
+      // Creation du rdv dans la base de donnee (en dur, chez le prestataire et chez le client)
 
-      let amountPresta = Math.floor(amount * 0.85);
-      let amount_parrain_prestataire = Math.floor(amount * 0.04);
-      let amount_parrain_client = Math.floor(amount * 0.02);
+      let newRDVKey = admin.database().ref().child('rdv').push().key;
 
-      stripe.transfers.create({
-                amount: amountPresta,
-                currency: "eur",
-                destination: prestataire,
-                transfer_group: idempotency_key,
-                source_transaction: charge.id
-            }, { idempotency_key: idempotency_key_prestataire })
-        .then( function(transfer) {
-            admin.database().ref(`/prestataire-gains/${event.data.val().ids.prestataire}/${event.params.userId}`).push({
-                amount: transfer.amount,
-                date: transfer.created,
-                currency: transfer.currency,
-                transaction: transfer.transfer_group
-            });
+      // Write the new rdv's data simultaneously in the rdv list and the users datas.
+      let firstUpdates = {};
+      firstUpdates['/rdv/' + newRDVKey] = val.rdvDatas;
+      firstUpdates['/user-rdv/' + val.rdvDatas.client + '/' + newRDVKey] = val.rdvDatas;
+      firstUpdates['/user-rdv/' + val.rdvDatas.prestataire + '/' + newRDVKey] = val.rdvDatas;
+      firstUpdates[`/stripe_customers/${event.params.userId}/response/${event.params.id}/resultCharge`] = charge;
 
-            return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('resultTransferPrestataire').set(transfer);
-        }).catch( (error) => {
-            console.log(error);
-
-            return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('errorTransferPrestataire').set(error.raw);
-        });
-
-        if (parrain_prestataire) {
-            stripe.transfers.create({
-                      amount: amount_parrain_prestataire,
-                      currency: "eur",
-                      destination: parrain_prestataire,
-                      transfer_group: idempotency_key,
-                      source_transaction: charge.id
-                  }, { idempotency_key: idempotency_key_parrain_prestataire })
-              .then( function(transfer) {
-                  admin.database().ref(`/parrain-gains/${event.data.val().ids.parrain_prestataire}/${event.data.val().ids.prestataire}`).push({
-                      amount: transfer.amount,
-                      date: transfer.created,
-                      currency: transfer.currency,
-                      transaction: transfer.transfer_group
-                  });
-
-                  return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('resultTransferParrainPrestataire').set(transfer);
-              }).catch( (error) => {
-                  console.log(error);
-
-                  return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('errorTransferParrainPrestataire').set(error.raw);
-              }).catch( (error) => {
-                  console.log(error);
-              });
-        }
-
-
-        if (parrain_client) {
-            stripe.transfers.create({
-                      amount: amount_parrain_client,
-                      currency: "eur",
-                      destination: parrain_client,
-                      transfer_group: idempotency_key,
-                      source_transaction: charge.id
-                  }, { idempotency_key: idempotency_key_parrain_client })
-              .then( function(transfer) {
-                  admin.database().ref(`/parrain-gains/${event.data.val().ids.parrain_client}/${event.params.userId}`).push({
-                      amount: transfer.amount,
-                      date: transfer.created,
-                      currency: transfer.currency,
-                      transaction: transfer.transfer_group
-                  });
-
-                  return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('resultTransferParrainClient').set(transfer);
-              }).catch( (error) => {
-
-                  return admin.database().ref(`/stripe_customers/${event.params.userId}/response/${event.params.id}`).child('errorTransferParrainClient').set(error.raw);
-              });
-        }
+      admin.database().ref().update(firstUpdates).then(function() {
+          admin.database().ref('/devices/'+val.rdvDatas.prestataire+'/tokenList').once('value', function(snapshot) {
+              if (snapshot.exists()) {
+                  let rdvDate = new Date(val.rdvDatas.timestamp);
+                  let tokens = snapshot.val();
+                  let payload = {
+                      notification: {
+                          title: 'Nouveau rendez vous !',
+                          body: 'Le '+ rdvDate.toDateString()
+                      }
+                  }
+                  admin.messaging().sendToDevice(tokens, payload);
+              }
+          });
+      });
 
 
         }).catch((error) => {

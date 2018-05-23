@@ -21,7 +21,7 @@
                 {{ getTotalGain() }} €
             </p>
 
-        <button ion-button icon-left class="align-right" color="light">
+        <button ion-button icon-left class="align-right" (click)='goToAccounts()' color="light">
             <ion-icon name="card"></ion-icon>
             Créditer mon compte
         </button>
@@ -36,7 +36,7 @@
             <p>{{ user.statut }}</p>
         </div>
 
-        <ion-badge class="main-color-button" item-end> {{ gains[user.uid] }} €</ion-badge>
+        <ion-badge class="main-color-button" item-end> {{ gains[user.uid] | number:'1.2-2' }} €</ion-badge>
       </ion-item>
     </ion-list>
 </ion-content>

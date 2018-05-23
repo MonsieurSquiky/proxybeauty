@@ -1,0 +1,19 @@
+configurations.all {
+   resolutionStrategy {
+       force "com.google.android.gms:play-services-auth:+"
+       force "com.google.android.gms:play-services-identity:+"
+       force "com.google.android.gms:play-services-ads:+"
+       force "com.google.android.gms:play-services-base:+"
+       force "com.google.android.gms:play-services-gcm:+"
+       force "com.google.android.gms:play-services-analytics:+"
+       force "com.google.android.gms:play-services-location:+"
+       force "com.google.android.gms:play-services-basement:+"
+       force "com.google.android.gms:play-services-tagmanager:+"
+       force 'com.google.firebase:firebase-core:+'
+       force 'com.google.firebase:firebase-crash:+'
+       force 'com.google.firebase:firebase-auth:+'
+       force 'com.google.firebase:firebase-common:+'
+       force 'com.google.firebase:firebase-config:+'
+       force 'com.google.firebase:firebase-messaging:+'
+   }
+}

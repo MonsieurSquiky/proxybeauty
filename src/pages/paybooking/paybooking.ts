@@ -295,13 +295,26 @@ export class PaybookingPage {
 
         let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/charges`).push().key;
 
+        let rdvDatas = {
+            client: obj.uid,
+            prestataire: obj.destinataire,
+            prix: obj.prix,
+            category: obj.product.category,
+            tags: obj.product.tags,
+            duree: obj.product.duree,
+            place: obj.product.place,
+            timestamp: obj.rdvTimestamp,
+            charge: newKey
+        }
+
         this.fdb.database.ref(`/stripe_customers/${this.uid}/charges/${newKey}`).set({
           source: sourceToken,
           amount: obj.prix,
           ids: {prestataire: this.destinataire, parrain_client, parrain_prestataire },
           destinataire: destinataireAccount,
           parrain_prestataire: parrain_prestataireAccount,
-          parrain_client: parrain_clientAccount
+          parrain_client: parrain_clientAccount,
+          rdvDatas
         });
 
         console.debug(parrain_prestataireAccount);
@@ -310,47 +323,19 @@ export class PaybookingPage {
         // On dwtecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
         this.fdb.database.ref(`/stripe_customers/${this.uid}/response/${newKey}/resultCharge`).on('value', function(snapshot) {
             if (snapshot.val().status == "succeeded") {
-                // Creation du rdv dans la base de donnee (en dur, chez le prestataire et chez le client)
 
-
-                let rdvDatas = {
-                    client: obj.uid,
-                    prestataire: obj.destinataire,
-                    prix: obj.prix,
-                    category: obj.product.category,
-                    tags: obj.product.tags,
-                    duree: obj.product.duree,
-                    place: obj.product.place,
-                    timestamp: obj.rdvTimestamp
-                }
-
-                let newRDVKey = firebase.database().ref().child('rdv').push().key;
-
-                // Write the new rdv's data simultaneously in the rdv list and the users datas.
-                let updates = {};
-                updates['/rdv/' + newRDVKey] = rdvDatas;
-                updates['/user-rdv/' + obj.uid + '/' + newRDVKey] = rdvDatas;
-                updates['/user-rdv/' + obj.destinataire + '/' + newRDVKey] = rdvDatas;
-
-                obj.fdb.database.ref().update(updates)
-                    .then(() => {
-                        obj.loading.dismiss();
-                        let alert = obj.alertCtrl.create({
-                          title: 'Paiement effectué avec succès',
-                          subTitle: 'Le paiement a bien été pris en compte et votre rendez-vous est pris',
-                          buttons: [{
-                              text: 'Parfait !',
-                              handler: () => {
-                                obj.navCtrl.setRoot(PrestaRdvPage);
-                              }
-                            }]
-                        });
-                        alert.present();
-                    }).catch((error) => {
-                        // il faut refaire la sauvegarde en bdd
-                        console.log(error);
-                    });
-
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Paiement effectué avec succès',
+                  subTitle: 'Le paiement a bien été pris en compte et votre rendez-vous est pris',
+                  buttons: [{
+                      text: 'Parfait !',
+                      handler: () => {
+                        obj.navCtrl.setRoot(PrestaRdvPage);
+                      }
+                    }]
+                });
+                alert.present();
 
             }
         });
