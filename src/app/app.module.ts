@@ -76,26 +76,15 @@ export function setTranslateLoader(http: HttpClient) {
 import { HttpModule } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
 
-export const firebaseConfig = {
-    production: false,
-    firebase : {
-        apiKey: "AIzaSyALQnjd3NpF0TI7P4JCUFAgWSs4yZ5VRF4",
-        authDomain: "proxybeauty.firebaseapp.com",
-        databaseURL: "https://proxybeauty.firebaseio.com",
-        projectId: "proxybeauty",
-        storageBucket: "proxybeauty.appspot.com",
-        messagingSenderId: "1090914691423"
-    }
+var config = {
+  apiKey: "AIzaSyCvZde2dbNMl8uJzYhI6EMVnFdewpObNZA",
+  authDomain: "proxybeauty-2.firebaseapp.com",
+  databaseURL: "https://proxybeauty-2.firebaseio.com",
+  projectId: "proxybeauty-2",
+  storageBucket: "proxybeauty-2.appspot.com",
+  messagingSenderId: "624687797142"
 };
 
-var config = {
-  apiKey: "AIzaSyALQnjd3NpF0TI7P4JCUFAgWSs4yZ5VRF4",
-  authDomain: "proxybeauty.firebaseapp.com",
-  databaseURL: "https://proxybeauty.firebaseio.com",
-  projectId: "proxybeauty",
-  storageBucket: "proxybeauty.appspot.com",
-  messagingSenderId: "1090914691423"
-};
 
 
 @NgModule({

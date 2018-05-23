@@ -288,7 +288,7 @@ exports.createStripeSubmit = functions.database.ref('/stripe_customers/{userId}/
       // On inscrit simplement le client qui a deja une carte enregistree
       return stripe.subscriptions.create({
           customer: customer,
-          items: [{plan: 'plan_CWun8RT9CsGdh4'}],
+          items: [{plan: 'plan_Cuvj40CAH97KSK'}],
         });
     }).then((susbcription) => {
         // If the result is successful, write it back to the database
