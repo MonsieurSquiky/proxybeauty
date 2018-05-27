@@ -68,6 +68,7 @@ export class HelloIonicPage {
     const obj = this;
     return this.facebook.login(['email'])
       .then( response => {
+          console.log(JSON.stringify(response));
         const facebookCredential = firebase.auth.FacebookAuthProvider
           .credential(response.authResponse.accessToken);
 
@@ -75,15 +76,25 @@ export class HelloIonicPage {
           .then( success => {
             console.log("Firebase success: " + JSON.stringify(success));
             obj.goDashboard();
+          }).catch((err) => {
+              console.log('Error normally detected');
+              console.log(JSON.stringify(err));
+              console.debug("Error: ", err);
+              console.log(err.toString());
           });
 
-      }).catch((error) => { console.log(error) });
+      }).catch((err) => {
+          console.log('Error normally detected');
+          console.log(JSON.stringify(err));
+          console.debug("Error: ", err);
+          console.log(err.toString());
+      });
   }
 
   googleLogin(): void {
       const obj = this;
       this.googlePlus.login({
-        'webClientId': '1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com',
+        'webClientId': '624687797142-unv7d8omkn2kd36q2ib6pdhuak1rspeu.apps.googleusercontent.com',
         'offline': true
       }).then( res => {
               const googleCredential = firebase.auth.GoogleAuthProvider
@@ -176,10 +187,12 @@ export class HelloIonicPage {
           this.onWayToDashboard = true;
           ref.once("value", function(snapshot) {
               if (snapshot.exists()) {
+                  if (!snapshot.hasChild('setupStep')) {
+                      obj.navCtrl.setRoot(FirstloginTypePage);
+                  }
+
                   switch (snapshot.val().setupStep) {
-                    case 0:
-                        obj.navCtrl.setRoot(FirstloginTypePage);
-                        break;
+
                     case 1:
                         obj.navCtrl.setRoot(FirstloginPage);
                         break;
@@ -201,7 +214,10 @@ export class HelloIonicPage {
                         else
                           obj.navCtrl.setRoot(PrestaBoardPage);
                         break;
-                    }
+                    default:
+                        obj.navCtrl.setRoot(FirstloginTypePage);
+                        break;
+                }
               }
               else {
                   let userReg = firebase.auth().currentUser;
@@ -209,7 +225,9 @@ export class HelloIonicPage {
 
                   updates["/users/"+ userReg.uid+"/uid"] = userReg.uid;
                   updates["/users/"+ userReg.uid+"/email"] = userReg.email;
-                  updates["/user-gift/"+ userReg.uid+"/palier"] = 0;
+
+                  //updates["/users/"+ userReg.uid+"/setupStep"] = 0;
+
                   //updates["/users/"+ userReg.uid+"/setupStep"] = 0;
                   //updates["/users/"+ userReg.uid+"/ambassador"] = false;
 

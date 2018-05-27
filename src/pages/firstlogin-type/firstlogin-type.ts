@@ -45,13 +45,15 @@ export class FirstloginTypePage {
     }
 
     chooseType(statut) {
-        var ref = this.fdb.database.ref("/users/"+ this.uid);
+        var ref = this.fdb.database.ref();
         var obj = this;
+        let updates = {};
 
-        ref.update({
-          statut: statut,
-          setupStep: 1
-        }).then(function() {
+        updates["/users/"+ this.uid+ "/statut"] = statut;
+        updates["/users/"+ this.uid+ "/setupStep"] = 1;
+        updates["/user-gift/"+ this.uid+"/palier"] = 0;
+
+        ref.update(updates).then(function() {
           obj.navCtrl.push(FirstloginPage);
         }).catch(function(error) {
           // An error happened.

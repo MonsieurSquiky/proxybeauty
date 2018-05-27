@@ -1,8 +1,8 @@
 {
-  "name": "TestIonic",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "name": "ProxyBeauty",
+  "version": "0.0.6",
+  "author": "ProxyBeauty Team",
+  "homepage": "http://proxybeauty.com/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -24,7 +24,7 @@
     "@angular/platform-browser-dynamic": "4.4.3",
     "@ionic-native/camera": "^4.5.3",
     "@ionic-native/core": "^4.7.0",
-    "@ionic-native/facebook": "^4.5.3",
+    "@ionic-native/facebook": "^4.7.0",
     "@ionic-native/firebase": "^4.7.0",
     "@ionic-native/geolocation": "^4.5.3",
     "@ionic-native/google-plus": "^4.7.0",
@@ -76,7 +76,7 @@
     "@ionic/app-scripts": "^3.0.0-201710070411",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project",
+  "description": "La beauté au bout de mes doigts.",
   "cordova": {
     "plugins": {
       "cordova-plugin-console": {},
@@ -91,10 +91,10 @@
         "APP_NAME": "ProxyBeauty"
       },
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.1090914691423-qtt5ni1abgqmdfce235blum8vfl5p8tk"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.624687797142-1e3soqr1e29jtlvso1rbsg4c22v35nt4"
       },
       "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
+        "GEOLOCATION_USAGE_DESCRIPTION": "ProxyBeauty a besoin de localiser votre position pour ainsi vous proposer les services les plus proches de vous."
       },
       "cordova-plugin-nativegeocoder": {
         "LOCATION_WHEN_IN_USE_DESCRIPTION": "ProxyBeauty a besoin de localiser votre position pour ainsi vous proposer les services les plus proches de vous."

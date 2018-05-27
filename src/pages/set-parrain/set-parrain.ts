@@ -43,34 +43,45 @@ export class SetParrainPage {
 
     saveParrain() {
         var obj = this;
-        this.fdb.database.ref('/users/'+this.parrainId).on('value', function(snapshot) {
-            if (snapshot.val()) {
 
-                let updates = {};
-                updates['/user-parrain/'+obj.uid] = {parrainId: obj.parrainId};
-                updates['/users/' + obj.uid + '/setupStep'] = 5;
+        if (this.parrainId != "" || this.parrainId !== null) {
+            this.fdb.database.ref('/users/'+this.parrainId).on('value', function(snapshot) {
+                if (snapshot.val()) {
 
-                obj.fdb.database.ref().update(updates).
-                    then( result => {
-                        obj.goNext();
-                    }).catch(error => {
-                        let alertVerification = obj.alertCtrl.create({
-                          title: "Echec",
-                          subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
-                          buttons: ['OK']
+                    let updates = {};
+                    updates['/user-parrain/'+obj.uid] = {parrainId: obj.parrainId};
+                    updates['/users/' + obj.uid + '/setupStep'] = 5;
+
+                    obj.fdb.database.ref().update(updates).
+                        then( result => {
+                            obj.goNext();
+                        }).catch(error => {
+                            let alertVerification = obj.alertCtrl.create({
+                              title: "Echec",
+                              subTitle: "Une erreur est survenue, veuillez vérifier votre connexion internet et réessayer ultérieurement.",
+                              buttons: ['OK']
+                            });
+                            alertVerification.present();
                         });
-                        alertVerification.present();
+                }
+                else {
+                    let alertVerification = obj.alertCtrl.create({
+                      title: "Code parrain inexistant",
+                      subTitle: "Le code parrain que vous avez rentré est incorrect, veuillez le corriger puis réessayer.",
+                      buttons: ['OK']
                     });
-            }
-            else {
-                let alertVerification = obj.alertCtrl.create({
-                  title: "Code parrain inexistant",
-                  subTitle: "Le code parrain que vous avez rentré est incorrect, veuillez le corriger puis réessayer.",
-                  buttons: ['OK']
-                });
-                alertVerification.present();
-            }
-        })
+                    alertVerification.present();
+                }
+            });
+        }
+        else {
+            let alertVerification = obj.alertCtrl.create({
+              title: "Code parrain non indiqué",
+              subTitle: "Vous devez remplir le champ code parrain.",
+              buttons: ['OK']
+            });
+            alertVerification.present();
+        }
     }
 
     goNext() {

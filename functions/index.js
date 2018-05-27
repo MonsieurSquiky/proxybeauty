@@ -539,9 +539,9 @@ exports.createStripeConnectedAccount = functions.database.ref('/users/{userId}/a
                 first_name: user.firstname,
                 last_name: user.lastname,
                 dob: {
-                    year: user.birthdate.year,
-                    month: user.birthdate.month,
-                    day: user.birthdate.day
+                    year: user.birthdate ? user.birthdate.year : "1995",
+                    month: user.birthdate ? user.birthdate.month : "01",
+                    day: user.birthdate ? user.birthdate.day : "01"
                 },
                 type: 'individual',
                 address: {
@@ -590,7 +590,8 @@ exports.addPaymentSource = functions.database.ref('/stripe_customers/{userId}/so
     return stripe.customers.createSource(customer, {source});
   }).then((response) => {
     return event.data.adminRef.parent.child('result').set(response);
-  }, (error) => {
+}).catch( (error) => {
+      console.debug(error);
     return event.data.adminRef.parent.child('error').set(userFacingMessage(error));
   }).then(() => {
     return reportError(error, {user: event.params.userId});
