@@ -149,25 +149,53 @@ exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').
     });
 });
 
-exports.setBankAccount = functions.database.ref('/user-bankaccount/{userId}/accountList').onWrite((event) => {
+exports.setBankAccount = functions.database.ref('/user-bankaccount/{userId}').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
     const val = event.data.val();
     // This onWrite will trigger whenever anything is written to the path, so
     // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+    console.log(val);
     if (val.state === null || val.state == 'error' || val === null) return null;
 
     admin.database().ref('/stripe_sellers/' + event.params.userId + '/token/id').once('value', function(snapshot) {
         let CONNECTED_STRIPE_ACCOUNT_ID = snapshot.val();
-        console.log(val);
-        stripe.accounts.update(
-            CONNECTED_STRIPE_ACCOUNT_ID,
-            {
-                external_account : val
-            }
-        ).then(function(acct) {
-          // asynchronously called
-          console.log(acct);
-        });
+        if ( val.banktoken ) {
+
+            stripe.accounts.update(
+                CONNECTED_STRIPE_ACCOUNT_ID,
+                {
+                    external_account : val.banktoken
+                }
+            ).then(function(acct) {
+              // asynchronously called
+
+            });
+        }
+        else if ( val.rawData) {
+            return stripe.accounts.createExternalAccount(
+                CONNECTED_STRIPE_ACCOUNT_ID,
+                {
+                    external_account : {
+                        object: 'bank_account',
+                        country: 'FR',
+                        currency: 'EUR',
+                        account_holder_name: val.rawData.name,
+                        account_number: val.rawData.iban,
+                         default_for_currency: true
+                    }
+                }
+            ).then( function(acct) {
+                 // asynchronously called
+                 return admin.database().ref('/user-bankaccount/' + event.params.userId + '/accountList').set(acct);
+             }).catch( (err) => {
+                  console.log(err);
+                  return admin.database().ref('/user-bankaccount/' + event.params.userId + '/error').set(err);
+             });
+
+
+        }
+
+
     });
 });
 

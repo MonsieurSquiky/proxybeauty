@@ -18,7 +18,7 @@
         Vous n'avez pas encore ajouté de compte.
     </p>
     <div *ngIf="noAccount">
-        <form action="/charge" method="post" id="payment-form">
+        <form action="/charge" method="post" id="payment-form" showWhen="android">
           <div class="form-row inline">
             <div class="col">
               <label for="name">
@@ -38,7 +38,7 @@
             <div id="bank-name"></div>
           </div>
 
-          <button class="accountButton">Ajouter un compte</button>
+          <button class="accountButton">Ajouter le compte</button>
 
           <!-- Used to display form errors. -->
         <div id="error-message" role="alert"></div>
@@ -54,6 +54,24 @@
           within 8 weeks starting from the date on which your account was debited.
         </div> -->
         </form>
+
+        <div showWhen="ios">
+            <div class="col">
+              <label for="name">
+                Propriétaire du compte
+              </label>
+              <input id="name" name="name" placeholder="Jane Doe" [(ngModel)]="accountName" required>
+            </div>
+            <div class="col">
+              <label for="iban">
+                IBAN
+              </label>
+              <input id="name" name="name" placeholder="FR00 0000 0000 0000 0000 0000 000" [(ngModel)]="ibanRaw" required>
+            </div>
+
+            <button class="accountButton" (click)="saveIban()">Ajouter le compte</button>
+        </div>
+
     </div>
 
     <ion-list *ngIf="!noAccount">

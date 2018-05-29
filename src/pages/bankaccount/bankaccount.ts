@@ -20,6 +20,7 @@ export class BankaccountPage {
   uid;
   stripe;
   iban;
+  ibanRaw;
   noAccount = true;
   accountName;
   accountBank;
@@ -35,93 +36,93 @@ export class BankaccountPage {
   setupStripe(){
       // Create an instance of Elements.
       const obj = this;
-  var elements = this.stripe.elements();
+      var elements = this.stripe.elements();
 
-  // Custom styling can be passed to options when creating an Element.
-  // (Note that this demo uses a wider set of styles than the guide below.)
-  var style = {
-    base: {
-      color: '#32325d',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      fontSmoothing: 'antialiased',
-      fontSize: '16px',
-      '::placeholder': {
-        color: '#aab7c4'
-      },
-      ':-webkit-autofill': {
-        color: '#32325d',
-      },
-    },
-    invalid: {
-      color: '#fa755a',
-      iconColor: '#fa755a',
-      ':-webkit-autofill': {
-        color: '#fa755a',
-      },
-    }
-  };
+      // Custom styling can be passed to options when creating an Element.
+      // (Note that this demo uses a wider set of styles than the guide below.)
+      var style = {
+        base: {
+          color: '#32325d',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          },
+          ':-webkit-autofill': {
+            color: '#32325d',
+          },
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a',
+          ':-webkit-autofill': {
+            color: '#fa755a',
+          },
+        }
+      };
 
-  // Create an instance of the iban Element.
-  var iban = elements.create('iban', {
-    style: style,
-    supportedCountries: ['SEPA'],
-  });
+      // Create an instance of the iban Element.
+      var iban = elements.create('iban', {
+        style: style,
+        supportedCountries: ['SEPA'],
+      });
 
-  // Add an instance of the iban Element into the `iban-element` <div>.
-  iban.mount('#iban-element');
+      // Add an instance of the iban Element into the `iban-element` <div>.
+      iban.mount('#iban-element');
 
-  var errorMessage = document.getElementById('error-message');
-  var bankName = document.getElementById('bank-name');
+      var errorMessage = document.getElementById('error-message');
+      var bankName = document.getElementById('bank-name');
 
-  iban.on('change', function(event) {
-    // Handle real-time validation errors from the iban Element.
-    if (event.error) {
-      errorMessage.textContent = event.error.message;
-      errorMessage.classList.add('visible');
-    } else {
-      errorMessage.classList.remove('visible');
-    }
+      iban.on('change', function(event) {
+        // Handle real-time validation errors from the iban Element.
+        if (event.error) {
+          errorMessage.textContent = event.error.message;
+          errorMessage.classList.add('visible');
+        } else {
+          errorMessage.classList.remove('visible');
+        }
 
-    // Display bank name corresponding to IBAN, if available.
-    if (event.bankName) {
-      bankName.textContent = event.bankName;
-      bankName.classList.add('visible');
-    } else {
-      bankName.classList.remove('visible');
-    }
-  });
+        // Display bank name corresponding to IBAN, if available.
+        if (event.bankName) {
+          bankName.textContent = event.bankName;
+          bankName.classList.add('visible');
+        } else {
+          bankName.classList.remove('visible');
+        }
+      });
 
-  // Handle form submission.
-  var form = document.getElementById('payment-form');
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    //showLoading();
+      // Handle form submission.
+      var form = document.getElementById('payment-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        //showLoading();
 
-    var sourceData = {
-        currency: 'eur',
-        account_holder_name:  obj.accountName,
-        account_holder_type: 'individual'
-    };
+        var sourceData = {
+            currency: 'eur',
+            account_holder_name:  obj.accountName,
+            account_holder_type: 'individual'
+        };
 
-    // Call `stripe.createSource` with the iban Element and additional options.
-    obj.stripe.createToken(iban, sourceData).then(function(result) {
-      if (result.error) {
-        // Inform the customer that there was an error.
-        errorMessage.textContent = result.error.message;
-        errorMessage.classList.add('visible');
-        //stopLoading();
-      } else {
-        // Send the Source to your server to create a charge.
-        errorMessage.classList.remove('visible');
+        // Call `stripe.createSource` with the iban Element and additional options.
+        obj.stripe.createToken(iban, sourceData).then(function(result) {
+          if (result.error) {
+            // Inform the customer that there was an error.
+            errorMessage.textContent = result.error.message;
+            errorMessage.classList.add('visible');
+            //stopLoading();
+          } else {
+            // Send the Source to your server to create a charge.
+            errorMessage.classList.remove('visible');
 
-        obj.accountList.push(result.token);
+            obj.accountList.push(result.token);
 
-        obj.fdb.database.ref('user-bankaccount/'+obj.uid).set({ accountList: result.token.id, name: obj.accountName, bank_name: result.token.bank_account.bank_name });
-        console.log(result);
-        //stripeSourceHandler(result.source);
-      }
-    });
-  });
+            obj.fdb.database.ref('user-bankaccount/'+obj.uid).set({ banktoken: result.token.id, name: obj.accountName, bank_name: result.token.bank_account.bank_name });
+            console.log(result);
+            //stripeSourceHandler(result.source);
+          }
+        });
+      });
 }
 
 
@@ -153,6 +154,14 @@ export class BankaccountPage {
             });
         }
     });
+  }
+
+  saveIban() {
+      console.log('Saving');
+      let rawData = {iban : this.ibanRaw, name: this.accountName};
+      if (this.invariant(rawData)) {
+          this.fdb.database.ref('user-bankaccount/'+this.uid).set({ rawData, name: this.accountName });
+      }
   }
 
   addAccount() {
@@ -213,15 +222,6 @@ export class BankaccountPage {
           return false;
       }
 
-        if (!IBAN.isValid(data.iban)) {
-            let alert = this.alertCtrl.create({
-              title: "IBAN incorrect",
-              subTitle: "Veuillez vérifier votre IBAN et réessayer.",
-              buttons: ['OK']
-            });
-            alert.present();
-            return false;
-        }
 
         return true;
       /*
