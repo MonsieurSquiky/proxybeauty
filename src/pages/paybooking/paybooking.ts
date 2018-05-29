@@ -48,7 +48,7 @@ export class PaybookingPage {
                 public loadingCtrl:LoadingController,
                 public alertCtrl:AlertController) {
 
-      this.stripe.setPublishableKey('pk_live_43QYPKhdyXb32bFFeR14Gw59');
+      this.stripe.setPublishableKey('pk_test_aHC0D842ZOVEaBZ2t7Z2fBQp');
 
       this.product = navParams.get('product');
       this.rdvTimestamp = navParams.get('timestamp');

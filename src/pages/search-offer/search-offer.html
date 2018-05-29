@@ -38,7 +38,7 @@
 
         <ion-item no-padding>
           <ion-label no-padding><span class="icon-left"><ion-icon name="home" color="black"></ion-icon></span> A mon domicile</ion-label>
-          <ion-checkbox disabled="{{ !addressExist || !remoteAllowed }}" [(ngModel)]="remote"></ion-checkbox>
+          <ion-checkbox disabled="{{ !addressExist }}" [(ngModel)]="remote" (click)="updateClose('remote')"></ion-checkbox>
           <p *ngIf="!addressExist || !remoteAllowed" style="font-size:12px" > Il faut entrer votre adresse dans votre profil pour pouvoir réserver à domicile. </p>
         </ion-item>
 
@@ -56,17 +56,17 @@
         <ion-list>
             <ion-item no-padding>
               <ion-label no-padding> Proche de mon domicile</ion-label>
-              <ion-checkbox disabled="{{ !addressExist }}" [(ngModel)]="closeHome" (ionChange)="updateClose('home')"></ion-checkbox>
+              <ion-checkbox disabled="{{ !addressExist || remote }}" [(ngModel)]="closeHome" (click)="updateClose('home')"></ion-checkbox>
             </ion-item>
 
             <ion-item no-padding>
               <ion-label no-padding> Proche de ma position </ion-label>
-              <ion-checkbox disabled="{{ remote }}" [(ngModel)]="locate" (ionChange)="updateClose('locate')"></ion-checkbox>
+              <ion-checkbox disabled="{{ remote }}" [(ngModel)]="locate" (click)="updateClose('locate')"></ion-checkbox>
             </ion-item>
 
             <ion-item no-padding>
                 <ion-label no-padding> Autre part : </ion-label>
-                <ion-select (ionChange)="updateClose('other')" [(ngModel)]="subLocality">
+                <ion-select disabled="{{ remote }}" (ionChange)="updateClose('other')" [(ngModel)]="subLocality">
 
                     <ion-option value="00">(00) Hors France</ion-option>
                     <ion-option value="01">(01) Ain </ion-option>

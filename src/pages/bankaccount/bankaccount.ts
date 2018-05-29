@@ -29,7 +29,7 @@ export class BankaccountPage {
                 private fdb: AngularFireDatabase,
                 public alertCtrl: AlertController) {
 
-      this.stripe = Stripe('pk_live_43QYPKhdyXb32bFFeR14Gw59');
+      this.stripe = Stripe('pk_test_aHC0D842ZOVEaBZ2t7Z2fBQp');
   }
 
   setupStripe(){

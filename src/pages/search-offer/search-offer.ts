@@ -153,15 +153,24 @@ export class SearchOfferPage {
       if (field == 'home') {
           this.locate = (this.closeHome) ? false : (this.subLocality ? false : this.locate);
           this.remoteAllowed = (this.closeHome) ? true : this.remoteAllowed;
-          //this.subLocality = null;
+          this.subLocality = null;
       }
       else if (field == 'locate') {
           this.closeHome = (this.locate) ? false : (this.subLocality ? false : this.closeHome);
           this.remoteAllowed = (this.locate) ? true : this.remoteAllowed;
-          //this.subLocality = null;
+          this.subLocality = null;
+      }
+      else if (field == 'remote') {
+          if (this.remote) {
+              this.closeHome = true;
+              this.locate = false;
+              this.subLocality = null;
+          }
+          //
       }
       else if (field == 'other'){
-          [this.remoteAllowed, this.remote, this.closeHome, this.locate ] = [false, false, false, false];
+          if (this.subLocality !== null)
+            [this.remoteAllowed, this.remote, this.closeHome, this.locate ] = [false, false, false, false];
       }
   }
 
