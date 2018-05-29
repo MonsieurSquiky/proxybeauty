@@ -89,7 +89,6 @@ export class RdvHistoryPage {
 
     prestaConfirm(idRdv, idPresta, idClient) {
         const obj = this;
-        console.log(idRdv);
 
         let alertConfirm = obj.alertCtrl.create({
           title: "Confirmation du rendez-vous",
@@ -120,6 +119,10 @@ export class RdvHistoryPage {
         alertConfirm.present();
 
 
+    }
+
+    reclaim(idRdv, idPresta, rdvDate, category, tags) {
+        this.navCtrl.push(RatePage, { idRdv, idPresta, rdvDate, category, tags, isRating: false});
     }
 
     rate(idRdv, idPresta, rdvDate, category, tags) {

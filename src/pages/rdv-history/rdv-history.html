@@ -66,14 +66,14 @@
 
                 <ion-row *ngIf="!rdv.state;else confirmed_content">
                     <ion-col col-6>
-                        <button ion-button icon-left color="dark" (click)="reclamation()" outline>
+                        <button ion-button small icon-left color="dark" (click)="reclaim(rdv.key, rdv.prestataire, rdv.timestamp, rdv.category, rdv.tags)" outline>
                             <ion-icon name="alert"></ion-icon>
                             Réclamations
                         </button>
 
                     </ion-col>
                     <ion-col col-6>
-                        <button ion-button icon-left color="dark" (click)="prestaConfirm(rdv.key, rdv.prestataire, rdv.client)">
+                        <button ion-button  small icon-left color="dark" (click)="prestaConfirm(rdv.key, rdv.prestataire, rdv.client)">
                             <ion-icon name="checkmark"></ion-icon>
                             Confirmer
                         </button>

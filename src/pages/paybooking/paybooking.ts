@@ -317,9 +317,6 @@ export class PaybookingPage {
           rdvDatas
         });
 
-        console.debug(parrain_prestataireAccount);
-        console.debug(parrain_clientAccount);
-
         // On dwtecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
         this.fdb.database.ref(`/stripe_customers/${this.uid}/response/${newKey}/resultCharge`).on('value', function(snapshot) {
             if (snapshot.val().status == "succeeded") {
@@ -337,6 +334,23 @@ export class PaybookingPage {
                 });
                 alert.present();
 
+            }
+        });
+
+        this.fdb.database.ref(`/stripe_customers/${this.uid}/response/${newKey}/errorCharge`).on('value', function(snapshot) {
+            if (snapshot.exists()) {
+                obj.loading.dismiss();
+                let alert = obj.alertCtrl.create({
+                  title: 'Erreur lors du paiement',
+                  subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+                  buttons: [{
+                      text: 'Ok',
+                      handler: () => {
+                        //obj.navCtrl.setRoot(AmbassadorPage);
+                      }
+                    }]
+                });
+                alert.present();
             }
         });
     }

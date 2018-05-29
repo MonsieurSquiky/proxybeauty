@@ -127,6 +127,17 @@ export class SetAddressPage {
     async saveAddress() {
         const obj = this;
 
+        if (this.address.place == "" || this.address.place === null) {
+            let alertVerification = this.alertCtrl.create({
+              title: "Adresse non renseignée",
+              subTitle: "Vous devez donner une adresse valide ou utiliser la gélocalisation",
+              buttons: ['OK']
+            });
+            alertVerification.present();
+
+            return true;
+        }
+
         this.loading = this.loadingCtrl.create({
         content: 'Sauvegarde en cours...'
         });

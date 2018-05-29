@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 
@@ -19,19 +19,22 @@ export class RatePage {
     note = 4;
     idRdv;
     idPresta;
-    comment;
+    comment = "";
     uid;
     myData;
     rdvDate;
     tags;
     category;
+    isRating: boolean = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase, public alertCtrl: AlertController) {
       this.idRdv = navParams.get('idRdv');
       this.idPresta = navParams.get('idPresta');
       this.rdvDate = navParams.get('rdvDate');
       this.category = navParams.get('category');
       this.tags = navParams.get('tags');
+
+      this.isRating = navParams.get('isRating');
   }
 
   ionViewDidLoad() {
@@ -80,5 +83,31 @@ export class RatePage {
 
         this.fdb.database.ref().update(updates);
         this.navCtrl.pop();
+  }
+
+  sendMessage() {
+      if (this.comment === null || this.comment == "") {
+          let alert = this.alertCtrl.create({
+            title: 'Champ non rempli',
+            subTitle: 'Veuillez expliquez en remplissant le champ les raisons de votre réclamation.',
+            buttons: [{
+                text: 'OK'
+              }]
+          });
+          alert.present();
+          return true;
+      }
+          let updates = {};
+
+          updates['user-rdv/'+this.uid+'/'+this.idRdv+'/state'] = 'issued';
+          updates['user-rdv/'+this.idPresta+'/'+this.idRdv+'/state'] = 'issued';
+          updates['rdv/'+this.idRdv+'/state'] = 'issued';
+
+          updates['user-rdv/'+this.uid+'/'+this.idRdv+'/reclaim'] = this.comment;
+          updates['user-rdv/'+this.idPresta+'/'+this.idRdv+'/reclaim'] =  this.comment;
+          updates['rdv/'+this.idRdv+'/reclaim'] = this.comment;
+
+          this.fdb.database.ref().update(updates);
+          this.navCtrl.pop();
   }
 }

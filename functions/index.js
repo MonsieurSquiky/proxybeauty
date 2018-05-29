@@ -358,11 +358,33 @@ exports.createStripeSubmit = functions.database.ref('/stripe_customers/{userId}/
 });
 // [END submit]]
 
+exports.sendReclaim = functions.database.ref('user-rdv/{userId}/{idRdv}/state').onWrite((event) => {
+
+    const val = event.data.val();
+
+    if (val === null || val !== 'issued') return null;
+
+    // Send mail to support
+    const mailToNadirOptions = {
+      from: 'myproxybeauty@gmail.com', // sender address
+      to: 'myproxybeauty@gmail.com', // list of receivers
+      subject: 'RECLAIM : Reclamation sur un rendez-vous client', // Subject line
+      html: '<p> customer ID : '+ event.params.userId +' <br /> rdv ID' + event.params.idRdv+' <br /> </p>'// plain text body
+    };
+    let transporter = nodemailer.createTransport(mailAuth);
+    transporter.sendMail(mailToNadirOptions, function (err, info) {
+       if(err)
+         console.error(err);
+       else
+         console.log(info);
+    });
+});
+
 exports.payPresta = functions.database.ref('rdv/{idRdv}/state').onWrite((event) => {
   const val = event.data.val();
   // This onWrite will trigger whenever anything is written to the path, so
   // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
-  if (val === null || val !== 'confirmed') return null;
+  if (val === null || val !== 'confirmed' || val == 'issued') return null;
   // on recup les infos rdv
   return admin.database().ref(`/rdv/${event.params.idRdv}`).once('value').then((snapshot) => {
     return snapshot.val();
