@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
 import IBAN from 'iban';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -28,7 +28,8 @@ export class BankaccountPage {
   constructor(  public navCtrl: NavController,
                 public navParams: NavParams,
                 private fdb: AngularFireDatabase,
-                public alertCtrl: AlertController) {
+                public alertCtrl: AlertController,
+                public loadingCtrl: LoadingController) {
 
       this.stripe = Stripe('pk_test_aHC0D842ZOVEaBZ2t7Z2fBQp');
   }
@@ -119,6 +120,41 @@ export class BankaccountPage {
 
             obj.fdb.database.ref('user-bankaccount/'+obj.uid).set({ banktoken: result.token.id, name: obj.accountName, bank_name: result.token.bank_account.bank_name });
             console.log(result);
+            let loading = obj.loadingCtrl.create({
+            content: 'Vérification des coordonnées...'
+            });
+
+            loading.present();
+
+            // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+            obj.fdb.database.ref('user-bankaccount/'+obj.uid+'/accountList').on('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    loading.dismiss();
+                    let alert = obj.alertCtrl.create({
+                      title: 'Compte associé avec succès',
+                      subTitle: "Votre compte est bien associé et vos gains vous seront virés automatiquement dessus.",
+                      buttons: [{
+                          text: 'Parfait !'
+                        }]
+                    });
+                    alert.present();
+                }
+            });
+
+            // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+            obj.fdb.database.ref('user-bankaccount/'+obj.uid+'/error').on('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    loading.dismiss();
+                    let alert = obj.alertCtrl.create({
+                      title: 'Informations non valides',
+                      subTitle: "Veuillez corrigez vos informations et recommencer. Si votre problème persiste, contactez le support.",
+                      buttons: [{
+                          text: 'OK'
+                        }]
+                    });
+                    alert.present();
+                }
+            });
             //stripeSourceHandler(result.source);
           }
         });
@@ -133,10 +169,10 @@ export class BankaccountPage {
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             obj.uid = user.uid;
-            obj.fdb.database.ref('user-bankaccount/'+user.uid).on('value', function(snapshot) {
+            obj.fdb.database.ref('user-bankaccount/'+user.uid+'/accountList').on('value', function(snapshot) {
                 if (snapshot.exists()) {
-                    obj.accountList = snapshot.val().accountList;
-                    obj.accountName = snapshot.val().name;
+                    obj.accountList = snapshot.val();
+                    obj.accountName = snapshot.val().account_holder_name;
                     obj.accountBank = snapshot.val().bank_name;
                     obj.noAccount = false;
                 }
@@ -158,55 +194,47 @@ export class BankaccountPage {
 
   saveIban() {
       console.log('Saving');
+      const obj = this;
       let rawData = {iban : this.ibanRaw, name: this.accountName};
       if (this.invariant(rawData)) {
           this.fdb.database.ref('user-bankaccount/'+this.uid).set({ rawData, name: this.accountName });
-      }
-  }
 
-  addAccount() {
-      var obj = this;
-      let prompt = this.alertCtrl.create({
-      title: 'Nouveau compte',
-      message: "Entrez l'IBAN de votre compte et un nom pour le différencier",
-      inputs: [
-        {
-          name: 'name',
-          placeholder: 'Nom'
-        },
-        {
-          name: 'iban',
-          placeholder: 'IBAN'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Annuler',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Ajouter',
-          handler: data => {
-              if (obj.invariant(data)) {
+          let loading = this.loadingCtrl.create({
+          content: 'Vérification des coordonnées...'
+          });
 
-                  let accoutData = {
-                      iban: data.iban,
-                      currency: 'eur',
-                      account_holder_name: data.name,
-                      account_holder_type: 'individual'
-                  }
-                  obj.accountList.push({name: data.name, iban: data.iban});
+          loading.present();
 
-                  obj.fdb.database.ref('user-bankaccount/'+obj.uid+'/accountList').set(obj.accountList);
-
+          // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+          this.fdb.database.ref('user-bankaccount/'+this.uid+'/accountList').on('value', function(snapshot) {
+              if (snapshot.exists()) {
+                  loading.dismiss();
+                  let alert = obj.alertCtrl.create({
+                    title: 'Compte associé avec succès',
+                    subTitle: "Votre compte est bien associé et vos gains vous seront virés automatiquement dessus.",
+                    buttons: [{
+                        text: 'Parfait !'
+                      }]
+                  });
+                  alert.present();
               }
-          }
-        }
-      ]
-    });
-    prompt.present();
+          });
+
+          // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+          this.fdb.database.ref('user-bankaccount/'+this.uid+'/error').on('value', function(snapshot) {
+              if (snapshot.exists()) {
+                  loading.dismiss();
+                  let alert = obj.alertCtrl.create({
+                    title: 'Informations non valides',
+                    subTitle: "Veuillez corrigez vos informations et recommencer. Si votre problème persiste, contactez le support.",
+                    buttons: [{
+                        text: 'OK'
+                      }]
+                  });
+                  alert.present();
+              }
+          });
+      }
   }
 
 

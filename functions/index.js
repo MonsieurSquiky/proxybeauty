@@ -78,7 +78,7 @@ exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrit
     let nbRdv = 0;
     let nbComment = 0;
 
-    admin.database().ref('/user-rdv/' + event.params.userId).once('value', function(snapshot) {
+    return admin.database().ref('/user-rdv/' + event.params.userId).once('value', function(snapshot) {
         snapshot.forEach( function(childSnapshot) {
             nbRdv += 1;
             if (childSnapshot.hasChild('review'))
@@ -123,7 +123,7 @@ exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').
     // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
     if (val.state === null || val.state == 'error' || val === null) return null;
 
-    admin.database().ref('/user-gift/' + event.params.userId + '/gifts/'+ val.giftKey).once('value', function(snapshot) {
+    return admin.database().ref('/user-gift/' + event.params.userId + '/gifts/'+ val.giftKey).once('value', function(snapshot) {
         if (snapshot.val().state == 'available') {
             // Send mail to Nadir
             var val = event.data.val();;
@@ -149,53 +149,64 @@ exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').
     });
 });
 
-exports.setBankAccount = functions.database.ref('/user-bankaccount/{userId}').onWrite((event) => {
+exports.setBankAccountandroid = functions.database.ref('/user-bankaccount/{userId}/banktoken').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
     const val = event.data.val();
     // This onWrite will trigger whenever anything is written to the path, so
     // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
-    console.log(val);
-    if (val.state === null || val.state == 'error' || val === null) return null;
 
-    admin.database().ref('/stripe_sellers/' + event.params.userId + '/token/id').once('value', function(snapshot) {
+    if ( val === null) return null;
+
+    return admin.database().ref('/stripe_sellers/' + event.params.userId + '/token/id').once('value', function(snapshot) {
         let CONNECTED_STRIPE_ACCOUNT_ID = snapshot.val();
-        if ( val.banktoken ) {
 
-            stripe.accounts.update(
-                CONNECTED_STRIPE_ACCOUNT_ID,
-                {
-                    external_account : val.banktoken
+        stripe.accounts.update(
+            CONNECTED_STRIPE_ACCOUNT_ID,
+            {
+                external_account : val
+            }
+        ).then( function(acct) {
+             // asynchronously called
+             return admin.database().ref('/user-bankaccount/' + event.params.userId + '/accountList').set(acct);
+         }).catch( (err) => {
+              console.log(err);
+              return admin.database().ref('/user-bankaccount/' + event.params.userId + '/error').set(err.message);
+         });
+
+    });
+});
+
+
+exports.setBankAccountios = functions.database.ref('/user-bankaccount/{userId}/rawData').onWrite((event) => {
+    // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
+    const val = event.data.val();
+    // This onWrite will trigger whenever anything is written to the path, so
+    // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+
+    if ( val === null) return null;
+
+    return admin.database().ref('/stripe_sellers/' + event.params.userId + '/token/id').once('value', function(snapshot) {
+        let CONNECTED_STRIPE_ACCOUNT_ID = snapshot.val();
+
+        return stripe.accounts.createExternalAccount(
+            CONNECTED_STRIPE_ACCOUNT_ID,
+            {
+                external_account : {
+                    object: 'bank_account',
+                    country: 'FR',
+                    currency: 'EUR',
+                    account_holder_name: val.name,
+                    account_number: val.iban,
+                     default_for_currency: true
                 }
-            ).then(function(acct) {
-              // asynchronously called
-
-            });
-        }
-        else if ( val.rawData) {
-            return stripe.accounts.createExternalAccount(
-                CONNECTED_STRIPE_ACCOUNT_ID,
-                {
-                    external_account : {
-                        object: 'bank_account',
-                        country: 'FR',
-                        currency: 'EUR',
-                        account_holder_name: val.rawData.name,
-                        account_number: val.rawData.iban,
-                         default_for_currency: true
-                    }
-                }
-            ).then( function(acct) {
-                 // asynchronously called
-                 return admin.database().ref('/user-bankaccount/' + event.params.userId + '/accountList').set(acct);
-             }).catch( (err) => {
-                  console.log(err);
-                  return admin.database().ref('/user-bankaccount/' + event.params.userId + '/error').set(err);
-             });
-
-
-        }
-
-
+            }
+        ).then( function(acct) {
+             // asynchronously called
+             return admin.database().ref('/user-bankaccount/' + event.params.userId + '/accountList').set(acct);
+         }).catch( (err) => {
+              console.log(err);
+              return admin.database().ref('/user-bankaccount/' + event.params.userId + '/error').set(err.message);
+         });
     });
 });
 
