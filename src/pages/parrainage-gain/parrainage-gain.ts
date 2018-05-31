@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
-
+import { BankaccountPage } from '../bankaccount/bankaccount';
 /**
  * Generated class for the ParrainageGainPage page.
  *

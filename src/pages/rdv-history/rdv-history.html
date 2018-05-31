@@ -85,6 +85,9 @@
                         <ion-icon name="card"></ion-icon>
                         Noter la prestation
                     </button>
+                    <ion-item *ngIf="rdv.state == 'issued'" >
+                      <p style='white-space: normal !important;'> Votre réclamation est en cours de traitement </p>
+                    </ion-item>
                 </ng-template>
                 <ng-template #review>
                 </ng-template>

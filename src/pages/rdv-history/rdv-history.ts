@@ -46,6 +46,7 @@ export class RdvHistoryPage {
 
               let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
               rdvRef.on('value', function(snapshot) {
+                obj.rdvList= [];
                   snapshot.forEach( function(childSnapshot) {
                       if (childSnapshot.val().timestamp <= obj.now.getTime()) {
                           let nextRdv = childSnapshot.val();
@@ -126,7 +127,7 @@ export class RdvHistoryPage {
     }
 
     rate(idRdv, idPresta, rdvDate, category, tags) {
-        this.navCtrl.push(RatePage, { idRdv, idPresta, rdvDate, category, tags});
+        this.navCtrl.push(RatePage, { idRdv, idPresta, rdvDate, category, tags, isRating: true});
     }
 
     setRdvDays() {

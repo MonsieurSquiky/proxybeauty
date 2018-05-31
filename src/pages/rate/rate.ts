@@ -56,8 +56,9 @@ export class RatePage {
   setNote(note) {
       this.note = note;
   }
-  saveReview() {
 
+  saveReview() {
+        
         let updates = {};
 
         updates['user-rdv/'+this.uid+'/'+this.idRdv+'/state'] = 'reviewed';
@@ -68,21 +69,28 @@ export class RatePage {
         updates['user-rdv/'+this.idPresta+'/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment ? this.comment : null};
         updates['rdv/'+this.idRdv+'/review'] = { note: this.note, comment: this.comment };
 
-        let reviewKey = this.fdb.database.ref('reviews/'+this.idPresta).push().key;
-        updates['reviews/'+this.idPresta+'/'+reviewKey] = { note: this.note,
-                                                            comment: this.comment,
-                                                            rdv: this.idRdv,
-                                                            timestamp: this.rdvDate,
-                                                            tags: (this.tags) ? this.tags : null,
-                                                            category: this.category,
-                                                            client: {   firstname: this.myData.firstname,
-                                                                        lastname: this.myData.lastname,
-                                                                        profilepic: this.myData.profilepic,
-                                                                    }
-                                                            };
+        try {
 
-        this.fdb.database.ref().update(updates);
-        this.navCtrl.pop();
+          let reviewKey = this.fdb.database.ref('reviews/'+this.idPresta).push().key;
+
+          updates['reviews/'+this.idPresta+'/'+reviewKey] = { note: this.note,
+                                                              comment: (this.comment != "") ? this.comment : null,
+                                                              rdv: this.idRdv,
+                                                              timestamp: this.rdvDate,
+                                                              tags: (this.tags) ? this.tags : null,
+                                                              category: this.category,
+                                                              client: {   firstname: this.myData.firstname,
+                                                                          lastname: this.myData.lastname,
+                                                                          profilepic: this.myData.profilepic ? this.myData.profilepic : null,
+                                                                      }
+                                                              };
+
+          this.fdb.database.ref().update(updates);
+          this.navCtrl.pop();
+        }
+        catch (err) {
+          console.log(err);
+        }
   }
 
   sendMessage() {
