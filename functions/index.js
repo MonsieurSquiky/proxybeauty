@@ -49,6 +49,7 @@ const products = [ null, {
                   "name" : "Masque tissu charbon puri-détox",
                   "pictureUrl" : "./assets/img/masque-charbon.jpg",
                   "prix" : 4.9,
+                  "statut" : "client",
                   "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
                 }, {
                   "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
@@ -57,6 +58,7 @@ const products = [ null, {
                   "name" : "Masque tissu anti-âge",
                   "pictureUrl" : "./assets/img/masque-anti-age.jpg",
                   "prix" : 4.9,
+                  "statut" : "client",
                   "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
                 }, {
                   "components" : "Vitamine E, collagène",
@@ -65,6 +67,34 @@ const products = [ null, {
                   "name" : "Masque tissu collagène",
                   "pictureUrl" : "./assets/img/masque-collagene.jpg",
                   "prix" : 4.9,
+                  "statut" : "client",
+                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                }, {
+                  "components" : "Vitamine B6, charbon actif",
+                  "description" : "(Pack de 15) Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
+                  "id" : 4,
+                  "name" : "Masque tissu charbon puri-détox (pack de 15)",
+                  "pictureUrl" : "./assets/img/masque-charbon.jpg",
+                  "prix" : 43.5,
+                  "statut" : "prestataire",
+                  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                }, {
+                  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
+                  "description" : " (Pack de 15) Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
+                  "id" : 5,
+                  "name" : "Masque tissu anti-âge (pack de 15)",
+                  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
+                  "prix" : 43.5,
+                  "statut" : "prestataire",
+                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+                }, {
+                  "components" : "Vitamine E, collagène",
+                  "description" : " (Pack de 15) Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
+                  "id" : 6,
+                  "name" : "Masque tissu collagène (pack de 15)",
+                  "pictureUrl" : "./assets/img/masque-collagene.jpg",
+                  "prix" : 43.5,
+                  "statut" : "prestataire",
                   "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
                 } ];
 
