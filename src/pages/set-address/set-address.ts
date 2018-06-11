@@ -32,6 +32,7 @@ export class SetAddressPage {
     longitude: number = 0;
     uid: string;
     loading;
+    update;
 
     constructor(public navCtrl: NavController,
                 private fdb: AngularFireDatabase,
@@ -42,7 +43,7 @@ export class SetAddressPage {
                 public geolocation: Geolocation,
                 public _GEOCODE   : GeocoderProvider,
                 private platform : Platform) {
-
+        this.update = this.navParams.get('update');
         this.address = {
           place: navParams.get('place')
         };
@@ -83,7 +84,7 @@ export class SetAddressPage {
     }
 
     goToDashboard () {
-        if (this.navParams.get('update'))
+        if (this.update)
             this.navCtrl.pop();
         else
             this.navCtrl.push(ProfilepicPage);
@@ -220,7 +221,10 @@ export class SetAddressPage {
                      'setupStep': 3
                  }).then(function() {
                      obj.loading.dismiss();
-                    obj.navCtrl.push(ProfilepicPage);
+                     if (obj.update)
+                         obj.navCtrl.pop();
+                     else
+                         obj.navCtrl.push(ProfilepicPage);
 
                  }).catch(function(error) {
                    // An error happened.
