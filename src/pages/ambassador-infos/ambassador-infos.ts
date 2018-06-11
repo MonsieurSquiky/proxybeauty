@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { PaybookingPage } from '../paybooking/paybooking';
+import { AngularFireDatabase } from 'angularfire2/database';
+
 /**
  * Generated class for the AmbassadorInfosPage page.
  *
@@ -18,7 +20,7 @@ export class AmbassadorInfosPage {
   uid;
   isAmbassador: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase) {
   }
 
   ionViewDidLoad() {
@@ -38,7 +40,11 @@ export class AmbassadorInfosPage {
   }
 
   submitAmbassador() {
-      this.navCtrl.push(PaybookingPage, { prix: 99, type: 'abonnement'});
+      //this.navCtrl.push(PaybookingPage, { prix: 99, type: 'abonnement'});
+      let updates = {};
+      updates['/parrains/' + this.uid+'/ambassador'] = true;
+      updates['/users/' + this.uid + '/ambassador'] = true;
+       this.fdb.database.ref().update(updates);
   }
 
 }
