@@ -42,61 +42,248 @@ const giftProducts = [  {ids: [1, 2, 3], qte: 1, title:'1 masque au choix' },
                         {ids: [1, 2, 3], qte: 9, title:'1 masque au choix' },
                         {ids: [1, 2, 3], qte: 18, title:'1 masque au choix' }];
 
-const products = [ null, {
-                  "components" : "Vitamine B6, charbon actif",
-                  "description" : "Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
-                  "id" : 1,
-                  "name" : "Masque tissu charbon puri-détox",
-                  "pictureUrl" : "./assets/img/masque-charbon.jpg",
-                  "prix" : 4.9,
-                  "statut" : "client",
-                  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                }, {
-                  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
-                  "description" : "  Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
-                  "id" : 2,
-                  "name" : "Masque tissu anti-âge",
-                  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
-                  "prix" : 4.9,
-                  "statut" : "client",
-                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                }, {
-                  "components" : "Vitamine E, collagène",
-                  "description" : "Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
-                  "id" : 3,
-                  "name" : "Masque tissu collagène",
-                  "pictureUrl" : "./assets/img/masque-collagene.jpg",
-                  "prix" : 4.9,
-                  "statut" : "client",
-                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                }, {
-                  "components" : "Vitamine B6, charbon actif",
-                  "description" : "(Pack de 15) Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
-                  "id" : 4,
-                  "name" : "Masque tissu charbon puri-détox (pack de 15)",
-                  "pictureUrl" : "./assets/img/masque-charbon.jpg",
-                  "prix" : 43.5,
-                  "statut" : "prestataire",
-                  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                }, {
-                  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
-                  "description" : " (Pack de 15) Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
-                  "id" : 5,
-                  "name" : "Masque tissu anti-âge (pack de 15)",
-                  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
-                  "prix" : 43.5,
-                  "statut" : "prestataire",
-                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                }, {
-                  "components" : "Vitamine E, collagène",
-                  "description" : " (Pack de 15) Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
-                  "id" : 6,
-                  "name" : "Masque tissu collagène (pack de 15)",
-                  "pictureUrl" : "./assets/img/masque-collagene.jpg",
-                  "prix" : 43.5,
-                  "statut" : "prestataire",
-                  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
-                } ];
+const products = [{
+  "components" : "Voir les fiches des produits inclus",
+  "description" : "Cette box contient une crème puissante de jour et une de nuit, une crème \"22\" à l'abricot, un sérum \"22\" renforcé et un masque éclat ( à la pulpe de fraise ) en flacons de 15ml, ainsi qu'un masque tissu anti-âge et un purifiant.",
+  "id" : 0,
+  "name" : "Box Ambassadrice",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fbox-decouverte.jpg?alt=media&token=6fe5cde9-881d-4395-bc20-e077cedee6e0",
+  "prix" : 69.90,
+  "statut" : "client",
+  "usage" : "  Voir les fiches des produits inclus"
+}, {
+  "components" : "Vitamine B6, charbon actif",
+  "description" : "Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
+  "id" : 1,
+  "name" : "Masque tissu charbon puri-détox",
+  "pictureUrl" : "./assets/img/masque-charbon.jpg",
+  "prix" : 4.9,
+  "statut" : "client",
+  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
+  "description" : "  Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
+  "id" : 2,
+  "name" : "Masque tissu anti-âge",
+  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
+  "prix" : 4.9,
+  "statut" : "client",
+  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+  "components" : "Vitamine E, collagène",
+  "description" : "Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
+  "id" : 3,
+  "name" : "Masque tissu collagène",
+  "pictureUrl" : "./assets/img/masque-collagene.jpg",
+  "prix" : 4.9,
+  "statut" : "client",
+  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+  "components" : "Vitamine B6, charbon actif",
+  "description" : "(Pack de 25) Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
+  "id" : 4,
+  "name" : "Masque tissu charbon puri-détox (pack de 25)",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-charbon-presta.jpg?alt=media&token=1a91130c-d286-4a15-b3eb-acad84e48357",
+  "prix" : 72.5,
+  "statut" : "prestataire",
+  "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+  "components" : "Acide hyaluronique, agent lilftant, agent anti-âge",
+  "description" : " (Pack de 25) Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
+  "id" : 5,
+  "name" : "Masque tissu anti-âge (pack de 25)",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-anti-age-presta.jpg?alt=media&token=e5011b70-9f90-42e4-916f-4a2b3df7d0db",
+  "prix" : 72.5,
+  "statut" : "prestataire",
+  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+  "components" : "Vitamine E, collagène",
+  "description" : " (Pack de 25) Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
+  "id" : 6,
+  "name" : "Masque tissu collagène (pack de 25)",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-collagene-presta.jpg?alt=media&token=3dbc1965-48cb-46a6-835f-2786103b0b3a",
+  "prix" : 72.5,
+  "statut" : "prestataire",
+  "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
+}, {
+    "components" : "Cellule souche de pomme, Extraits de myrtille",
+    "description" : "Un masque constitué d'une membrane en Bio-Cellulose 100% naturelle, gorgé d'actifs anti-âge ultra-performants, pour une peau revitalisée, lisse et tonique.",
+    "id" : 7,
+    "name" : "Masque Bio-Cellulose anti-âge",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-myrtille.jpg?alt=media&token=6a1d84ae-31b6-4b9d-8fc7-1394ab8a84da",
+    "prix" : 9.90,
+    "statut" : "client",
+    "usage" : "Prêt à l’emploi, retirer les gazes puis appliquer sur le visage et laisser poser 10 minutes. Retirer le masque et masser l'excédent sans rincer"
+}, {
+    "components" : "Extraits de Capucine et de Graines de Muringa Oleifera",
+    "description" : "Un masque constitué d'une membrane en Bio-Cellulose 100% naturelle, gorgé d'actifs hautement efficaces, pour une purifiée, oxygénée, éclatante de santé.",
+    "id" : 8,
+    "name" : "Masque Bio-Cellulose purifiant",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-the.jpg?alt=media&token=6e9fb41c-3a43-41d8-b1f2-d1a64ab62b41",
+    "prix" : 9.90,
+    "statut" : "client",
+    "usage" : "Prêt à l’emploi, retirer les gazes puis appliquer sur le visage et laisser poser 10 minutes. Retirer le masque et masser l'excédent sans rincer"
+}, {
+    "components" : "Cellule souche de pomme, Extraits de myrtille",
+    "description" : "Un masque constitué d'une membrane en Bio-Cellulose 100% naturelle, gorgé d'actifs anti-âge ultra-performants, pour une peau revitalisée, lisse et tonique.",
+    "id" : 9,
+    "name" : "Masque Bio-Cellulose anti-âge (pack de 25)",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-myrtille-presta.jpg?alt=media&token=bbb9cbf3-fe70-485a-a9b4-de0238bf7580",
+    "prix" : 125.09,
+    "statut" : "prestataire",
+    "usage" : "Prêt à l’emploi, retirer les gazes puis appliquer sur le visage et laisser poser 10 minutes. Retirer le masque et masser l'excédent sans rincer"
+}, {
+    "components" : "Extraits de Capucine et de Graines de Muringa Oleifera",
+    "description" : "Un masque constitué d'une membrane en Bio-Cellulose 100% naturelle, gorgé d'actifs hautement efficaces, pour une purifiée, oxygénée, éclatante de santé.",
+    "id" : 10,
+    "name" : "Masque Bio-Cellulose purifiant (pack de 25)",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-the-presta.jpg?alt=media&token=ca82ab06-ca3f-41bc-9016-bbcbffedfc55",
+    "prix" : 125.09,
+    "statut" : "prestataire",
+    "usage" : "Prêt à l’emploi, retirer les gazes puis appliquer sur le visage et laisser poser 10 minutes. Retirer le masque et masser l'excédent sans rincer"
+}, {
+    "components" : "L-PCA, Extrait de laminaires",
+    "description" : " Cette lotion purifiante et équilibrante rafraîchit et tonifie les peaux grasses ou brillantes. Apaisante et régulatrice, elle nettoie tout en douceur la peau de ses impuretés, atténue l'aspect cutané brillant. Elle laisse la peau saine et nette. ",
+    "id" : 11,
+    "name" : "Brume & Lotion purifiante",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Flotion.jpg?alt=media&token=bf1c72df-2343-46d6-a64f-eb6aaaf176ab",
+    "prix" : 12.90,
+    "statut" : "client",
+    "usage" : "Utiliser régulièrement matin et soir sur la peau du visage, le cou et la nuque. Eviter le contour des yeux."
+
+}, {
+    "components" : "L-PCA, Extrait de laminaires",
+    "description" : " Cette lotion purifiante et équilibrante rafraîchit et tonifie les peaux grasses ou brillantes. Apaisante et régulatrice, elle nettoie tout en douceur la peau de ses impuretés, atténue l'aspect cutané brillant. Elle laisse la peau saine et nette. ",
+    "id" : 12,
+    "name" : "Brume & Lotion purifiante",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Flotion.jpg?alt=media&token=bf1c72df-2343-46d6-a64f-eb6aaaf176ab",
+    "prix" : 10,
+    "statut" : "prestaire",
+    "usage" : "Utiliser régulièrement matin et soir sur la peau du visage, le cou et la nuque. Eviter le contour des yeux."
+
+}, {
+    "components" : "Collagène Marin, Zinc",
+    "description" : "Une crème «ingénieuse» traitante contenant 2 complexes matifiants brevetés anti-peaux grasses. Un soin qui resserre les pores et diminue efficacement les brillances de la zone médiane. Cette crème matifiante contribue' à freiner la production excessive de sébum pour une peau mate et hydratée tout au long de la journée. ",
+    "id" : 13,
+    "name" : "Complexe Matifiant",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-mat.jpg?alt=media&token=0782c548-c252-44d5-8ff1-e8b5eea0bf25",
+    "prix" : 29.90,
+    "statut" : "client",
+    "usage" : "Appliquer le Complexe Matifiant sur peau propre et sèche matin et/ou soir sur l'ensemble du visage ou sur la zone médiane T-zone. Peaux mixtes à grasses. "
+
+}, {
+    "components" : "Collagène Marin, Zinc",
+    "description" : "Une crème «ingénieuse» traitante contenant 2 complexes matifiants brevetés anti-peaux grasses. Un soin qui resserre les pores et diminue efficacement les brillances de la zone médiane. Cette crème matifiante contribue' à freiner la production excessive de sébum pour une peau mate et hydratée tout au long de la journée. ",
+    "id" : 14,
+    "name" : "Complexe Matifiant",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-mat.jpg?alt=media&token=0782c548-c252-44d5-8ff1-e8b5eea0bf25",
+    "prix" : 17,
+    "statut" : "prestataire",
+    "usage" : "Appliquer le Complexe Matifiant sur peau propre et sèche matin et/ou soir sur l'ensemble du visage ou sur la zone médiane T-zone. Peaux mixtes à grasses. "
+
+}, {
+    "components" : "Acide Hyaluronique, Collagène Marin, Germes de blé, Abricot",
+    "description" : "Formule Complexe composée de 22 actifs qui stimulent une régénération rapide du tissu dermique et améliorent son élasticité. Plus douce, plus hydratée, la peau gagne en douceur, éclat et fermeté grâce aux apports de l'huile de noyau d'Abricot, de l'Acide Hyaluronique, du Collagène Marin et de l'huile de Germe de Blé. ",
+    "id" : 15,
+    "name" : "Crème \"22\" à l'abricot",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-abricot.jpg?alt=media&token=599a224b-3e24-43d5-9c73-cb2c74b90646",
+    "prix" : 34.90,
+    "statut" : "client",
+    "usage" : "Appliquer tous les matins sur le visage et le cou parfaitement nettoyés."
+
+}, {
+    "components" : "Acide Hyaluronique, Collagène Marin, Germes de blé, Abricot",
+    "description" : "Formule Complexe composée de 22 actifs qui stimulent une régénération rapide du tissu dermique et améliorent son élasticité. Plus douce, plus hydratée, la peau gagne en douceur, éclat et fermeté grâce aux apports de l'huile de noyau d'Abricot, de l'Acide Hyaluronique, du Collagène Marin et de l'huile de Germe de Blé. ",
+    "id" : 16,
+    "name" : "Crème \"22\" à l'abricot",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-abricot.jpg?alt=media&token=599a224b-3e24-43d5-9c73-cb2c74b90646",
+    "prix" : 17.90,
+    "statut" : "prestataire",
+    "usage" : "Appliquer tous les matins sur le visage et le cou parfaitement nettoyés."
+
+}, {
+    "components" : "Pulpe de Fraise, Vitamine A, Kaolin",
+    "description" : "En plus des Vitamines C et A (puissants anti-oxydants) contenues dans la Pulpe de Fraise, les tanins améliorent l'éclat du teint et assainissent la peau.",
+    "id" : 17,
+    "name" : "Masque éclat à la pulpe de fraise",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-fraise.jpg?alt=media&token=e85d0451-7382-485c-8d8f-ca59499abe41",
+    "prix" : 24.90,
+    "statut" : "client",
+    "usage" : "Utiliser une à deux fois par semaine, idéalement après un gommage. Appliquer en couche épaisse le masque pendant 10 à 15 minutes. Retirer à l'aide d'un coton humidifié. Eviter le contour des yeux."
+
+}, {
+    "components" : "Pulpe de Fraise, Vitamine A, Kaolin",
+    "description" : "En plus des Vitamines C et A (puissants anti-oxydants) contenues dans la Pulpe de Fraise, les tanins améliorent l'éclat du teint et assainissent la peau.",
+    "id" : 18,
+    "name" : "Masque éclat à la pulpe de fraise",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-fraise.jpg?alt=media&token=e85d0451-7382-485c-8d8f-ca59499abe41",
+    "prix" : 19,
+    "statut" : "prestataire",
+    "usage" : "Utiliser une à deux fois par semaine, idéalement après un gommage. Appliquer en couche épaisse le masque pendant 10 à 15 minutes. Retirer à l'aide d'un coton humidifié. Eviter le contour des yeux."
+
+}, {
+    "components" : "Acide Hyaluronique, Oligogéline, Aloé Vera",
+    "description" : "Riche en actifs réparateurs et hydratants, ce sérum à la tecture gel est un soin d'une extrême douceur pour tous les types de peaux, même les plus sensibles : son pouvoir apaisant calme les peaux les plus délicates, tandis que ses propriétés hydratantes et réparatrices améliorent l'aspect de l'épiderme.",
+    "id" : 19,
+    "name" : "Sérum \"22\" Formule Renforcée",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fserum.jpg?alt=media&token=99949d78-0e85-4d0f-a928-b62b652fc29c",
+    "prix" : 37.90,
+    "statut" : "client",
+    "usage" : "Appliquer le matin et le soir après avoir nettoyé la peau et avant l'appliation de la crème 22 à l'abricot. Peut également être utilisé tel un soin apaisant, réparateur après rasage. Eviter le contour des yeux."
+
+}, {
+    "components" : "Acide Hyaluronique, Oligogéline, Aloé Vera",
+    "description" : "Riche en actifs réparateurs et hydratants, ce sérum à la tecture gel est un soin d'une extrême douceur pour tous les types de peaux, même les plus sensibles : son pouvoir apaisant calme les peaux les plus délicates, tandis que ses propriétés hydratantes et réparatrices améliorent l'aspect de l'épiderme.",
+    "id" : 20,
+    "name" : "Sérum \"22\" Formule Renforcée",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fserum.jpg?alt=media&token=99949d78-0e85-4d0f-a928-b62b652fc29c",
+    "prix" : 26,
+    "statut" : "prestataire",
+    "usage" : "Appliquer le matin et le soir après avoir nettoyé la peau et avant l'appliation de la crème 22 à l'abricot. Peut également être utilisé tel un soin apaisant, réparateur après rasage. Eviter le contour des yeux."
+
+}, {
+    "components" : "Acide Hyaluronique, Vitamine A, Vitamine E, Karité",
+    "description" : "Ce soin \"cocoon\" de nuit a une action restructurante et repulpante grâce à la vitamine E, au Rétinol et aux extraits d'origine marine qui stimulent la synthèse de Collagène et d'Élastine. L'Acide Hyaluronique, le Nalidone et le beurre de Karité apportent un pouvoir hydratant et régénérant renforcés. ",
+    "id" : 21,
+    "name" : "Crème Puissante Nuit",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-nuit.jpg?alt=media&token=b765233d-90ac-4bc1-8e85-8c12807a5eb2",
+    "prix" : 37.90,
+    "statut" : "client",
+    "usage" : "Appliquer tous les soirs sur le visage et le cou parfaitement nettoyés, de préférence après votre sérum. Eviter le contour des yeux. "
+
+}, {
+    "components" : "Acide Hyaluronique, Vitamine A, Vitamine E, Karité",
+    "description" : "Ce soin \"cocoon\" de nuit a une action restructurante et repulpante grâce à la vitamine E, au Rétinol et aux extraits d'origine marine qui stimulent la synthèse de Collagène et d'Élastine. L'Acide Hyaluronique, le Nalidone et le beurre de Karité apportent un pouvoir hydratant et régénérant renforcés. ",
+    "id" : 22,
+    "name" : "Crème Puissante Nuit",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-nuit.jpg?alt=media&token=b765233d-90ac-4bc1-8e85-8c12807a5eb2",
+    "prix" : 22.90,
+    "statut" : "prestataire",
+    "usage" : "Appliquer tous les soirs sur le visage et le cou parfaitement nettoyés, de préférence après votre sérum. Eviter le contour des yeux. "
+
+}, {
+    "components" : "Anti-Rides (Hibiscus & Baobab), Osilift, Acide Hyaluronique",
+    "description" : "Une crème gorgée de principes actifs anti-rides puissants issus de la nature. Le Complexe Anti-Age [Hibiscus & Baobab] réduit la profondeur des rides d'expression et prévient leur formation [alternative non chirurgicale aux traitements à base de toxîne botulique. Des actifs anti-âge hautement régénérants [Acide Hyaluronique - extrait de Myrtille - Collagène Marin - Vitamine A) tonifient, restructurent et redensifient en profondeur l'épiderme. ",
+    "id" : 23,
+    "name" : "Crème Puissante Jour",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-jour.jpg?alt=media&token=fdc27bcc-d329-4f05-a8ac-1cf149107962",
+    "prix" : 39.90,
+    "statut" : "client",
+    "usage" : "Appliquer tous les matin sur le visage et le cou parfaitement nettoyés, de préférence en complément votre sérum. Eviter le contour des yeux. "
+
+}, {
+    "components" : "Anti-Rides (Hibiscus & Baobab), Osilift, Acide Hyaluronique",
+    "description" : "Une crème gorgée de principes actifs anti-rides puissants issus de la nature. Le Complexe Anti-Age [Hibiscus & Baobab] réduit la profondeur des rides d'expression et prévient leur formation [alternative non chirurgicale aux traitements à base de toxîne botulique. Des actifs anti-âge hautement régénérants [Acide Hyaluronique - extrait de Myrtille - Collagène Marin - Vitamine A) tonifient, restructurent et redensifient en profondeur l'épiderme. ",
+    "id" : 24,
+    "name" : "Crème Puissante Jour",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-jour.jpg?alt=media&token=fdc27bcc-d329-4f05-a8ac-1cf149107962",
+    "prix" : 24.90,
+    "statut" : "prestataire",
+    "usage" : "Appliquer tous les matin sur le visage et le cou parfaitement nettoyés, de préférence en complément votre sérum. Eviter le contour des yeux. "
+
+}
+ ]
+;
 
 exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
@@ -621,6 +808,8 @@ exports.createStripeCustomer = functions.auth.user().onCreate((event) => {
 // When a user finished to fill its profile, register them with Stripe as connected account
 exports.createStripeConnectedAccount = functions.database.ref('/users/{userId}/address/details').onWrite((event) => {
   const addressData = event.data.val();
+
+  if (addressData === null) return null;
 
   return admin.database().ref(`/users/${event.params.userId}`).once('value').then(function(snapshot) {
       var user = snapshot.val();
