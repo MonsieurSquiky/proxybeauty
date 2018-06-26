@@ -40,11 +40,13 @@ export class AmbassadorInfosPage {
   }
 
   submitAmbassador() {
-      //this.navCtrl.push(PaybookingPage, { prix: 99, type: 'abonnement'});
+      this.navCtrl.push(PaybookingPage, { prix: 12.90, type: 'abonnement'});
+      /*
       let updates = {};
       updates['/parrains/' + this.uid+'/ambassador'] = true;
       updates['/users/' + this.uid + '/ambassador'] = true;
        this.fdb.database.ref().update(updates);
+      */
   }
 
 }

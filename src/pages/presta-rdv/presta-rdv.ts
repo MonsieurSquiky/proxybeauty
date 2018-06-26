@@ -45,13 +45,16 @@ export class PrestaRdvPage {
 
             let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
             rdvRef.on('value', function(snapshot) {
-                snapshot.forEach( function(childSnapshot) {
-                    if (childSnapshot.val().timestamp > obj.now.getTime())
-                        obj.rdvList.push(childSnapshot.val());
-                    // else detruire le rdv
+                if (snapshot.exists()) {
 
-                  return false;
-                });
+                    snapshot.forEach( function(childSnapshot) {
+                        if (childSnapshot.val().timestamp > obj.now.getTime())
+                            obj.rdvList.push(childSnapshot.val());
+                        // else detruire le rdv
+
+                      return false;
+                    });
+                }
 
                 if (obj.rdvList.length == 0) {
                     let alertVerification = obj.alertCtrl.create({
@@ -60,7 +63,7 @@ export class PrestaRdvPage {
                       buttons: ['OK']
                     });
                     alertVerification.present();
-                    
+
                 }
 
                 obj.rdvList.sort(function (a, b) {
