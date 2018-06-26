@@ -35,19 +35,19 @@ const mailAuth = {
 
 const giftRdv = [3, 10, 25, 50, 100];
 const giftComment = [3, 10, 25, 50, 100];
-const giftValue = [5, 10, 20, 45, 90];
+const giftValue = [5, 10, 20, 40, 70];
 const giftProducts = [  {ids: [1, 2, 3], qte: 1, title:'1 masque au choix' },
-                        {ids: [1, 2, 3], qte: 2, title:'1 masque au choix' },
-                        {ids: [1, 2, 3], qte: 4, title:'1 masque au choix' },
-                        {ids: [1, 2, 3], qte: 9, title:'1 masque au choix' },
-                        {ids: [1, 2, 3], qte: 18, title:'1 masque au choix' }];
+                        {ids: [7, 8], qte: 1, title:'1 masque bio au choix' },
+                        {ids: [16, 17], qte: 1, title:'1 crème "fruitée" au choix' },
+                        {ids: [19, 21, 23], qte: 1, title:'1 crème au choix' },
+                        {ids: [0], qte: 1, title:'1 trousse Ambassadrice' }];
 
 const products = [{
   "components" : "Voir les fiches des produits inclus",
   "description" : "Cette box contient une crème puissante de jour et une de nuit, une crème \"22\" à l'abricot, un sérum \"22\" renforcé et un masque éclat ( à la pulpe de fraise ) en flacons de 15ml, ainsi qu'un masque tissu anti-âge et un purifiant.",
   "id" : 0,
   "name" : "Box Ambassadrice",
-  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fbox-decouverte.jpg?alt=media&token=6fe5cde9-881d-4395-bc20-e077cedee6e0",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fbox-decouverte.jpg?alt=media&token=74cfd8a4-815e-4d89-87c5-2a5894660af4",
   "prix" : 69.90,
   "statut" : "client",
   "usage" : "  Voir les fiches des produits inclus"
@@ -56,7 +56,7 @@ const products = [{
   "description" : "Le masque tissu charbon puri-detox est imprégné d’un sérum possédant un fort pouvoir absorbant permettant de retenir les impuretés et les toxines. Connu pour leurs propriétés anti-pollution, les actifs de ce masque vont venir purifier la peau.",
   "id" : 1,
   "name" : "Masque tissu charbon puri-détox",
-  "pictureUrl" : "./assets/img/masque-charbon.jpg",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-charbon.jpg?alt=media&token=889b639e-07eb-40a2-9589-8db0fb91711c",
   "prix" : 4.9,
   "statut" : "client",
   "usage" : "  Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
@@ -65,7 +65,7 @@ const products = [{
   "description" : "  Ce masque tissu est imprégné d’un sérum enrichi en actifs anti-âge. Ces actifs permettent d’estomper les premiers signes du vieillissement de la peau et apportent à la peau douceur et souplesse.",
   "id" : 2,
   "name" : "Masque tissu anti-âge",
-  "pictureUrl" : "./assets/img/masque-anti-age.jpg",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-anti-age.jpg?alt=media&token=2e49a30b-54e4-4498-92d4-8a0e8c1ee532",
   "prix" : 4.9,
   "statut" : "client",
   "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
@@ -74,7 +74,7 @@ const products = [{
   "description" : "Ce masque tissu est imprégné d’un sérum enrichi en vitamine E et en collagène. Composant majeur des tissus de la peau, le collagène est connu pour ses propriétés hydrantes et anti-âge permettant de raffermir et d’améliorer l’élasticité de la peau.",
   "id" : 3,
   "name" : "Masque tissu collagène",
-  "pictureUrl" : "./assets/img/masque-collagene.jpg",
+  "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-collagene.jpg?alt=media&token=93a20ab8-e8ab-4fd4-a959-37018c55d96b",
   "prix" : 4.9,
   "statut" : "client",
   "usage" : "Prêt à l’emploi, appliquer sur le visage et laisser poser 15 à 20 minutes. Retirer le masque et masser doucement l’excédent de sérum."
@@ -137,7 +137,7 @@ const products = [{
     "description" : "Un masque constitué d'une membrane en Bio-Cellulose 100% naturelle, gorgé d'actifs hautement efficaces, pour une purifiée, oxygénée, éclatante de santé.",
     "id" : 10,
     "name" : "Masque Bio-Cellulose purifiant (pack de 25)",
-    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-the-presta.jpg?alt=media&token=ca82ab06-ca3f-41bc-9016-bbcbffedfc55",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fmasque-the-presta.jpg?alt=media&token=923aabf1-f336-4b86-92b5-e435ebe1bfa6",
     "prix" : 125.09,
     "statut" : "prestataire",
     "usage" : "Prêt à l’emploi, retirer les gazes puis appliquer sur le visage et laisser poser 10 minutes. Retirer le masque et masser l'excédent sans rincer"
@@ -281,9 +281,47 @@ const products = [{
     "statut" : "prestataire",
     "usage" : "Appliquer tous les matin sur le visage et le cou parfaitement nettoyés, de préférence en complément votre sérum. Eviter le contour des yeux. "
 
-}
- ]
-;
+}, {
+    "components" : "Rose Damas-cena, Beurre de Karité, Huile de Germes de Blé et de Noyaux d'Abricot, Collagène Marin, Acide Hyaluronique, Nalidone, Vitamine E.",
+    "description" : "Un masque booster d'hydratation à la texture fraîche et onctueuse qui désaltère intensément les épidermes les plus assoiffés grâce à ses 22 constituants qui stimulent une régénération rapide du tissu dermique et améliorent son élasticité.",
+    "id" : 25,
+    "name" : "Crème 22 à la rose",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-rose.jpg?alt=media&token=b224e68f-a35e-49b8-bbb2-553325f77bd6",
+    "prix" : 24.90,
+    "statut" : "client",
+    "usage" : "Appliquer ie masque en couche épaisse sur le visage et le cou. Laisser poser 10 à 15 minutes ou toute la nuit pour les épidermes les plus assoiffés. Pour une efficacité renforcée, poser le masque après avoir appliqué le Sérum 22. L'effet 'booster' d'hydratation n'en sera que décuplé. Se rince avec une lotion tonique."
+
+}, {
+    "components" : "Rose Damas-cena, Beurre de Karité, Huile de Germes de Blé et de Noyaux d'Abricot, Collagène Marin, Acide Hyaluronique, Nalidone, Vitamine E.",
+    "description" : "Un masque booster d'hydratation à la texture fraîche et onctueuse qui désaltère intensément les épidermes les plus assoiffés grâce à ses 22 constituants qui stimulent une régénération rapide du tissu dermique et améliorent son élasticité.",
+    "id" : 26,
+    "name" : "Crème 22 à la rose",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fcreme-rose.jpg?alt=media&token=b224e68f-a35e-49b8-bbb2-553325f77bd6",
+    "prix" : 15.90,
+    "statut" : "prestataire",
+    "usage" : "Appliquer le masque en couche épaisse sur le visage et le cou. Laisser poser 10 à 15 minutes ou toute la nuit pour les épidermes les plus assoiffés. Pour une efficacité renforcée, poser le masque après avoir appliqué le Sérum 22. L'effet 'booster' d'hydratation n'en sera que décuplé. Se rince avec une lotion tonique."
+
+}, {
+    "components" : "Vitamine A, Vitamine E, Huile de noyau d’abricot, Acide Hyaluronique, Cellules végétales de Lys Blanc, Poudre d’Or – effet bonne mine",
+    "description" : "Le Sérum anti-âge global profond est un soin d’exception sur mesure composé de molécules inspirées de la nature et sublimées par la science au service d’un soin régénérant de pointe. Grace à un système unique d’encapsulation breveté, les actifs sont protégés dans les « perles à double coeur ». ",
+    "id" : 27,
+    "name" : "Sérum absolu d'or",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fserum-or.png?alt=media&token=05adfc64-1862-488d-89d0-3dd3a287c189",
+    "prix" : 69.90,
+    "statut" : "client",
+    "usage" : "Matin et soir, sur une peau nettoyée, appliquez le Sérum Absolu d’Or avant votre crème de soin (2 à 3 pressions pour le visage et le cou). Eviter le contour des yeux."
+
+}, {
+    "components" : "Vitamine A, Vitamine E, Huile de noyau d’abricot, Acide Hyaluronique, Cellules végétales de Lys Blanc, Poudre d’Or – effet bonne mine",
+    "description" : "Le Sérum anti-âge global profond est un soin d’exception sur mesure composé de molécules inspirées de la nature et sublimées par la science au service d’un soin régénérant de pointe. Grace à un système unique d’encapsulation breveté, les actifs sont protégés dans les « perles à double coeur ». ",
+    "id" : 28,
+    "name" : "Sérum absolu d'or",
+    "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fserum-or.png?alt=media&token=05adfc64-1862-488d-89d0-3dd3a287c189",
+    "prix" : 58.90,
+    "statut" : "prestataire",
+    "usage" : "Matin et soir, sur une peau nettoyée, appliquez le Sérum Absolu d’Or avant votre crème de soin (2 à 3 pressions pour le visage et le cou). Eviter le contour des yeux."
+
+}];
 
 exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
