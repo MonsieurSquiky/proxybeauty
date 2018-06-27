@@ -110,7 +110,7 @@ export class FilterPage {
     remote: boolean;
     home: boolean;
     prix: number;
-    duree;
+    duree: number;
     category;
     supplementsNode: any;
     uid;
@@ -121,7 +121,7 @@ export class FilterPage {
 
       for(let i=0; i < this.metatags[this.category].length; i++) {
           this.selectedTags[this.metatags[this.category][i]] = 0
-          this.tags.push( {"name" : this.metatags[this.category][i], "duree": null, "prix": null});
+          this.tags.push( {"name": this.metatags[this.category][i], "duree": null, "prix": null});
       }
 
       this.supplementsNode = $( "#supplement_template").clone();
@@ -181,7 +181,21 @@ export class FilterPage {
   }
 
   switchTag(tagCode: string) {
-      this.selectedTags[tagCode] = (this.selectedTags[tagCode] == 0) ? 1 : 0;
+      if  (this.selectedTags[tagCode] == 0) {
+          this.addSupplement(tagCode);
+          this.selectedTags[tagCode] = 1;
+      }
+      else {
+          for (let j=0; j <this.tags.length; j++) {
+              if (this.tags[j]["name"] == tagCode) {
+                  $( "#supplement"+j).hide();
+                  this.tags[j] = {"name": tagCode, "duree": null, "prix": null};
+
+              }
+          }
+          this.selectedTags[tagCode] = 0;
+      }
+
       var tagButton = document.getElementById(tagCode);
       if (tagButton.className.search("main-color-button") == -1 ) {
           tagButton.className += " main-color-button";
@@ -189,7 +203,7 @@ export class FilterPage {
       else {
           tagButton.className = tagButton.className.replace("main-color-button", "");
       }
-
+      /* Old system for erasing supplemnt if tag is selected
       for (let j=0; j <this.tags.length; j++) {
           if (this.tags[j]["name"] == tagCode) {
               $( "#supplement"+j).hide();
@@ -197,6 +211,7 @@ export class FilterPage {
 
           }
       }
+      */
   }
 
   showSupplement() {
@@ -253,13 +268,14 @@ export class FilterPage {
         if (this.tags[i]["prix"] && this.supplements.indexOf(this.tags[i]) == -1)
             this.supplements.push(this.tags[i]);
     }
-
+    /*
     for (var key in this.selectedTags) {
         if (this.selectedTags[key] != 0) {
 
             finaltags.push(key);
         }
     }
+    */
     if (this.invariant()) {
         var postData = {
             prestataire: this.uid,
@@ -297,10 +313,11 @@ export class FilterPage {
           alert.present();
           return false;
       }
-      if (!this.prix || this.prix < 10) {
+
+      if (!this.prix || this.prix < 5) {
           let alert = this.alertCtrl.create({
             title: "Prix invalide",
-            subTitle: "Veuillez entrer un prix non nul supérieur à 10€.",
+            subTitle: "Veuillez entrer un prix non nul supérieur à 5€.",
             buttons: ['OK']
           });
           alert.present();
@@ -321,7 +338,7 @@ export class FilterPage {
           if (!this.supplements[i].prix) {
               let alert = this.alertCtrl.create({
                 title: this.supplements[i].name + " : prix invalide",
-                subTitle: "Veuillez entrer un prix non nul pour le supplément "+ this.supplements[i].name,
+                subTitle: "Veuillez entrer un prix non nul pour le tag "+ this.supplements[i].name,
                 buttons: ['OK']
               });
               alert.present();
@@ -331,7 +348,7 @@ export class FilterPage {
           if (!this.supplements[i].duree) {
               let alert = this.alertCtrl.create({
                 title: this.supplements[i].name + " : durée invalide",
-                subTitle: "Veuillez entrer la durée estimée de votre supplément "+ this.supplements[i].name,
+                subTitle: "Veuillez entrer la durée estimée pour le tag "+ this.supplements[i].name,
                 buttons: ['OK']
               });
               alert.present();
