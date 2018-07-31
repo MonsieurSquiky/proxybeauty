@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import firebase from 'firebase';
 import { PaybookingPage } from '../paybooking/paybooking';
+import { BoutiquePage } from '../boutique/boutique';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 /**
@@ -40,7 +41,8 @@ export class AmbassadorInfosPage {
   }
 
   submitAmbassador() {
-      this.navCtrl.push(PaybookingPage, { prix: 12.90, type: 'abonnement'});
+      //this.navCtrl.push(PaybookingPage, { prix: 12.90, type: 'abonnement'});
+      this.navCtrl.push(BoutiquePage, { special: 'ambassador', type: 'abonnement'});
       /*
       let updates = {};
       updates['/parrains/' + this.uid+'/ambassador'] = true;

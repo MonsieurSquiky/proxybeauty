@@ -33,10 +33,11 @@ import { ProfilePage } from '../pages/profile/profile';
 import { BoutiquePage } from '../pages/boutique/boutique';
 import { RdvPage } from '../pages/rdv/rdv';
 import { GiftPage } from '../pages/gift/gift';
+import { SavPage } from '../pages/sav/sav';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { TranslateService } from '@ngx-translate/core';
+//import { TranslateService } from '@ngx-translate/core';
 
 import { FcmProvider } from '../providers/fcm/fcm';
 
@@ -64,7 +65,7 @@ export class MyApp {
     public menu: MenuController,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
-    public translate: TranslateService,
+    //public translate: TranslateService,
     public fcm: FcmProvider,
     public toastCtrl: ToastController
   ) {
@@ -75,6 +76,7 @@ export class MyApp {
     this.pages = [
       { title: 'Accueil', component: PrestaBoardPage },
       { title: 'Mon Profil', component: ProfilePage },
+      { title: 'Espace Client', component: SavPage },
       { title: 'Se déconnecter', component: LogoutPage }
       /*,
       { title: 'My First List', component: ListPage },
@@ -97,13 +99,14 @@ export class MyApp {
     this.clientpages.push({ title: 'La Boutique', component: BoutiquePage });
     this.clientpages.push({ title: 'Mes Cadeaux', component: GiftPage });
     this.clientpages.push({ title: 'Mon Espace Ambassadeur', component: AmbassadorPage });
+    this.clientpages.push({ title: 'Espace Client', component: SavPage });
     this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
 
   }
 
   initializeApp() {
       const obj = this;
-    this.translate.setDefaultLang('fr');
+    //this.translate.setDefaultLang('fr');
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

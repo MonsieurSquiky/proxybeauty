@@ -18,6 +18,7 @@
 
 <ion-content padding>
     <button *ngIf="!isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Activer le mode Ambassadeur</button>
+    <button *ngIf="isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Commander une autre Box </button>
     <p *ngIf="isAmbassador" class="selectable" > Votre code ambassadeur est : <br />
         <ion-item text-center style="font-size:12px" class="selectable"> {{ uid }} </ion-item>
     </p>
@@ -33,7 +34,7 @@
         Tu aimes le concept ProxyBeauty et ses produits ? <br />
         Fais la connaître autour de toi, enregistre des professionnels, parles en à un max de personnes et sois rémunéré à vie ! <br />
         Comment ça marche ? <br /> <br />
-        <b>1.</b> Active le mode Ambassadeur gratuit pour le premier mois (puis 12,90€ par mois, <b>sans aucun engagement</b>) . <br /> <br />
+        <b>1.</b> Active le mode Ambassadeur en cliquant sur le bouton puis en achetant une des box (à partir de 39,90€). <br /> <br />
         <b>2.</b> Récupére ton code parrain juste au dessus de la vidéo et transmet le au plus grand nombre possible. <br /> <br />
         <b>3.</b> Reçois de l'argent chaque fois qu'une d'entre elles utilisent l'appli :  <br />
          <b>

@@ -21,6 +21,7 @@ export class BoutiquePage {
   uid;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private fdb: AngularFireDatabase) {
+
   }
 
   ionViewDidLoad() {
@@ -47,14 +48,20 @@ export class BoutiquePage {
   async loadBoutique(statut) {
     const obj = this;
 
-    
+
     console.log(statut);
     var boutiqueRef = this.fdb.database.ref('/products');
     boutiqueRef.once('value', function(snapshot) {
         snapshot.forEach( function(childSnapshot) {
             let product = childSnapshot.val();
-            if (product.statut == statut)
-              obj.products.push(product);
+            if (obj.navParams.get('special')) {
+                if (obj.navParams.get('special') == "ambassador" && product.statut == 'ambassador')
+                    obj.products.push(product);
+            }
+            else {
+                if (product.statut == statut)
+                    obj.products.push(product);
+            }
           return false;
         });
 

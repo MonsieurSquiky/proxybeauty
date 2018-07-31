@@ -18,9 +18,8 @@ import { ResultOfferPage } from '../pages/result-offer/result-offer';
 import { ParrainageGainPage } from '../pages/parrainage-gain/parrainage-gain';
 import { PrestaListPage } from '../pages/presta-list/presta-list';
 import { PrestaRatingsPage } from '../pages/presta-ratings/presta-ratings';
-import { RatePage } from '../pages/rate/rate';
-import { RdvPage } from '../pages/rdv/rdv';
-import { RdvHistoryPage } from '../pages/rdv-history/rdv-history';
+
+
 import { PrestaRdvPage } from '../pages/presta-rdv/presta-rdv';
 import { HorairePage } from '../pages/horaire/horaire';
 //import { ParrainagePage } from '../pages/parrainage/parrainage';
@@ -51,6 +50,10 @@ import { FormsModule } from '@angular/forms';
 import { AddressFormPageModule } from '../pages/address-form/address-form.module';
 import { GiftPageModule } from '../pages/gift/gift.module';
 import { BankaccountPageModule } from '../pages/bankaccount/bankaccount.module';
+import { SavPageModule } from '../pages/sav/sav.module';
+import { RatePageModule } from '../pages/rate/rate.module';
+import { RdvPageModule } from '../pages/rdv/rdv.module';
+import { RdvHistoryPageModule } from '../pages/rdv-history/rdv-history.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -65,13 +68,13 @@ import { GeocoderProvider } from '../providers/geocoder/geocoder';
 import { FcmProvider } from '../providers/fcm/fcm';
 import { InAppBrowser, InAppBrowserOptions } from "@ionic-native/in-app-browser";
 
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+//import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+//import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-export function setTranslateLoader(http: HttpClient) {
+/*export function setTranslateLoader(http: HttpClient) {
  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+}*/
 //import { DatabaseserviceProvider } from '../providers/databaseservice/databaseservice';
 import { HttpModule } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
@@ -109,10 +112,7 @@ var config = {
     BookingPage,
     BoutiquePage,
     ProductPage,
-    ProfilePage,
-    RdvHistoryPage,
-    RdvPage,
-    RatePage
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -121,6 +121,7 @@ var config = {
     IonicModule.forRoot(MyApp),
     HttpClientModule,
     HttpModule,
+    /*
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -128,6 +129,7 @@ var config = {
         deps: [HttpClient]
       }
     }),
+    */
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
@@ -145,7 +147,11 @@ var config = {
     LogoutPageModule,
     AddressFormPageModule,
     GiftPageModule,
-    BankaccountPageModule
+    BankaccountPageModule,
+    SavPageModule,
+    RatePageModule,
+    RdvHistoryPageModule,
+    RdvPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -168,10 +174,7 @@ var config = {
     BookingPage,
     BoutiquePage,
     ProductPage,
-    ProfilePage,
-    RdvHistoryPage,
-    RdvPage,
-    RatePage
+    ProfilePage
   ],
   providers: [
     StatusBar,
