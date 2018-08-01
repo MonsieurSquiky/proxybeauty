@@ -427,7 +427,128 @@ const products = [{
     "statut" : "ambassador",
     "usage" : ""
 
-}];
+}, {
+    "components" : "Menthe poivrée, Cassis, Ortie, Artichaut, Pensées sauvage, Pétales de souci",
+    "description" : "Elimine les toxines. A boire en cure lors des changements de saison- purifie et draine pour une remise en forme complète de l’organisme.",
+    "id" : 33,
+    "name" : "Détox",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion 3 min maximum"
+
+}, {
+    "components" : "Fleurs d’Hibiscus, Menthe Nanah, Thé Vert, Racines de Pissenlit, Reine des Prés",
+    "description" : "Purifie l’organisme. Ce mélange de plantes est un allié indirect dans la perte de poids. A prendre en cure, ou quotidiennement.",
+    "id" : 34,
+    "name" : "Minceur",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion 3 min maximum"
+
+}, {
+    "components" : "Rooibos, Cannelle, Cardamome, Orange, Gingembre, Poivre, Badiane, Girofle",
+    "description" : "Stimulante, cette tisane aux vertus antioxydantes redonne énergie et vitalité afin de commencer sa journée en pleine forme.   ",
+    "id" : 35,
+    "name" : "RÉVEIL",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Citronnelle, Gingembre Gris, Citron, Cardamome",
+    "description" : "Énergisant, ce mélange de plantes aux notes citronnées offre des bienfaits revitalisants et stimulants à boire toute la journée.",
+    "id" : 36,
+    "name" : "Tonique",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Anis Vert, Carvi, Menthe Nanah, Fenugrec, Basilic, Fenouil",
+    "description" : "Favorise la lactation. Sa composition à base de fenouil et d’anis facilite la digestion. Son goût délicatement anisé est très apprécié des nourrissons.",
+    "id" : 37,
+    "name" : "ALLAITEMENT",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Houblon, Fenouil, Anis vert, Mélisse, Menthe nanah",
+    "description" : "Soulage les maux liés à la grossesse, ce mélange aux bienfaits apaisants vous accompagne tout au long de votre grossesse. ",
+    "id" : 38,
+    "name" : "GROSSESSE",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Raisins de Corinthe, Hibiscus, Cynorrhodon, Réglisse, Vigne rouge, Mélilot",
+    "description" : "Favorise et stimule le flux du sang au niveau des vaisseaux sanguins. Idéale pour pallier aux problèmes de jambes lourdes. ",
+    "id" : 39,
+    "name" : "CIRCULATOIRE",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude ou glacée. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Romarin, Cannelle, Sureau, Réglisse, Mélisse, Bourrache, Mauve",
+    "description": "Tonifie le système immunitaire et revitalise l’organisme afin de lutter contre les rigueurs de l’hiver. Cure d’un mois.",
+    "id" : 40,
+    "name" : "IMMUNITÉ",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Eucalyptus, Hysope, Réglisse, Fleurs de Mauve, Menthe poivree",
+    "description" : "Soulage les voies respiratoires, calme la toux et adoucit la gorge. A boire sous forme de cure de 3 semaines. ",
+    "id" : 41,
+    "name" : "Respiratoire",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Fruits de fenouil, Verveine odorante, Semence d’Angélique, Romarin, Anis vert, Badiane, Hysope",
+    "description" : "Apaise et facilite la digestion, à boire en fin de repas pour stimuler les voies digestives. L’alliance du romarin, verveine et hysope apaise et offre des vertus relaxantes. ",
+    "id" : 42,
+    "name" : "DIGESTIVE",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude. Temps d’infusion: 7 à 10 min"
+
+},  {
+    "components" : "Raisins de Corinthe, Anis Vert, Carvi Noir, Amande, Cannelle de Ceylan, Aspérule Odorante",
+    "description" : "Réduit le stress de la journée et détend les muscles pour favoriser un sommeil réparateur. L’Aspérule est reconnue pour ses effets  antistress et ses bienfaits sur les insomnies. ",
+    "id" : 43,
+    "name" : "SOMMEIL",
+    "pictureUrl" : "",
+    "prix" : 9.90,
+    "statut" : "client",
+    "category": "Tisanes",
+    "usage" : "A boire chaude. Temps d’infusion: 7 à 10 min"
+}
+ ];
 
 exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
