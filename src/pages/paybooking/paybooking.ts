@@ -5,6 +5,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 import { PrestaRdvPage } from '../presta-rdv/presta-rdv';
 import { AmbassadorPage } from '../ambassador/ambassador';
+import { ReqHttpProvider } from '../../providers/req-http/req-http';
 
 import firebase from 'firebase';
 
@@ -40,13 +41,15 @@ export class PaybookingPage {
   place;
   statut;
   loading;
+  user_infos;
 
   constructor(  public navCtrl: NavController,
                 public navParams: NavParams,
                 private stripe: Stripe,
                 private fdb: AngularFireDatabase,
                 public loadingCtrl:LoadingController,
-                public alertCtrl:AlertController) {
+                public alertCtrl:AlertController,
+                public reqHttp: ReqHttpProvider) {
 
       this.stripe.setPublishableKey('pk_live_43QYPKhdyXb32bFFeR14Gw59');
 
@@ -57,6 +60,7 @@ export class PaybookingPage {
       this.type = navParams.get('type');
       this.place = navParams.get('place');
       this.statut = navParams.get('statut');
+      this.user_infos = navParams.get('user_infos') ? navParams.get('user_infos') : false;
 
 
         var obj = this;
@@ -75,8 +79,9 @@ export class PaybookingPage {
             } else {
               // No user is signed in.
               console.log("No user signed");
+              obj.uid = false;
               loading1.dismiss();
-              navCtrl.setRoot(HelloIonicPage);
+              //navCtrl.setRoot(HelloIonicPage);
             }
           });
     }
@@ -150,66 +155,81 @@ export class PaybookingPage {
 
     async buyProduct(sourceToken) {
         var obj=this;
-        var parrainId;
+        var parrainId = false;
         var parrainAccount = null;
         console.log('In');
-        await this.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value', function(snapshot) {
-            parrainId = (snapshot.val()) ? snapshot.val() : false;
-        }).catch( (error) => { console.log('Parrain id ' + error) });
 
+        if (this.uid) {
+            await this.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value', function(snapshot) {
+                parrainId = (snapshot.val()) ? snapshot.val() : false;
+            }).catch( (error) => { console.log('Parrain id ' + error) });
 
-        if (parrainId) {
-            await firebase.database().ref('/stripe_sellers/' + parrainId + '/token/id').once('value', function(snapshot) {
-                parrainAccount = snapshot.val();
-            }).catch( (error) => { console.log('Parrain account ' + error) });
+            if (parrainId) {
+                await firebase.database().ref('/stripe_sellers/' + parrainId + '/token/id').once('value', function(snapshot) {
+                    parrainAccount = snapshot.val();
+                }).catch( (error) => { console.log('Parrain account ' + error) });
+            }
+            console.log('Parrain correct');
+            let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/shopping`).push().key;
+            console.log('Key correct' + newKey);
+            this.fdb.database.ref(`/stripe_customers/${this.uid}/shopping/${newKey}`).set({
+              source: sourceToken,
+              idProduct: this.product.id,
+              qte: this.product.qte,
+              place: this.place,
+              parrainId : parrainId,
+              parrainAccount : parrainAccount,
+              user_infos: this.user_infos
+              }).catch( (error) => { console.log('Fdb shopping ' + error) });
+
+                // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
+                this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/resultCharge`).on('value', function(snapshot) {
+                    if (snapshot.exists() && snapshot.val().status == "succeeded") {
+                        obj.loading.dismiss();
+                        let alert = obj.alertCtrl.create({
+                          title: 'Paiement effectué avec succès',
+                          subTitle: "Le paiement a bien été pris en compte et votre commande est enregistrée",
+                          buttons: [{
+                              text: 'Parfait !',
+                              handler: () => {
+                                obj.navCtrl.pop();
+                                obj.navCtrl.pop();
+                                obj.navCtrl.pop();
+                              }
+                            }]
+                        });
+                        alert.present();
+                    }
+                });
+
+            this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/errorCharge`).on('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    obj.loading.dismiss();
+                    let alert = obj.alertCtrl.create({
+                      title: 'Erreur lors du paiement',
+                      subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
+                      buttons: [{
+                          text: 'Ok',
+                          handler: () => {
+                            //obj.navCtrl.setRoot(AmbassadorPage);
+                          }
+                        }]
+                    });
+                    alert.present();
+                }
+            });
         }
-        console.log('Parrain correct');
-        let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/shopping`).push().key;
-        console.log('Key correct' + newKey);
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopping/${newKey}`).set({
-          source: sourceToken,
-          idProduct: this.product.id,
-          qte: this.product.qte,
-          place: this.place,
-          parrainId : parrainId,
-          parrainAccount : parrainAccount
-      }).catch( (error) => { console.log('Fdb shopping ' + error) });
+        else {
+            let body = {source: sourceToken, idProduct: this.product.id, qte: this.product.qte, place: this.place, user_infos: this.user_infos };
 
-        // On detecte le resultat du paiement en regardant si la reponse a ete ecrite sur la bdd
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/resultCharge`).on('value', function(snapshot) {
-            if (snapshot.exists() && snapshot.val().status == "succeeded") {
-                obj.loading.dismiss();
-                let alert = obj.alertCtrl.create({
-                  title: 'Paiement effectué avec succès',
-                  subTitle: "Le paiement a bien été pris en compte et votre commande est enregistrée",
-                  buttons: [{
-                      text: 'Parfait !',
-                      handler: () => {
-                        obj.navCtrl.pop();
-                        obj.navCtrl.pop();
-                      }
-                    }]
-                });
-                alert.present();
-            }
-        });
+            let reqLoader = this.loadingCtrl.create({
+            content: 'Opération en cours de traitement...'
+            });
 
-        this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse/${newKey}/errorCharge`).on('value', function(snapshot) {
-            if (snapshot.exists()) {
-                obj.loading.dismiss();
-                let alert = obj.alertCtrl.create({
-                  title: 'Erreur lors du paiement',
-                  subTitle: "Le paiement a échoué, vérifiez vos coordonnées bancaires ou changez de carte",
-                  buttons: [{
-                      text: 'Ok',
-                      handler: () => {
-                        //obj.navCtrl.setRoot(AmbassadorPage);
-                      }
-                    }]
-                });
-                alert.present();
-            }
-        });
+            reqLoader.present();
+
+            this.reqHttp.callFirebaseShop('shopOrder', body, [reqLoader, this.loading], this);
+        }
     }
 
     newSubmit(sourceToken) {

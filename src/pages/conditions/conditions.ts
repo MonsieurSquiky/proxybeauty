@@ -5,6 +5,7 @@ import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 
 import { PrestaBoardPage } from '../presta-board/presta-board';
 import { DashboardPage } from '../dashboard/dashboard';
+import { ReqHttpProvider } from '../../providers/req-http/req-http';
 /**
  * Generated class for the ConditionsPage page.
  *
@@ -21,7 +22,7 @@ export class ConditionsPage {
 
     uid;
     accept;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public request: ReqHttpProvider) {
 
   }
 
@@ -49,7 +50,8 @@ export class ConditionsPage {
           firebase.database().ref('/user-gift/'+ this.uid+'/palier').set(0).then(function() {
               firebase.database().ref('/users/'+ obj.uid +'/setupStep').set('complete')
               .then(function() {
-                  obj.goDashboard();
+                  obj.request.callFirebaseConditions('acceptConditions', { uid: obj.uid}, [], obj);
+                  
               }, error => {
                   let alertVerification = obj.alertCtrl.create({
                     title: "Echec",

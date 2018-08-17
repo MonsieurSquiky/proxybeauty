@@ -8,6 +8,8 @@ import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as $ from 'jquery'
 
+import { TagsProvider } from '../../providers/tags/tags';
+
 /**
  * Generated class for the FilterPage page.
  *
@@ -21,88 +23,7 @@ import * as $ from 'jquery'
     templateUrl: 'search-offer.html',
 })
 export class SearchOfferPage {
-    metatags = { "Coiffure" : ["Coupe Femme",
-            		"Coloration",
-            		"Balayage",
-            		"Mèches",
-            		"Tie & Dye",
-            		"Ombré Hair",
-            		"Lissage",
-            		"Brushing",
-            		"Permanente",
-            		"Défrisage",
-            		"Tissage",
-            		"Afro",
-            		"Beauté",
-            		"Esthétique",
-            		"Minceur",
-            		"Soin du cheveu"],
-              "Ongles" : [  "Manucure",
-            		"Pédicure",
-            		"Vernis semi-permanent",
-            		"Ongles en gel",
-            		"Nail art",
-            		"Réparation ongle cassé",
-            		"Extension/Faux ongles",
-            		"Remplissage d'ongles",
-            		"Traitement paraffine"],
-              "Massage" : [	"4 ou 6 mains",
-            		"Aux pierres chaudes",
-            		"Acupression",
-            		"Pré/Post natal",
-            		"Amincissant",
-            		"Mains",
-            		"Pieds",
-            		"Pierre de lave",
-            		"Indien (de la tête)",
-            		"Aux compresses d'herbes",
-            		"Thérapeutique",
-            		"Sportif",
-            		"Visage",
-            		"Suédois",
-            		"Ayurvédique",
-            		"En couple",
-            		"Thailandais",
-            		"Réflexologie",
-            		"Chinois",
-            		"Aux huiles essentielles",
-            		"Dos, épaules et cou",
-            		"Deep tissue",
-            		"Californien",
-            		"Shiatsu"],
-             "Epilation" : ["Maillot",
-            		"Maillot intégral",
-            		"Maillot brésilien",
-            		"Jambes",
-            		"Aisselles et bras",
-            		"Visage",
-            		"Visage (au fil)",
-            		"A la cire",
-            		"Orientale",
-            		"Lumière pulsée"],
-            "Visage" : ["Extension de cils",
-            	    "Permanente de cils",
-            	    "Rehaussement de cils",
-            	    "Teinture des cils et des sourcils",
-            	    "Soin du visage micro-aiguilles",
-            	    "Soin du visage anti-acné",
-            	    "Épilation des sourcils au fil",
-            	    "Épilation des sourcils à la cire",
-            	    "Maquillage",
-            	    "Soin acupuncture rajeunissement",
-            	    "Soin du visage homme",
-            	    "Lifting visage non chirurgical",
-            	    "Peeling du visage",
-            	    "Thérapie lumineuse LED",
-            	    "Soin du visage peaux jeunes",
-            	    "Maquillage permanent et semi-permanent",
-            	    "Microblading",
-            	    "Soin des cils et sourcils",
-            	    "Microdermabrasion",
-            	    "Soin du visage femme",
-            	    "Soin du visage à l'oxygène",
-            	    "Consultation de la peau"]
-            };
+    metatags;
     selectedTags = {};
     remote: boolean;
     home: boolean;
@@ -115,9 +36,9 @@ export class SearchOfferPage {
     subLocality;
     remoteAllowed: boolean = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController, private fdb: AngularFireDatabase, public tags: TagsProvider) {
       this.category = navParams.get('category');
-
+      this.metatags = tags.metatags;
       for(let i=0; i < this.metatags[this.category].length; i++) {
           this.selectedTags[this.metatags[this.category][i]] = 0;
       }

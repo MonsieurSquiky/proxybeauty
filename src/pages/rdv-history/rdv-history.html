@@ -59,6 +59,20 @@
                 </ion-row>
                 <ion-row>
                     <ion-col col-12>
+                    <ion-item>
+                      <ion-avatar item-start>
+                        <img src="{{ rdv.details && rdv.details.profilepic ?  rdv.details.profilepic.url : './assets/img/profilePic.png' }}">
+                      </ion-avatar>
+                      <div class="item-main-content">
+                          <h2 >{{ rdv.details ? ((rdv.details.salonName) ? rdv.details.salonName : (rdv.details.firstname + ' ' + rdv.details.lastname )) : 'Utilisateur supprimé' }}</h2>
+
+                      </div>
+
+                    </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-12>
                         <span class="icon-left"><ion-icon name="{{ (rdv.place == address) ? 'home' : 'pin' }}" color="red"></ion-icon></span>
                         {{ (rdv.place == address) ? 'Chez moi' : rdv.place }}
                     </ion-col>

@@ -19,12 +19,12 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const logging = require('@google-cloud/logging')();
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors')({ origin: true });
 
 const app = express();
 
 // Automatically allow cross-origin requests
-app.use(cors({ origin: true }));
+//app.use(cors({ origin: true }));
 
 // Add middleware to authenticate requests
 //app.use(myMiddleware);
@@ -32,57 +32,7 @@ app.use(cors({ origin: true }));
 /*
 // build multiple CRUD interfaces:
 app.get('/:uid', (req, res) => {
-    // creer le compte Stripe Seller
-    let uid = req.params.uid;
-    if (uid === null) {
-        res.send({ error: 'No firebase uid send'});
-        return null;
-    }
-
-    admin.database().ref(`/users/${req.params.uid}`).once('value').then(function(snapshot) {
-        var user = snapshot.val();
-        const ipAddress = req.get('X-Forwarded-For') || req.connection.remoteAddress;
-
-        let userDatas = {
-              country: 'FR',
-              legal_entity: {
-                  first_name: user.firstname,
-                  last_name: user.lastname,
-                  type: 'individual'
-              },
-              tos_acceptance: {
-                    date: Math.floor(Date.now() / 1000),
-                    ip: ipAddress // Assumes you're not using a proxy
-              },
-              type: "custom"
-        };
-
-        if (snapshot.hasChild('birthdate')) {
-            userDatas.legal_entity['dob'] = {
-                year: user.birthdate.year ? user.birthdate.year : "1995",
-                month: user.birthdate.month ? user.birthdate.month : "01",
-                day: user.birthdate.day ? user.birthdate.day : "01"
-            };.
-        }
-
-        if (snapshot.hasChild('address')) {
-            let addressData = snapshot.child('address').child('details').val();
-            userDatas.country = addressData.countryCode ? addressData.countryCode : userDatas.country;
-            userDatas.legal_entity['address'] = {
-                    city: addressData.locality ? addressData.locality : 'non renseigne',
-                    line1: addressData.thoroughfare ? addressData.thoroughfare : 'non renseigne',
-                    postal_code: addressData.postalCode ? addressData.postalCode : 'non renseigne',
-                };
-        }
-        stripe.accounts.create(userDatas).then((sellerAccount) => {
-          admin.database().ref(`/stripe_sellers/${event.params.userId}/token`).set(sellerAccount);
-          res.status(200).send(sellerAccount);
-      }).catch(function(error) {
-          admin.database().ref(`/stripe_sellers/${event.params.userId}/error`).set(error);
-          res.send(error);
-      });
 });
-
 // Expose Express API as a single Cloud Function:
 exports.acceptConditions = functions.https.onRequest(app);
 */
@@ -613,10 +563,27 @@ exports.retrieveGift = functions.database.ref('/user-gift/{userId}/retrieving').
               from: 'myproxybeauty@gmail.com', // sender address
               to: 'myproxybeauty@gmail.com', // list of receivers
               subject: 'Proxybeauty produit à expedier', // Subject line
-              html: '<p> Produit a envoyer : '+ products[val.product.id].name +' x'+ snapshot.val().qte+' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+'</p>'// plain text body
+              html: '<p> Produit a envoyer : '+ products[val.product.id].name +' x'+ snapshot.val().qte+
+              '<br /> Adresse de livraison : '+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+
+               '<br /> Client :'+val.user_infos.firstname + ' '+ val.user_infos.lastname+', mail : '+ val.user_infos.email+' </p>'// plain text body
             };
+
+            const receipt = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: val.user_infos.email, // list of receivers
+              subject: 'Commande Proxybeauty : '+ products[val.product.id].name +' x'+ snapshot.val().qte, // Subject line
+              html: '<p> Votre commande a bien été prise en compte et sera expédiée sous 48h ! </p>'// plain text body
+            };
+
             let transporter = nodemailer.createTransport(mailAuth);
             transporter.sendMail(mailToNadirOptions, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+
+            transporter.sendMail(receipt, function (err, info) {
                if(err)
                  console.error(err);
                else
@@ -718,6 +685,85 @@ exports.receiveComplain = functions.database.ref('/sav/{userId}/{complainId}').o
 });
 
 
+// Shop command by a non resgistered user
+// Make a POST HTTP request to https://us-central1-proxybeauty-2.cloudfunctions.net/shopOrder
+// JSON body request and X-Request-ID header containing email+timestamp
+
+exports.shopOrder = functions.https.onRequest((req, res) => {
+  // Grab the req parameter.
+  const val = req.body;
+  val['id'] = req.get('x-request-id');
+
+  // This onWrite will trigger whenever anything is written to the path, so
+  // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+  //if (val) res.status(200).send(val);
+
+  if (val === null || !val.qte || !val.idProduct || !val.source || !val.place || !val.user_infos) res.status(400).send({ message: "La requete n'est pas reglementire"});
+
+  return admin.database().ref(`/products/${val.idProduct}/prix`).once('value').then((snapshot) => {
+    return snapshot.val();
+  }).then((prix) => {
+
+        // Create a charge using the pushId as the idempotency key, protecting against double charges
+        const amount = Math.ceil(prix * val.qte * 100);
+        const idempotency_key = req.get('x-request-id');
+
+        return stripe.charges.create({
+              amount: amount,
+              currency: "eur",
+              source: val.source,
+              transfer_group: idempotency_key,
+          }, {idempotency_key});
+        }).then((charge) => {
+            // If the result is successful, write it back to the database
+            var val = req.body;
+            let updates = {};
+
+            // send a mail to Nadir so he can send product
+            const mailToNadirOptions = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: 'myproxybeauty@gmail.com', // list of receivers
+              subject: 'Proxybeauty produit à expedier', // Subject line
+              html: '<p> Produit a envoyer : '+ products[val.idProduct].name +' x'+ val.qte+
+              ' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+
+              ' <br /> Client :'+val.user_infos.firstname + ' '+ val.user_infos.lastname+', mail : '+ val.user_infos.email+' </p>'// plain text body
+            };
+
+            const receipt = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: val.user_infos.email, // list of receivers
+              subject: 'Commande Proxybeauty : '+ products[val.idProduct].name +' x'+ val.qte, // Subject line
+              html: '<p> Votre commande a bien été prise en compte et sera expédiée sous 48h ! </p>'// plain text body
+            };
+
+            let transporter = nodemailer.createTransport(mailAuth);
+            transporter.sendMail(mailToNadirOptions, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+
+            transporter.sendMail(receipt, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+            /////////////////
+
+            //admin.database().ref(`/stripe_customers/non-registered/shopResponse/${val.user_infos.firstname + val.user_infos.lastname}`).child('resultCharge').push(charge);
+            res.status(200).send({ message: "Achat effectué avec succès ! Vous allez recevoir sous peu un mail de confirmation de votre commande"});
+          }).catch((error) => {
+              console.log(error);
+            // We want to capture errors and render them in a user-friendly way, while
+            // still logging an exception with Stackdriver
+            //admin.database().ref(`/stripe_customers/non-registered/shopResponse/${val.user_infos.firstname + val.user_infos.lastname}`).child('errorCharge').set(error.raw);
+            res.status(200).send({ error: true, message: "Le paiement a échoué", error_details: error});
+          });
+
+});
+
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
 exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/shopping/{id}').onWrite((event) => {
@@ -755,10 +801,27 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
               from: 'myproxybeauty@gmail.com', // sender address
               to: 'myproxybeauty@gmail.com', // list of receivers
               subject: 'Proxybeauty produit à expedier', // Subject line
-              html: '<p> Produit a envoyer : '+ products[val.idProduct].name +' x'+ val.qte+' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+'</p>'// plain text body
+              html: '<p> Produit a envoyer : '+ products[val.idProduct].name +' x'+ val.qte+
+              ' <br /> Adresse de livraison :'+val.place.street+' '+val.place.city+val.place.zipCode+' '+val.place.country+
+              ' <br /> Client :'+val.user_infos.firstname + ' '+ val.user_infos.lastname+', mail : '+ val.user_infos.email+' </p>'// plain text body
             };
+
+            const receipt = {
+              from: 'myproxybeauty@gmail.com', // sender address
+              to: val.user_infos.email, // list of receivers
+              subject: 'Commande Proxybeauty : '+ products[val.idProduct].name +' x'+ val.qte, // Subject line
+              html: '<p> Votre commande a bien été prise en compte et sera expédiée sous 48h ! </p>'// plain text body
+            };
+
             let transporter = nodemailer.createTransport(mailAuth);
             transporter.sendMail(mailToNadirOptions, function (err, info) {
+               if(err)
+                 console.error(err);
+               else
+                 console.log(info);
+            });
+
+            transporter.sendMail(receipt, function (err, info) {
                if(err)
                  console.error(err);
                else
@@ -1101,6 +1164,98 @@ exports.createStripeCustomer = functions.auth.user().onCreate((event) => {
 });
 
 // When a user finished to fill its profile, register them with Stripe as connected account
+exports.acceptConditions = functions.https.onRequest((req, res) => {
+    // creer le compte Stripe Seller
+    let uid = req.body.uid;
+    var CONNECTED_STRIPE_ACCOUNT_ID;
+    if (uid === null || !uid) {
+        res.status(400).send({ message: 'No firebase uid send', code: 'no-uid'});
+    }
+
+    // On verifie si le user a deja un compte, et dans ce cas on l'update
+    admin.database().ref('/stripe_sellers/' + uid + '/token/id').once('value', function(snapshot) {
+        CONNECTED_STRIPE_ACCOUNT_ID = snapshot.exists() ? snapshot.val() : false;
+
+        console.log(snapshot.val());
+
+        return CONNECTED_STRIPE_ACCOUNT_ID;
+    }).then( function(account2) {
+
+        admin.database().ref('/users/'+uid).once('value').then(function(snapshot) {
+
+            let uid = req.body.uid;
+            var user = snapshot.val();
+            const ipAddress = (req.get('X-Forwarded-For') || req.get('x-forwarded-for') || '').split(',')[0] || req.connection.remoteAddress;
+
+            let userDatas = {
+                  country: 'FR',
+                  legal_entity: {
+                      first_name: user.firstname,
+                      last_name: user.lastname,
+                      type: 'individual'
+                  }
+            };
+
+            if (snapshot.hasChild('birthdate')) {
+                userDatas.legal_entity['dob'] = {
+                    year: user.birthdate.year ? user.birthdate.year : "1995",
+                    month: user.birthdate.month ? user.birthdate.month : "01",
+                    day: user.birthdate.day ? user.birthdate.day : "01"
+                };
+            }
+
+            if (snapshot.hasChild('address')) {
+                let addressData = snapshot.child('address').child('details').val();
+                userDatas.country = addressData.countryCode ? addressData.countryCode : userDatas.country;
+                userDatas.legal_entity['address'] = {
+                        city: addressData.locality ? addressData.locality : 'non renseigne',
+                        line1: addressData.thoroughfare ? addressData.thoroughfare : 'non renseigne',
+                        postal_code: addressData.postalCode ? addressData.postalCode : 'non renseigne',
+                    };
+            }
+
+            // Si un compte existe, on l'update
+            if (CONNECTED_STRIPE_ACCOUNT_ID) {
+                console.log('Updating seller account, but not today');
+                /*
+                stripe.accounts.update(
+                    CONNECTED_STRIPE_ACCOUNT_ID,
+                    userDatas
+                ).then( function(sellerAccount) {
+                     // asynchronously called
+                     admin.database().ref('/stripe_sellers/'+uid+'/token').set(sellerAccount);
+                     res.status(200).send(sellerAccount);
+                 }).catch(function(error) {
+                     admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.message);
+                     res.status(500).send(error);
+                 });
+                 */
+                 res.status(200).send({ code: 200, message: 'succès relatif du developpeur epuise'});
+            }   //Sinon on le creer
+            else {
+                userDatas['tos_acceptance'] = {
+                      date: Math.floor(Date.now() / 1000),
+                      ip: ipAddress // Assumes you're not using a proxy
+                };
+                userDatas['type'] = "custom";
+
+                stripe.accounts.create(userDatas).then((sellerAccount) => {
+                  admin.database().ref('/stripe_sellers/'+uid+'/token').set(sellerAccount);
+                  res.status(200).send(sellerAccount);
+              }).catch(function(error) {
+                  console.log(error);
+                  admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.message);
+                  res.status(500).send(error);
+              });
+            }
+
+
+        });
+
+   });
+
+});
+/*
 exports.createStripeConnectedAccount = functions.database.ref('/users/{userId}/address/details').onWrite((event) => {
   const addressData = event.data.val();
 
@@ -1152,8 +1307,9 @@ exports.createStripeConnectedAccount = functions.database.ref('/users/{userId}/a
 
     return admin.database().ref(`/stripe_sellers/${event.params.userId}/token`).set(sellerAccount);
   });
-  */
+
 });
+*/
 
 // Add a payment source (card) for a user by writing a stripe payment source token to Realtime database
 exports.addPaymentSource = functions.database.ref('/stripe_customers/{userId}/sources/{pushId}/token').onWrite((event) => {

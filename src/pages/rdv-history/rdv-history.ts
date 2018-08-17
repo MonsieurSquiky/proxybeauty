@@ -18,6 +18,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class RdvHistoryPage {
     uid;
+    statut;
     rdvList= [];
     dates = [];
     daysName = ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'];
@@ -44,37 +45,52 @@ export class RdvHistoryPage {
                   obj.address = (snapshot.val().place) ? snapshot.val().place : false;
               });
 
-              let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
-              rdvRef.on('value', function(snapshot) {
-                obj.rdvList= [];
-                  snapshot.forEach( function(childSnapshot) {
-                      if (childSnapshot.val().timestamp <= obj.now.getTime()) {
-                          let nextRdv = childSnapshot.val();
-                          nextRdv['key'] = childSnapshot.key;
-                          obj.rdvList.push(nextRdv);
-                      }
-                    // else detruire le rdv
-                    return false;
-                  });
+              let statutRef = obj.fdb.database.ref('/users/'+user.uid+'/statut');
+              statutRef.once('value', function(snapshot) {
+                  obj.statut = (snapshot.val()) ? snapshot.val() : 'client';
+              }).then( () => {
+                  let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
+                  rdvRef.on('value', function(snapshot) {
+                    obj.rdvList= []; // on remet la liste a zero en cas de rafraichissement pour eviter les doublons
+                      snapshot.forEach( function(childSnapshot) {
+                          if (childSnapshot.val().timestamp <= obj.now.getTime()) {
+                              let nextRdv = childSnapshot.val();
+                              nextRdv['key'] = childSnapshot.key;
+                              obj.rdvList.push(nextRdv);
 
-                  if (obj.rdvList.length == 0) {
-                      let alertVerification = obj.alertCtrl.create({
-                        title: "Historique vide",
-                        subTitle: "Vous n'avez effectué aucun rendez vous jusqu'à présent.",
-                        buttons: ['OK']
+
+                              let encounter = (obj.statut == 'client') ? 'prestataire' : 'client';
+
+                              let ref = obj.fdb.database.ref('/users/'+nextRdv[encounter]);
+                              ref.once('value', function(snapshot) {
+                                  nextRdv['details'] = (snapshot.val()) ? snapshot.val() : false;
+                              }).catch( (error) => { console.log('Encounter id ' + error) });
+                          }
+                        // else detruire le rdv
+                        return false;
                       });
-                      alertVerification.present();
 
-                  }
+                      if (obj.rdvList.length == 0) {
+                          let alertVerification = obj.alertCtrl.create({
+                            title: "Historique vide",
+                            subTitle: "Vous n'avez effectué aucun rendez vous jusqu'à présent.",
+                            buttons: ['OK']
+                          });
+                          alertVerification.present();
 
-                  obj.rdvList.sort(function (a, b) {
-                    return a.timestamp - b.timestamp;
+                      }
+
+                      obj.rdvList.sort(function (a, b) {
+                        return a.timestamp - b.timestamp;
+                      });
+                      obj.rdvList.reverse();
+                      //console.debug(obj.rdvList);
+                      obj.setRdvDays();
+
                   });
-                  obj.rdvList.reverse();
-                  //console.debug(obj.rdvList);
-                  obj.setRdvDays();
-
               });
+
+
               //navCtrl.setRoot(PrestaBoardPage);
             } else {
               // No user is signed in.
@@ -83,6 +99,7 @@ export class RdvHistoryPage {
           });
 
     }
+
 
     goBoard() {
         this.navCtrl.setRoot(PrestaBoardPage);

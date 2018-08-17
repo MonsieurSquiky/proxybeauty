@@ -19,17 +19,21 @@
               <ion-item class="transparent rounded">
                 <ion-input class="" [(ngModel)]="user.password" type="password" placeholder="Password"></ion-input>
               </ion-item>
-              <button ion-button color="light" (click)="login(user)">Login</button>
-              <button ion-button color="dark" (click)="confirmPassword(user)" >Register</button>
+              <button ion-button color="light" (click)="login(user)">Connexion</button>
+              <button ion-button color="dark" (click)="confirmPassword(user)" >Inscription</button>
         </div>
         <div style="width:100%">
             <button ion-button color="light" class="facebook" (click)="facebookLogin()" icon-start full>
                 <ion-icon name="logo-facebook"></ion-icon>
-                Login with Facebook
+                Connexion avec Facebook
             </button>
             <button ion-button color="light" class="google" (click)="googleLogin()" icon-start full>
                 <ion-icon name="logo-google"></ion-icon>
-                Login with Google
+                Connexion avec Google
+            </button>
+            <button ion-button color="light" class="proxybeauty" (click)="goShop()" icon-start full>
+                <ion-icon name="basket"></ion-icon>
+                Accéder à la Boutique
             </button>
         </div>
 

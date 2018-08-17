@@ -59,7 +59,7 @@ export class ProductPage {
           } else {
             // No user is signed in.
             console.log("No user signed");
-            obj.navCtrl.setRoot(HelloIonicPage);
+            obj.statut = 'client';
           }
         });
 
@@ -71,7 +71,7 @@ export class ProductPage {
 
   buy() {
       //if (this.place) {
-          this.navCtrl.push('AddressFormPage', {product: { id: this.idList[this.selected], qte: this.qte }, type: this.isGift ? 'gift' : 'shopProduct', statut : this.statut, giftId: this.isGift ? this.navParams.get('giftId') : null });
+          this.navCtrl.push('IdFormPage', {product: { id: this.idList[this.selected], qte: this.qte }, type: this.isGift ? 'gift' : 'shopProduct', statut : this.statut, giftId: this.isGift ? this.navParams.get('giftId') : null });
       /*}
       else {
           let alertVerification = this.alertCtrl.create({

@@ -58,48 +58,64 @@ export class AddressFormPage {
       let place = { street: this.street, city: this.city, zipCode: this.zipCode, country: this.country };
       var obj = this;
 
-      if (this.type == 'gift') {
-          // Call functions
-          this.fdb.database.ref('/user-gift/'+ this.uid+'/retrieving').set({state:'processing', product: this.product, place, giftKey: this.navParams.get('giftId')});
-          let loading = this.loadingCtrl.create({
-          content: 'Commande du cadeau en cours de vérification...'
-          });
+      if (this.invariant()) {
 
-          loading.present();
 
-          this.fdb.database.ref('/user-gift/'+this.uid+'/gifts/'+this.navParams.get('giftId')).on('value', function(snapshot) {
-              if (snapshot.val().state == 'retrieved') {
-                  loading.dismiss();
-                  let alert = obj.alertCtrl.create({
-                    title: 'Cadeau commandé !',
-                    subTitle: 'Félicitation, votre cadeau sera expédié sous peu !',
-                    buttons: [{
-                        text: 'Parfait !'
-                      }]
-                  });
-                  alert.present();
-                  obj.navCtrl.setRoot('GiftPage');
-              }
-          });
+          if (this.type == 'gift') {
+              // Call functions
+              this.fdb.database.ref('/user-gift/'+ this.uid+'/retrieving').set({state:'processing', product: this.product, place, giftKey: this.navParams.get('giftId'), user_infos: this.navParams.get('user_infos')});
+              let loading = this.loadingCtrl.create({
+              content: 'Commande du cadeau en cours de vérification...'
+              });
 
-          this.fdb.database.ref('/user-gift/'+this.uid+'/retrieving').on('value', function(snapshot) {
-              if (snapshot.val().state == 'notAvailable') {
-                  loading.dismiss();
-                  let alert = obj.alertCtrl.create({
-                    title: 'Ce cadeau a déjà été commandé',
-                    subTitle: 'Vous avez déjà demandé à recevoir ce cadeau.',
-                    buttons: [{
-                        text: 'OK'
-                      }]
-                  });
-                  alert.present();
-                  obj.navCtrl.setRoot('GiftPage');
-              }
-          });
+              loading.present();
+
+              this.fdb.database.ref('/user-gift/'+this.uid+'/gifts/'+this.navParams.get('giftId')).on('value', function(snapshot) {
+                  if (snapshot.val().state == 'retrieved') {
+                      loading.dismiss();
+                      let alert = obj.alertCtrl.create({
+                        title: 'Cadeau commandé !',
+                        subTitle: 'Félicitation, votre cadeau sera expédié sous peu !',
+                        buttons: [{
+                            text: 'Parfait !'
+                          }]
+                      });
+                      alert.present();
+                      obj.navCtrl.setRoot('GiftPage');
+                  }
+              });
+
+              this.fdb.database.ref('/user-gift/'+this.uid+'/retrieving').on('value', function(snapshot) {
+                  if (snapshot.val().state == 'notAvailable') {
+                      loading.dismiss();
+                      let alert = obj.alertCtrl.create({
+                        title: 'Ce cadeau a déjà été commandé',
+                        subTitle: 'Vous avez déjà demandé à recevoir ce cadeau.',
+                        buttons: [{
+                            text: 'OK'
+                          }]
+                      });
+                      alert.present();
+                      obj.navCtrl.setRoot('GiftPage');
+                  }
+              });
+          }
+          else
+            this.navCtrl.push('PaybookingPage', { product: this.product, type: this.type, statut: this.statut, place, user_infos: this.navParams.get('user_infos')});
       }
-      else
-        this.navCtrl.push('PaybookingPage', { product: this.product, type: this.type, statut: this.statut, place});
-
   }
 
+  invariant() {
+      if (this.street == null || this.street == "" || this.city == null || this.city == "" || this.zipCode == null || this.zipCode == "" || this.country == null || this.country == "" ) {
+          let alert = this.alertCtrl.create({
+            title: "Champs incomplets",
+            subTitle: "Veuillez remplir tous les champs correctement.",
+            buttons: ['OK']
+          });
+          alert.present();
+          return false;
+      }
+
+      return true;
+  }
 }

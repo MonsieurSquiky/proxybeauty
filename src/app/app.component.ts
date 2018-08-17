@@ -34,6 +34,7 @@ import { BoutiquePage } from '../pages/boutique/boutique';
 import { RdvPage } from '../pages/rdv/rdv';
 import { GiftPage } from '../pages/gift/gift';
 import { SavPage } from '../pages/sav/sav';
+import { ConditionsPage } from '../pages/conditions/conditions';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -101,6 +102,7 @@ export class MyApp {
     this.clientpages.push({ title: 'Mon Espace Ambassadeur', component: AmbassadorPage });
     this.clientpages.push({ title: 'Espace Client', component: SavPage });
     this.clientpages.push({ title: 'Se déconnecter', component: LogoutPage });
+    this.clientpages.push({ title: 'Conditions', component: ConditionsPage });
 
   }
 

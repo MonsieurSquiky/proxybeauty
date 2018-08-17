@@ -140,26 +140,27 @@ export class ResultOfferPage {
         });
     }
     checkTags(node) {
-        node.prixTotal = node.prix;
         if (this.tags.length == 0)
             return true;
 
 
       for (let t of this.tags) {
-          if (node.tags && node.tags.indexOf(t) == -1) {
-              let count = 0;
-              if (node.supplements) {
-                  for (let obj of node.supplements) {
-                      if (obj.name == t) {
-                          count += 1;
-                          node.prixTotal += obj.prix;
-                          break;
-                      }
+          let inSup = false;
+          if (node.tags) {
+              if (node.tags.indexOf(t) != -1)
+                continue;
+          }
+
+          if (node.supplements) {
+              for (let obj of node.supplements) {
+                  if (obj.name == t) {
+                      inSup = true;
+                      break;
                   }
               }
-              if (count == 0)
-                return false;
           }
+          if (!inSup)
+              return false;
       }
       return true;
     }
@@ -179,8 +180,11 @@ export class ResultOfferPage {
                 //console.log(snapshot.child('/address').val());
                 for (let i=0; i < obj.results.length; i++) {
                     if (obj.results[i].prestataire == userId) {
-                        if (distance > 30000)
-                            obj.results.splice(i, 1);
+                        if (distance > 30000) {
+
+                            obj.results.splice(i, 1);   // On retire l'offre a la i eme positon
+                            i--;                        // Donc la prochaine offre se retrouve a l'indice i et non i+1 !!! La taille de notre liste a change. On decale notre curseur de 1 en arriere
+                        }
                         else {
                             obj.results[i]['distance'] = precisionRound(distance / 1000, 1);
                             obj.results[i]['firstname'] = snapshot.val().firstname;
@@ -261,17 +265,17 @@ export class ResultOfferPage {
     getPrix(node) {
       var prixTotal = parseInt(node.prix, 10);
       for (let t of this.tags) {
-          if (node.tags.indexOf(t) == -1) {
-              let count = 0;
+         // Non opti : on fouille tous les supplements a chaque fois
+         if (node.supplements) {
               for (let obj of node.supplements) {
                   if (obj.name == t) {
-                      count += 1;
                       prixTotal += parseInt(obj.prix, 10);
                       break;
                   }
 
               }
-          }
+         }
+
       }
       return prixTotal;
     }
@@ -279,17 +283,17 @@ export class ResultOfferPage {
     getDuree(node) {
       var dureeTotal = parseInt(node.duree, 10);
       for (let t of this.tags) {
-          if (node.tags.indexOf(t) == -1) {
-              let count = 0;
+          if (node.supplements) {
+
               for (let obj of node.supplements) {
                   if (obj.name == t) {
-                      count += 1;
                       dureeTotal += parseInt(obj.duree, 10);
                       break;
                   }
 
               }
           }
+
       }
       return dureeTotal;
     }

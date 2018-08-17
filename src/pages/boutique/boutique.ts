@@ -40,6 +40,7 @@ export class BoutiquePage {
         } else {
           // No user is signed in.
           console.log("No user signed");
+          obj.loadBoutique('client');
         }
       });
 

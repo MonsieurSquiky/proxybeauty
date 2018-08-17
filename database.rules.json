@@ -1,7 +1,12 @@
 {
   "rules": {
     ".read": "auth != null",
-    ".write": "auth != null"
+    ".write": "auth != null",
+    "products": {
+      ".read": true,
+      ".write": false
+    }
+
   }
 }
 

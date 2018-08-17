@@ -17,6 +17,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class PrestaRdvPage {
   uid;
+  statut;
   rdvList= [];
   dates = [];
   daysName = ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'];
@@ -37,21 +38,35 @@ export class PrestaRdvPage {
           if (user) {
             // User is signed in.
             obj.uid = user.uid;
-
             let addressRef = obj.fdb.database.ref('/users/'+user.uid+'/address');
             addressRef.on('value', function(snapshot) {
                 obj.address = (snapshot.val().place) ? snapshot.val().place : false;
             });
 
+            let statutRef = obj.fdb.database.ref('/users/'+user.uid+'/statut');
+            statutRef.once('value', function(snapshot) {
+                obj.statut = (snapshot.val()) ? snapshot.val() : 'client';
+            }).then( () => {
+
+
             let rdvRef = obj.fdb.database.ref('/user-rdv/'+obj.uid);
             rdvRef.on('value', function(snapshot) {
                 if (snapshot.exists()) {
-
+                    obj.rdvList = [];
                     snapshot.forEach( function(childSnapshot) {
-                        if (childSnapshot.val().timestamp > obj.now.getTime())
-                            obj.rdvList.push(childSnapshot.val());
-                        // else detruire le rdv
+                        if (childSnapshot.val().timestamp > obj.now.getTime()) {
 
+                            let nextRdv = childSnapshot.val();
+                                obj.rdvList.push(nextRdv);
+                            // else detruire le rdv
+
+                            let encounter = (obj.statut == 'client') ? 'prestataire' : 'client';
+
+                            let ref = obj.fdb.database.ref('/users/'+nextRdv[encounter]);
+                            ref.once('value', function(snapshot) {
+                                nextRdv['details'] = (snapshot.val()) ? snapshot.val() : false;
+                            }).catch( (error) => { console.log('Encounter id ' + error) });
+                        }
                       return false;
                     });
                 }
@@ -72,6 +87,7 @@ export class PrestaRdvPage {
 
                 obj.setRdvDays();
 
+            });
 
 
             });
@@ -83,6 +99,7 @@ export class PrestaRdvPage {
         });
 
   }
+
 
   goBoard() {
       this.navCtrl.setRoot(PrestaBoardPage);

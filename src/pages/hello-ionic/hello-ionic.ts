@@ -18,7 +18,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Facebook } from '@ionic-native/facebook'
 
 import { User } from "../../models/user";
-
+import { BoutiquePage } from '../boutique/boutique';
 
 @Component({
   selector: 'page-hello-ionic',
@@ -279,6 +279,10 @@ export class HelloIonicPage {
       console.error(e);
       this.errorLogs(e.code);
     }
+  }
+
+  goShop() {
+      this.navCtrl.push(BoutiquePage);
   }
 
   errorLogs(code) {

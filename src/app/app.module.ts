@@ -48,12 +48,14 @@ import { SetParrainPageModule } from '../pages/set-parrain/set-parrain.module';
 import { ConditionsPageModule } from '../pages/conditions/conditions.module';
 import { FormsModule } from '@angular/forms';
 import { AddressFormPageModule } from '../pages/address-form/address-form.module';
+import { IdFormPageModule } from '../pages/id-form/id-form.module';
 import { GiftPageModule } from '../pages/gift/gift.module';
 import { BankaccountPageModule } from '../pages/bankaccount/bankaccount.module';
 import { SavPageModule } from '../pages/sav/sav.module';
 import { RatePageModule } from '../pages/rate/rate.module';
 import { RdvPageModule } from '../pages/rdv/rdv.module';
 import { RdvHistoryPageModule } from '../pages/rdv-history/rdv-history.module';
+import { RdvInfosPageModule } from '../pages/rdv-infos/rdv-infos.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -78,6 +80,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 //import { DatabaseserviceProvider } from '../providers/databaseservice/databaseservice';
 import { HttpModule } from '@angular/http';
 import { HTTP } from '@ionic-native/http';
+import { ReqHttpProvider } from '../providers/req-http/req-http';
+import { TagsProvider } from '../providers/tags/tags';
 
 var config = {
   apiKey: "AIzaSyCvZde2dbNMl8uJzYhI6EMVnFdewpObNZA",
@@ -151,7 +155,9 @@ var config = {
     SavPageModule,
     RatePageModule,
     RdvHistoryPageModule,
-    RdvPageModule
+    RdvInfosPageModule,
+    RdvPageModule,
+    IdFormPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -190,7 +196,9 @@ var config = {
     HTTP,
     Camera,
     Firebase,
-    FcmProvider
+    FcmProvider,
+    ReqHttpProvider,
+    TagsProvider
   ]
 })
 export class AppModule {}
