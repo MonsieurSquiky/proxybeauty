@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
 import { HelloIonicPage } from '../hello-ionic/hello-ionic';
 
 import { PrestaBoardPage } from '../presta-board/presta-board';
 import { DashboardPage } from '../dashboard/dashboard';
 import { ReqHttpProvider } from '../../providers/req-http/req-http';
+
 /**
  * Generated class for the ConditionsPage page.
  *
@@ -22,7 +23,8 @@ export class ConditionsPage {
 
     uid;
     accept;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public request: ReqHttpProvider) {
+    loading;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public request: ReqHttpProvider) {
 
   }
 
@@ -50,8 +52,12 @@ export class ConditionsPage {
           firebase.database().ref('/user-gift/'+ this.uid+'/palier').set(0).then(function() {
               firebase.database().ref('/users/'+ obj.uid +'/setupStep').set('complete')
               .then(function() {
-                  obj.request.callFirebaseConditions('acceptConditions', { uid: obj.uid}, [], obj);
-                  
+                  obj.loading = obj.loadingCtrl.create({
+                  content: 'Création du compte...'
+                  });
+                  obj.loading.present();
+                  obj.request.callFirebaseConditions('acceptConditions', { uid: obj.uid}, [obj.loading], obj);
+
               }, error => {
                   let alertVerification = obj.alertCtrl.create({
                     title: "Echec",

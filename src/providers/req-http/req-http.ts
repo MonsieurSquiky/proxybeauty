@@ -78,14 +78,15 @@ export class ReqHttpProvider {
              console.log(error.toString());
              for (let i=0; i < loaders.length; i++)
                 loaders[i].dismiss();
-                let alert = context.alertCtrl.create({
-                  title: 'Erreur',
-                  subTitle: error.message,
-                  buttons: [{
-                      text: 'OK'
-                    }]
-                });
-                alert.present();
+                
+            let alert = context.alertCtrl.create({
+              title: 'Erreur',
+              subTitle: error.message,
+              buttons: [{
+                  text: 'OK'
+                }]
+            });
+            alert.present();
 
        });
   }
