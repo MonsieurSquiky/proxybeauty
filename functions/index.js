@@ -328,7 +328,7 @@ const products = [
                       "id" : 29,
                       "name" : "Starting Business & Licence",
                       "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fstarting-business-license.jpg?alt=media&token=3851c812-e3e1-4fc1-9e40-7b04d7fd2c8b",
-                      "prix" : 29.9,
+                      "prix" : 34.9,
                       "statut" : "ambassador",
                       "usage" : "Un guide inclus et la formation dont vous bénéficierez vous permettra de faire un usage optimal de ce kit. Revendez les masques pour être rentable dès le départ !"
                     }, {
@@ -1320,6 +1320,8 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
                       type: 'individual'
                   }
             };
+
+            // Send mail CLIENT accueil
 
             if (snapshot.hasChild('birthdate')) {
                 userDatas.legal_entity['dob'] = {
