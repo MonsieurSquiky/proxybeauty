@@ -51,7 +51,7 @@ export class PaybookingPage {
                 public alertCtrl:AlertController,
                 public reqHttp: ReqHttpProvider) {
 
-      this.stripe.setPublishableKey('pk_live_43QYPKhdyXb32bFFeR14Gw59');
+      this.stripe.setPublishableKey('pk_test_aHC0D842ZOVEaBZ2t7Z2fBQp');
 
       this.product = navParams.get('product');
       this.rdvTimestamp = navParams.get('timestamp');
@@ -157,7 +157,6 @@ export class PaybookingPage {
         var obj=this;
         var parrainId = false;
         var parrainAccount = null;
-        console.log('In');
 
         if (this.uid) {
             await this.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value', function(snapshot) {
@@ -169,9 +168,9 @@ export class PaybookingPage {
                     parrainAccount = snapshot.val();
                 }).catch( (error) => { console.log('Parrain account ' + error) });
             }
-            console.log('Parrain correct');
+            //console.log('Parrain correct');
             let newKey = firebase.database().ref(`/stripe_customers/${this.uid}/shopping`).push().key;
-            console.log('Key correct' + newKey);
+            //console.log('Key correct' + newKey);
             this.fdb.database.ref(`/stripe_customers/${this.uid}/shopping/${newKey}`).set({
               source: sourceToken,
               idProduct: this.product.id,

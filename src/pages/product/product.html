@@ -50,7 +50,11 @@
         <ion-item *ngIf="!isGift">
             <ion-icon name="cash" item-start></ion-icon>
             Prix
-            <h2 item-end>
+            <h2 *ngIf="reduction" item-end>
+                <span style='text-decoration: line-through;color:#666; font-size:14px;'> {{ product[selected].prix * qte | number:'1.2-2'}} € </span> <br />
+                {{ product[selected].prix * qte * reduction | number:'1.2-2'}} €
+            </h2>
+            <h2  *ngIf="!reduction" item-end>
                 {{ product[selected].prix * qte | number:'1.2-2'}} €
             </h2>
         </ion-item>

@@ -25,10 +25,13 @@ export class ProductPage {
   isGift: boolean = false;
   product = [{}];
   qte: number = 1;
+  reduction;
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private fdb: AngularFireDatabase) {
       this.qte = navParams.get('qte') ? navParams.get('qte') : 1;
       this.idList = navParams.get('idList') ? navParams.get('idList') : null;
       this.isGift = navParams.get('isGift') ? navParams.get('isGift') : false;
+
+      this.reduction = false;
 
       for (let i=0; i<this.idList.length; i++)
          this.product[i] = {};
@@ -55,6 +58,7 @@ export class ProductPage {
               adresseRef.once('value', function(snapshot) {
                  obj.statut = snapshot.child('statut');
               });
+              obj.checkReduction();
 
           } else {
             // No user is signed in.
@@ -67,6 +71,43 @@ export class ProductPage {
 
   takeGift() {
 
+  }
+
+  async checkReduction () {
+      var obj = this;
+
+      /*
+      var shopRef = this.fdb.database.ref(`/stripe_customers/${this.uid}/shopResponse`);
+      shopRef.once('value', async function(snapshot) {
+          let nbPurchase = 0;
+          let parrainId = false;
+
+          try {
+              let snapParrain = await obj.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value');
+              parrainId = (snapParrain.val()) ? snapParrain.val() : false;
+          }
+          catch (error) {
+              console.log('Parrain id ' + error);
+          }
+
+          console.log(parrainId);
+
+          snapshot.forEach( function(childSnapshot) {
+              nbPurchase += 1;
+              console.log(nbPurchase);
+            return false;
+          });
+          console.log(nbPurchase);
+
+
+          obj.reduction = (nbPurchase == 0 && parrainId) ? 0.8 : false;
+          */
+
+          // Si le client a un parrain, il beneficie de 20% de reducs sur tous ses achats
+          let snapParrain = await obj.fdb.database.ref('/user-parrain/' + obj.uid + '/parrainId').once('value');
+          let parrainId = (snapParrain.val()) ? snapParrain.val() : false;
+
+          obj.reduction = (parrainId) ? 0.8 : false;
   }
 
   buy() {
