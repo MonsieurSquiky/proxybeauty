@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "proxybeauty-2"
+    "default": "proxybeauty-2",
+    "testmode": "proxybeauty"
   }
 }

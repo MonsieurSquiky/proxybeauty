@@ -52,8 +52,7 @@ export class LogoutPage {
         }).then(function() {
             firebase.auth().signOut().then(function() {
                 // Sign-out successful.
-                console.log(user.uid);
-                console.log('In Logout');
+                
                 loading.dismiss();
                 obj.goHome();
 

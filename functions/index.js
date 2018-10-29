@@ -734,6 +734,100 @@ exports.shopOrder = functions.https.onRequest((req, res) => {
 
 });
 
+// Gestion de la redistribution aux parrains, via le systeme de tickets
+exports.useChargeTicket = functions.database.ref(`/stripe_customers/${event.params.userId}/tickets`).onWrite( (event) => {
+    //On recupere les donnees du ticket
+    const val = event.data.val();
+    // On verifie que le ticket est confirme ie qu'on peut bien distribuer l'argent car on est sur que l'on ne dera pas rembourser
+    if (val === null || val.state !== 'confirmed') return null;
+
+    // On cherche le parrain du clients
+    return admin.database().ref(`/user-parrains/${event.params.userId}/parrainId`).once('value').then((snapshot) => {
+        event.params.parrainId = snapshot.val() ? snapshot.val() : false;
+        return snapshot.val() ? snapshot.val() : false;
+    }).then(function(parrainId) {
+        // Si le client a un parrain, on redistribue
+        if (parrainId) {
+            // On recupere compte Stripe du parrain
+            return admin.database().ref('/stripe-sellers/'+parrainId+'/token/id').once('value').then((snapshot) => {
+                return snapshot.val() ? snapshot.val() : false;
+            }).then(function(parrainAccount) {
+
+                if (parrainAccount) {
+                    // On effectue le transfert au parrain
+                    let commision = 0;
+                    // Pas les meme pourcentages de comm selon shop ou reservation
+                    switch (val.source) {
+                        case 'shop':
+                            commission = 0.25;
+                            break;
+                        case 'service':
+                            commission = (filleulType == prestataire) ? 0.04 : 0.02;
+                            break;
+                    }
+                    console.log('Calcul de la commission :', commission);
+
+                    let amount_parrain = Math.floor(val.amount * commission);
+                    let idempotency_key = val.idempotency_key;
+                    let idempotency_key_parrain = idempotency_key+'-parrain0';
+
+                    // On envoie l'argent au parrain
+                    console.log('Montant inscrit sur le ticket : ', val.amount);
+                    stripe.transfers.create({
+                              amount: amount_parrain,
+                              currency: "eur",
+                              destination: parrainAccount,
+                              transfer_group: idempotency_key,
+                              source_transaction: val.chargeId
+                          }, { idempotency_key: idempotency_key_parrain })
+                      .then( function(transfer) {
+
+                          // Si le transfert est reussi, on notifie les gains au parrain
+                          let newKey = admin.database().ref(`/parrain-gains/${parrainId}/${val.idempotency_key}`).push().key;
+                          let updates = {};
+                          updates[`/parrain-gains/${parrainId}/${val.idempotency_key}/${newKey}`] = {
+                              amount: transfer.amount,
+                              date: transfer.created,
+                              currency: transfer.currency,
+                              transaction: transfer.transfer_group
+                          };
+                          updates[`/stripe_customers/${event.params.userId}/shopResponse/${val.chargeId}/resultTransfer`] = transfer;
+
+                          // Systeme de ticket : on donne le ticket au parrain en indiquant le rank
+                          console.log('On met a jour les gains dans parrains-gains et on cree un ticket pour le parrain');
+                          val.rank += 1;
+                          updates[`/stripe_sellers/${event.params.parrainId}/tickets`] = val;
+
+
+                          return admin.database().ref().update(updates);
+
+                      }).catch( (error) => {
+                          console.log(error);
+                          // Send mail to support
+                          const mailToNadirOptions = {
+                            from: 'myproxybeauty@gmail.com', // sender address
+                            to: 'myproxybeauty@gmail.com', // list of receivers
+                            subject: 'WARNING : Payment or Transfer error', // Subject line
+                            html: '<p> customer ID : '+ event.params.userId +' <br /> operation ID' + val.chargeId+'</p>'// plain text body
+                          };
+                          let transporter = nodemailer.createTransport(mailAuth);
+                          transporter.sendMail(mailToNadirOptions, function (err, info) {
+                             if(err)
+                               console.error(err);
+                             else
+                               console.log(info);
+                          });
+
+                          return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${val.chargeId}`).child('errorTransferParrain').set(error.raw);
+                      });
+                }
+
+            });
+
+        }
+    });
+});
+
 // [START chargecustomer]
 // Charge the Stripe customer whenever an amount is written to the Realtime database
 exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/shopping/{id}').onWrite((event) => {
@@ -916,6 +1010,17 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
         var val = event.data.val();
         let updates = {};
         updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultCharge`] = charge;
+
+        // Systeme de ticket : l'achat est confirme car c'est dans un shop
+        updates[`/stripe_customers/${event.params.userId}/tickets`] = {
+            amount: charge.amount,
+            rank: 0,
+            state: 'confirmed',
+            source: 'shop',
+            idempotency_key: event.params.id,
+            chargeId: charge.id,
+            filleulType: 'client'
+        };
 
         if (products[val.idProduct].statut == "ambassador") {
             updates['/parrains/' + event.params.userId+'/ambassador'] = true;
