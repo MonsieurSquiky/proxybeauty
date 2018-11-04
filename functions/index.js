@@ -735,41 +735,44 @@ exports.shopOrder = functions.https.onRequest((req, res) => {
 });
 
 // Gestion de la redistribution aux parrains, via le systeme de tickets
-exports.useChargeTicket = functions.database.ref(`/stripe_customers/${event.params.userId}/tickets`).onWrite( (event) => {
+exports.useChargeTicket = functions.database.ref(`/stripe_customers/{userId}/tickets/{ticketId}`).onWrite((event) => {
     //On recupere les donnees du ticket
     const val = event.data.val();
     // On verifie que le ticket est confirme ie qu'on peut bien distribuer l'argent car on est sur que l'on ne dera pas rembourser
     if (val === null || val.state !== 'confirmed') return null;
 
     // On cherche le parrain du clients
-    return admin.database().ref(`/user-parrains/${event.params.userId}/parrainId`).once('value').then((snapshot) => {
+    return admin.database().ref(`/user-parrain/${event.params.userId}/parrainId`).once('value').then((snapshot) => {
         event.params.parrainId = snapshot.val() ? snapshot.val() : false;
         return snapshot.val() ? snapshot.val() : false;
     }).then(function(parrainId) {
         // Si le client a un parrain, on redistribue
+
         if (parrainId) {
+            console.log(event.params.parrainId);
             // On recupere compte Stripe du parrain
-            return admin.database().ref('/stripe-sellers/'+parrainId+'/token/id').once('value').then((snapshot) => {
+            return admin.database().ref('/stripe_sellers/'+parrainId+'/token/id').once('value').then((snapshot) => {
                 return snapshot.val() ? snapshot.val() : false;
             }).then(function(parrainAccount) {
-
-                if (parrainAccount) {
-                    // On effectue le transfert au parrain
-                    let commision = 0;
+                console.log(parrainAccount);
+                if (parrainAccount && event.data.val().rank < 2) {
+                    // On effectue le transfert au parrain (seulement 1 etage)
+                    let commission = 0;
+                    let val = event.data.val();
                     // Pas les meme pourcentages de comm selon shop ou reservation
                     switch (val.source) {
                         case 'shop':
-                            commission = 0.25;
+                            commission = (val.rank == 0 ) ? 0.25 : 0.1;
                             break;
                         case 'service':
-                            commission = (filleulType == prestataire) ? 0.04 : 0.02;
+                            commission = (val.rank == 0 ? ((filleulType == prestataire) ? 0.04 : 0.02) : 0);
                             break;
                     }
                     console.log('Calcul de la commission :', commission);
 
                     let amount_parrain = Math.floor(val.amount * commission);
                     let idempotency_key = val.idempotency_key;
-                    let idempotency_key_parrain = idempotency_key+'-parrain0';
+                    let idempotency_key_parrain = idempotency_key+'-parrain'+val.rank;
 
                     // On envoie l'argent au parrain
                     console.log('Montant inscrit sur le ticket : ', val.amount);
@@ -781,11 +784,10 @@ exports.useChargeTicket = functions.database.ref(`/stripe_customers/${event.para
                               source_transaction: val.chargeId
                           }, { idempotency_key: idempotency_key_parrain })
                       .then( function(transfer) {
-
+                          console.log(transfer);
                           // Si le transfert est reussi, on notifie les gains au parrain
-                          let newKey = admin.database().ref(`/parrain-gains/${parrainId}/${val.idempotency_key}`).push().key;
                           let updates = {};
-                          updates[`/parrain-gains/${parrainId}/${val.idempotency_key}/${newKey}`] = {
+                          updates[`/parrain-gains/${parrainId}/${event.params.userId}/${val.idempotency_key}`] = {
                               amount: transfer.amount,
                               date: transfer.created,
                               currency: transfer.currency,
@@ -796,7 +798,8 @@ exports.useChargeTicket = functions.database.ref(`/stripe_customers/${event.para
                           // Systeme de ticket : on donne le ticket au parrain en indiquant le rank
                           console.log('On met a jour les gains dans parrains-gains et on cree un ticket pour le parrain');
                           val.rank += 1;
-                          updates[`/stripe_sellers/${event.params.parrainId}/tickets`] = val;
+                          let newKey = admin.database().ref(`/stripe_customers/${event.params.parrainId}/tickets`).push().key;
+                          updates[`/stripe_customers/${event.params.parrainId}/tickets/${newKey}`] = val;
 
 
                           return admin.database().ref().update(updates);
@@ -1012,7 +1015,8 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
         updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultCharge`] = charge;
 
         // Systeme de ticket : l'achat est confirme car c'est dans un shop
-        updates[`/stripe_customers/${event.params.userId}/tickets`] = {
+        let newTicketKey = admin.database().ref(`/stripe_customers/${event.params.userId}/tickets`).push().key;
+        updates[`/stripe_customers/${event.params.userId}/tickets/${newTicketKey}`] = {
             amount: charge.amount,
             rank: 0,
             state: 'confirmed',
@@ -1061,6 +1065,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
 
         admin.database().ref().update(updates);
 
+        /*
         if (event.data.val().parrainId) {
             let amount_parrain = Math.floor(charge.amount * 0.3);
             let idempotency_key = event.params.id;
@@ -1107,7 +1112,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
                   return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorTransferParrain').set(error.raw);
               });
         }
-
+        */
       }).catch((error) => {
           console.log(error);
         // We want to capture errors and render them in a user-friendly way, while
@@ -1397,6 +1402,7 @@ exports.createStripeCustomer = functions.auth.user().onCreate((event) => {
 exports.acceptConditions = functions.https.onRequest((req, res) => {
     // creer le compte Stripe Seller
     let uid = req.body.uid;
+
     var CONNECTED_STRIPE_ACCOUNT_ID;
     if (uid === null || !uid) {
         res.status(400).send({ message: 'No firebase uid send', code: 'no-uid'});
@@ -1410,7 +1416,7 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
 
         return CONNECTED_STRIPE_ACCOUNT_ID;
     }).then( function(account2) {
-
+        console.log(uid);
         admin.database().ref('/users/'+uid).once('value').then(function(snapshot) {
 
             let uid = req.body.uid;
@@ -1445,26 +1451,40 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
                         postal_code: addressData.postalCode ? addressData.postalCode : 'non renseigne',
                     };
             }
-
+            console.log(CONNECTED_STRIPE_ACCOUNT_ID);
             // Si un compte existe, on l'update
             if (CONNECTED_STRIPE_ACCOUNT_ID) {
-                console.log('Updating seller account, but not today');
-                /*
+                console.log('Updating seller account');
+                delete userDatas.country;
                 stripe.accounts.update(
                     CONNECTED_STRIPE_ACCOUNT_ID,
                     userDatas
                 ).then( function(sellerAccount) {
                      // asynchronously called
+                     console.log(sellerAccount);
                      admin.database().ref('/stripe_sellers/'+uid+'/token').set(sellerAccount);
                      res.status(200).send(sellerAccount);
                  }).catch(function(error) {
-                     admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.message);
-                     res.status(500).send(error);
+                     if (error.code == 'account_invalid') {
+                         // Le compte n'existe pas, on archive les fake donnees et on demande de reessayer
+                         console.log('No existing account');
+                         admin.database().ref('/stripe_sellers/'+uid+'/oldTokenId').set(CONNECTED_STRIPE_ACCOUNT_ID);
+                         admin.database().ref('/stripe_sellers/'+uid+'/token').set(null);
+                         admin.database().ref('/user-bankaccount/'+uid).set(null);
+                         res.status(500).send({error : 'Veuillez réessayer.'});
+                     }
+                     else {
+                         console.log(error.code + ' : ' + error.message);
+                         admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.code + ' : ' + error.message);
+                         res.status(500).send(error);
+                     }
+
                  });
-                 */
-                 res.status(200).send({ code: 200, message: 'succès relatif du developpeur epuise'});
+
+                 //res.status(200).send({ code: 200, message: 'succès relatif du developpeur epuise'});
             }   //Sinon on le creer
             else {
+
                 userDatas['tos_acceptance'] = {
                       date: Math.floor(Date.now() / 1000),
                       ip: ipAddress // Assumes you're not using a proxy

@@ -49,6 +49,12 @@ export class ConditionsPage {
       if (this.accept) {
           var obj = this;
 
+          obj.loading = obj.loadingCtrl.create({
+          content: 'Création du compte...'
+          });
+          obj.loading.present();
+          obj.request.callFirebaseConditions('acceptConditions', { uid: obj.uid}, [obj.loading], obj);
+          /*
           firebase.database().ref('/user-gift/'+ this.uid+'/palier').set(0).then(function() {
               firebase.database().ref('/users/'+ obj.uid +'/setupStep').set('complete')
               .then(function() {
@@ -70,7 +76,7 @@ export class ConditionsPage {
                 console.log("ERROR -> " + JSON.stringify(error));
               });
           }).catch( (error) => { console.log("ERROR -> " + JSON.stringify(error)); });
-
+          */
       }
       else {
           let alertVerification = this.alertCtrl.create({
@@ -86,14 +92,22 @@ export class ConditionsPage {
 
       var ref = firebase.database().ref("/users/"+ this.uid);
       var obj = this;
-      ref.on("value", function(snapshot) {
-          if (snapshot.val().statut == "client")
-            obj.navCtrl.setRoot(DashboardPage);
-          else
-            obj.navCtrl.setRoot(PrestaBoardPage);
-        }, function (errorObject) {
-          console.log("The read failed: " + errorObject.code);
-        });
+
+      let updates = {};
+      updates['/user-gift/'+ this.uid+'/palier'] = 0;
+      updates['/users/'+ obj.uid +'/setupStep'] = 'complete';
+
+      firebase.database().ref().update(updates).then( function () {
+          ref.on("value", function(snapshot) {
+              if (snapshot.val().statut == "client")
+                obj.navCtrl.setRoot(DashboardPage);
+              else
+                obj.navCtrl.setRoot(PrestaBoardPage);
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+      });
+
 
   }
 }

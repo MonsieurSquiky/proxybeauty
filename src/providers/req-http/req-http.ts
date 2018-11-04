@@ -78,7 +78,7 @@ export class ReqHttpProvider {
              console.log(error.toString());
              for (let i=0; i < loaders.length; i++)
                 loaders[i].dismiss();
-                
+
             let alert = context.alertCtrl.create({
               title: 'Erreur',
               subTitle: error.message,
@@ -92,7 +92,7 @@ export class ReqHttpProvider {
   }
 
   callFirebaseConditions(fctName, body, loaders, context) {
-      let serverUrl = 'https://us-central1-proxybeauty-2.cloudfunctions.net/'+fctName;
+      let serverUrl = 'https://us-central1-proxybeauty.cloudfunctions.net/'+fctName;
       console.log(body);
       let headers = new Headers({
           'X-Request-ID': (body.email ? body.email : body.uid ) + Date.now().toString(),
