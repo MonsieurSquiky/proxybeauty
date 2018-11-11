@@ -40,6 +40,7 @@
     "@types/intl-tel-input": "0.0.8",
     "@types/jquery": "3.3.0",
     "angularfire2": "5.0.0-rc.3",
+    "cordova": "8.1.2",
     "cordova-android": "^6.4.0",
     "cordova-android-play-services-gradle-release": "^1.4.4",
     "cordova-browser": "4.1.0",

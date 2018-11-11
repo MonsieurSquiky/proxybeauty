@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "1090914691423",
-    "firebase_url": "https://proxybeauty.firebaseio.com",
-    "project_id": "proxybeauty",
-    "storage_bucket": "proxybeauty.appspot.com"
+    "project_number": "624687797142",
+    "firebase_url": "https://proxybeauty-2.firebaseio.com",
+    "project_id": "proxybeauty-2",
+    "storage_bucket": "proxybeauty-2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1090914691423:android:5dd25229d8a69305",
+        "mobilesdk_app_id": "1:624687797142:android:5dd25229d8a69305",
         "android_client_info": {
           "package_name": "io.ionic.proxybeauty"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1090914691423-81838louqi6ksmn7o3rkpqvf0noq49a4.apps.googleusercontent.com",
+          "client_id": "624687797142-38e2uh4asvrghiqma40bt93nuu0h8klb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "io.ionic.proxybeauty",
-            "certificate_hash": "562c55238ba368e1ff1bd8ee017f77ffde54c6a4"
+            "certificate_hash": "a4e1ed8a1c6e6f45b8ecf1e5f02c062ea2b5bfbd"
           }
         },
         {
-          "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+          "client_id": "624687797142-unv7d8omkn2kd36q2ib6pdhuak1rspeu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAu40QIwgWbFQhNqPm-_6P-9UJQIjiag70"
+          "current_key": "AIzaSyCT3gnUACOlfqAPrbdoBwefyvRM_qkZKGU"
         }
       ],
       "services": {
@@ -40,11 +40,11 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1090914691423-0p6mbq3ceg6092353jajc7d998e1cmah.apps.googleusercontent.com",
+              "client_id": "624687797142-unv7d8omkn2kd36q2ib6pdhuak1rspeu.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1090914691423-qqdocg2thovlajoe1u91g4g8u31572c9.apps.googleusercontent.com",
+              "client_id": "624687797142-1e3soqr1e29jtlvso1rbsg4c22v35nt4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "io.ionic.proxybeauty",

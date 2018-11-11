@@ -31,7 +31,7 @@ export class BankaccountPage {
                 public alertCtrl: AlertController,
                 public loadingCtrl: LoadingController) {
 
-      this.stripe = Stripe('pk_test_aHC0D842ZOVEaBZ2t7Z2fBQp');
+      this.stripe = Stripe('pk_live_43QYPKhdyXb32bFFeR14Gw59');
   }
 
   setupStripe(){
