@@ -40,7 +40,7 @@ import { AutocompletePageModule } from '../pages/autocomplete/autocomplete.modul
 import { FirstloginPageModule } from '../pages/firstlogin/firstlogin.module';
 import { FirstloginTypePageModule } from '../pages/firstlogin-type/firstlogin-type.module';
 import { SetAddressPageModule } from '../pages/set-address/set-address.module';
-
+import { AmbassadorRankPageModule } from '../pages/ambassador-rank/ambassador-rank.module';
 import { LogoutPageModule } from '../pages/logout/logout.module';
 import { PaybookingPageModule } from '../pages/paybooking/paybooking.module';
 import { ProfilepicPageModule } from '../pages/profilepic/profilepic.module';
@@ -158,7 +158,8 @@ var config = {
     RdvHistoryPageModule,
     RdvInfosPageModule,
     RdvPageModule,
-    IdFormPageModule
+    IdFormPageModule,
+    AmbassadorRankPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

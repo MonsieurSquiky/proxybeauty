@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 
 import { AmbassadorInfosPage } from '../ambassador-infos/ambassador-infos';
 import { ParrainageGainPage } from '../parrainage-gain/parrainage-gain';
+import { AmbassadorRankPage } from '../ambassador-rank/ambassador-rank';
 
 /**
  * Generated class for the AmbassadorPage page.
@@ -20,6 +21,7 @@ export class AmbassadorPage {
 
     tab1Root = AmbassadorInfosPage;
     tab2Root = ParrainageGainPage;
+    tab3Root = AmbassadorRankPage;
 
     constructor(public navCtrl: NavController, public navParams: NavParams) {
 
