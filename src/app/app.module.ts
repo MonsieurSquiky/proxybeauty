@@ -40,7 +40,7 @@ import { AutocompletePageModule } from '../pages/autocomplete/autocomplete.modul
 import { FirstloginPageModule } from '../pages/firstlogin/firstlogin.module';
 import { FirstloginTypePageModule } from '../pages/firstlogin-type/firstlogin-type.module';
 import { SetAddressPageModule } from '../pages/set-address/set-address.module';
-
+import { AmbassadorRankPageModule } from '../pages/ambassador-rank/ambassador-rank.module';
 import { LogoutPageModule } from '../pages/logout/logout.module';
 import { PaybookingPageModule } from '../pages/paybooking/paybooking.module';
 import { ProfilepicPageModule } from '../pages/profilepic/profilepic.module';
@@ -84,12 +84,13 @@ import { ReqHttpProvider } from '../providers/req-http/req-http';
 import { TagsProvider } from '../providers/tags/tags';
 
 var config = {
-  apiKey: "AIzaSyCvZde2dbNMl8uJzYhI6EMVnFdewpObNZA",
-  authDomain: "proxybeauty-2.firebaseapp.com",
-  databaseURL: "https://proxybeauty-2.firebaseio.com",
-  projectId: "proxybeauty-2",
-  storageBucket: "proxybeauty-2.appspot.com",
-  messagingSenderId: "624687797142"
+    apiKey: "AIzaSyALQnjd3NpF0TI7P4JCUFAgWSs4yZ5VRF4",
+    authDomain: "proxybeauty.firebaseapp.com",
+    databaseURL: "https://proxybeauty.firebaseio.com",
+    projectId: "proxybeauty",
+    storageBucket: "proxybeauty.appspot.com",
+    messagingSenderId: "1090914691423"
+
 };
 
 
@@ -157,7 +158,8 @@ var config = {
     RdvHistoryPageModule,
     RdvInfosPageModule,
     RdvPageModule,
-    IdFormPageModule
+    IdFormPageModule,
+    AmbassadorRankPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

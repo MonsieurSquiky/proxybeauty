@@ -51,8 +51,11 @@ const mailAuth = {
      }
 };
 
+const rankPal = [2, 2, 2];
+
 const giftRdv = [3, 10, 25, 50, 100];
 const giftComment = [3, 10, 25, 50, 100];
+
 const giftValue = [5, 10, 20, 40, 70];
 const giftProducts = [  {ids: [1, 2, 3], qte: 1, title:'1 masque au choix' },
                         {ids: [7, 8], qte: 1, title:'1 masque bio au choix' },
@@ -328,7 +331,7 @@ const products = [
                       "id" : 29,
                       "name" : "Starting Business & Licence",
                       "pictureUrl" : "https://firebasestorage.googleapis.com/v0/b/proxybeauty-2.appspot.com/o/img%2Fshop%2Fstarting-business-license.jpg?alt=media&token=3851c812-e3e1-4fc1-9e40-7b04d7fd2c8b",
-                      "prix" : 29.9,
+                      "prix" : 34.9,
                       "statut" : "ambassador",
                       "usage" : "Un guide inclus et la formation dont vous bénéficierez vous permettra de faire un usage optimal de ce kit. Revendez les masques pour être rentable dès le départ !"
                     }, {
@@ -470,6 +473,62 @@ const products = [
                       "usage" : "A boire chaude. Temps d’infusion: 7 à 10 min"
                     }
                 ];
+
+exports.checkRank = functions.database.ref('/parrains/{userId}/checkin').onWrite((event) => {
+    // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
+    const val = event.data.val();
+    // This onWrite will trigger whenever anything is written to the path, so
+    // noop if the charge was deleted, errored out, or the Stripe API returned a result (id exists)
+    if (val === null || val == 'failed' || val == 'success' || !Number.isInteger(val)) return null;
+
+    let nbFilleuls = 0;
+    let nbRank = [0, 0, 0, 0];
+
+    return admin.database().ref('/parrains/' + event.params.userId + '/filleuls').once('value', function(snapshot) {
+        snapshot.forEach( function(childSnapshot) {
+
+            nbRank[0] += 1;
+            if (childSnapshot.rank >= 1)
+                nbRank[1] += 1; //Bronze
+
+            if (childSnapshot.rank >= 2)
+                nbRank[2] += 1; // Silver
+            if (childSnapshot.rank >= 3)
+                nbRank[3] += 1; // Gold
+
+          return false;
+        });
+        return true;
+    }).then( () => {
+        if (nbRank[val] >= rankPal[val]) {
+
+            // Le user peut passer au palier supplementaire
+
+            admin.database().ref('/user-parrain/'+event.params.userId+'/parrainId').once('value', function(snapshot) {
+                if (snapshot.val())
+                    return admin.database().ref('/parrains/'+snapshot.val()+'/filleuls/'+event.params.userId+'/rank').set(val +1);
+                else {
+                    return true;
+                }
+            });
+
+            let updates = {};
+
+            updates['/parrains/'+event.params.userId+'/rank'] = val +1;
+            updates['/parrains/'+event.params.userId+'/checkin'] = 'success';
+
+            return admin.database().ref().update(updates);
+        }
+        else {
+            return admin.database().ref('/parrains/'+event.params.userId+'/checkin').set('failed');
+        }
+
+    }).catch( (error) => {
+        return admin.database().ref('/parrains/'+event.params.userId+'/checkin').set(error);
+    });
+
+});
+
 exports.checkGift = functions.database.ref('/user-gift/{userId}/checkin').onWrite((event) => {
     // Ici la valeur de checkin est le numero du palier auquel le user se trouve avant l'upgrade
     const val = event.data.val();
@@ -654,6 +713,32 @@ exports.receiveComplain = functions.database.ref('/sav/{userId}/{complainId}').o
     });
 });
 
+exports.initFilleuls = functions.https.onRequest((req, res) => {
+
+
+    return admin.database().ref('/parrains').once('value', function(snapshot) {
+
+        snapshot.forEach( function(childSnapshot) {
+            let parrain = childSnapshot.key;
+            admin.database().ref(`parrains/${parrain}/rank`).set(0);
+          return false;
+        });
+    }).then(function() {
+        return admin.database().ref('/user-parrain').once('value', function(snapshot) {
+
+            snapshot.forEach( function(childSnapshot) {
+                let parrain = childSnapshot.val().parrainId;
+                admin.database().ref(`parrains/${parrain}/rank`).set(0);
+                admin.database().ref(`parrains/${parrain}/filleuls/${childSnapshot.key}/rank`).set(0);
+              return false;
+            });
+
+            res.status(200).send({ message: "Initialisation des Filleuls finished"});
+        });
+    });
+
+
+});
 
 // Shop command by a non resgistered user
 // Make a POST HTTP request to https://us-central1-proxybeauty-2.cloudfunctions.net/shopOrder
@@ -732,6 +817,123 @@ exports.shopOrder = functions.https.onRequest((req, res) => {
             res.status(200).send({ error: true, message: "Le paiement a échoué", error_details: error});
           });
 
+});
+
+// Gestion de la redistribution aux parrains, via le systeme de tickets
+exports.useChargeTicket = functions.database.ref(`/stripe_customers/{userId}/tickets/{ticketId}`).onWrite((event) => {
+    //On recupere les donnees du ticket
+    const val = event.data.val();
+    // On verifie que le ticket est confirme ie qu'on peut bien distribuer l'argent car on est sur que l'on ne dera pas rembourser
+    if (val === null || val.state !== 'confirmed') return null;
+
+    // On cherche le parrain du clients
+    return admin.database().ref(`/user-parrain/${event.params.userId}/parrainId`).once('value').then((snapshot) => {
+        event.params.parrainId = snapshot.val() ? snapshot.val() : false;
+        return snapshot.val() ? snapshot.val() : false;
+    }).then(function(parrainId) {
+        // Si le client a un parrain, on redistribue
+
+        if (parrainId) {
+            console.log(event.params.parrainId);
+            // On recupere compte Stripe du parrain
+            return admin.database().ref('/stripe_sellers/'+parrainId+'/token/id').once('value').then((snapshot) => {
+                return snapshot.val() ? snapshot.val() : false;
+            }).then(function(parrainAccount) {
+                console.log(parrainAccount);
+
+                return admin.database().ref('/parrains/'+parrainId+'/rank').once('value').then((snapshot) => {
+                    return snapshot.val() ? snapshot.val() : false;
+                }).then(function(rank) {
+
+                    if (parrainAccount && event.data.val().rank <= rank) {
+                        // On effectue le transfert au parrain (seulement si le ticket ticket est de rang inferieur a celui du parrain)
+                        let commission = 0;
+                        let val = event.data.val();
+                        // Pas les meme pourcentages de comm selon shop ou reservation
+                        switch (val.source) {
+                            case 'shop':
+                                switch (val.rank) {
+                                    case 0:
+                                        commission = 0.25;
+                                        break;
+                                    case 1:
+                                        commission = 0.10;
+                                        break;
+                                    case 2:
+                                        commission = 0.05;
+                                        break;
+                                    case 3:
+                                        commission = 0.02;
+                                        break;
+                                }
+                                break;
+                            case 'service':
+                                commission = (val.rank == 0 ? ((filleulType == prestataire) ? 0.04 : 0.02) : 0);
+                                break;
+                        }
+                        console.log('Calcul de la commission :', commission);
+
+                        let amount_parrain = Math.floor(val.amount * commission);
+                        let idempotency_key = val.idempotency_key;
+                        let idempotency_key_parrain = idempotency_key+'-parrain'+val.rank;
+
+                        if (amount_parrain > 0) {
+                            // On envoie l'argent au parrain
+                            console.log('Montant inscrit sur le ticket : ', val.amount);
+                            stripe.transfers.create({
+                                      amount: amount_parrain,
+                                      currency: "eur",
+                                      destination: parrainAccount,
+                                      transfer_group: idempotency_key,
+                                      source_transaction: val.chargeId
+                                  }, { idempotency_key: idempotency_key_parrain })
+                              .then( function(transfer) {
+                                  console.log(transfer);
+                                  // Si le transfert est reussi, on notifie les gains au parrain
+                                  let updates = {};
+                                  updates[`/parrain-gains/${parrainId}/${event.params.userId}/${val.idempotency_key}`] = {
+                                      amount: transfer.amount,
+                                      date: transfer.created,
+                                      currency: transfer.currency,
+                                      transaction: transfer.transfer_group
+                                  };
+                                  updates[`/stripe_customers/${event.params.userId}/shopResponse/${val.chargeId}/resultTransfer`] = transfer;
+
+                                  // Systeme de ticket : on donne le ticket au parrain en indiquant le rank
+                                  console.log('On met a jour les gains dans parrains-gains et on cree un ticket pour le parrain');
+                                  val.rank += 1;
+                                  let newKey = admin.database().ref(`/stripe_customers/${event.params.parrainId}/tickets`).push().key;
+                                  updates[`/stripe_customers/${event.params.parrainId}/tickets/${newKey}`] = val;
+
+
+                                  return admin.database().ref().update(updates);
+
+                              }).catch( (error) => {
+                                  console.log(error);
+                                  // Send mail to support
+                                  const mailToNadirOptions = {
+                                    from: 'myproxybeauty@gmail.com', // sender address
+                                    to: 'myproxybeauty@gmail.com', // list of receivers
+                                    subject: 'WARNING : Payment or Transfer error', // Subject line
+                                    html: '<p> customer ID : '+ event.params.userId +' <br /> operation ID' + val.chargeId+'</p>'// plain text body
+                                  };
+                                  let transporter = nodemailer.createTransport(mailAuth);
+                                  transporter.sendMail(mailToNadirOptions, function (err, info) {
+                                     if(err)
+                                       console.error(err);
+                                     else
+                                       console.log(info);
+                                  });
+
+                                  return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${val.chargeId}`).child('errorTransferParrain').set(error.raw);
+                              });
+                        }
+                    }
+                });
+            });
+
+        }
+    });
 });
 
 // [START chargecustomer]
@@ -917,6 +1119,18 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
         let updates = {};
         updates[`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}/resultCharge`] = charge;
 
+        // Systeme de ticket : l'achat est confirme car c'est dans un shop
+        let newTicketKey = admin.database().ref(`/stripe_customers/${event.params.userId}/tickets`).push().key;
+        updates[`/stripe_customers/${event.params.userId}/tickets/${newTicketKey}`] = {
+            amount: charge.amount,
+            rank: 0,
+            state: 'confirmed',
+            source: 'shop',
+            idempotency_key: event.params.id,
+            chargeId: charge.id,
+            filleulType: 'client'
+        };
+
         if (products[val.idProduct].statut == "ambassador") {
             updates['/parrains/' + event.params.userId+'/ambassador'] = true;
             updates['/users/' + event.params.userId + '/ambassador'] = true;
@@ -956,6 +1170,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
 
         admin.database().ref().update(updates);
 
+        /*
         if (event.data.val().parrainId) {
             let amount_parrain = Math.floor(charge.amount * 0.3);
             let idempotency_key = event.params.id;
@@ -1002,7 +1217,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
                   return admin.database().ref(`/stripe_customers/${event.params.userId}/shopResponse/${event.params.id}`).child('errorTransferParrain').set(error.raw);
               });
         }
-
+        */
       }).catch((error) => {
           console.log(error);
         // We want to capture errors and render them in a user-friendly way, while
@@ -1292,6 +1507,7 @@ exports.createStripeCustomer = functions.auth.user().onCreate((event) => {
 exports.acceptConditions = functions.https.onRequest((req, res) => {
     // creer le compte Stripe Seller
     let uid = req.body.uid;
+
     var CONNECTED_STRIPE_ACCOUNT_ID;
     if (uid === null || !uid) {
         res.status(400).send({ message: 'No firebase uid send', code: 'no-uid'});
@@ -1305,7 +1521,7 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
 
         return CONNECTED_STRIPE_ACCOUNT_ID;
     }).then( function(account2) {
-
+        console.log(uid);
         admin.database().ref('/users/'+uid).once('value').then(function(snapshot) {
 
             let uid = req.body.uid;
@@ -1320,6 +1536,8 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
                       type: 'individual'
                   }
             };
+
+            // Send mail CLIENT accueil
 
             if (snapshot.hasChild('birthdate')) {
                 userDatas.legal_entity['dob'] = {
@@ -1338,26 +1556,40 @@ exports.acceptConditions = functions.https.onRequest((req, res) => {
                         postal_code: addressData.postalCode ? addressData.postalCode : 'non renseigne',
                     };
             }
-
+            console.log(CONNECTED_STRIPE_ACCOUNT_ID);
             // Si un compte existe, on l'update
             if (CONNECTED_STRIPE_ACCOUNT_ID) {
-                console.log('Updating seller account, but not today');
-                /*
+                console.log('Updating seller account');
+                delete userDatas.country;
                 stripe.accounts.update(
                     CONNECTED_STRIPE_ACCOUNT_ID,
                     userDatas
                 ).then( function(sellerAccount) {
                      // asynchronously called
+                     console.log(sellerAccount);
                      admin.database().ref('/stripe_sellers/'+uid+'/token').set(sellerAccount);
                      res.status(200).send(sellerAccount);
                  }).catch(function(error) {
-                     admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.message);
-                     res.status(500).send(error);
+                     if (error.code == 'account_invalid') {
+                         // Le compte n'existe pas, on archive les fake donnees et on demande de reessayer
+                         console.log('No existing account');
+                         admin.database().ref('/stripe_sellers/'+uid+'/oldTokenId').set(CONNECTED_STRIPE_ACCOUNT_ID);
+                         admin.database().ref('/stripe_sellers/'+uid+'/token').set(null);
+                         admin.database().ref('/user-bankaccount/'+uid).set(null);
+                         res.status(500).send({error : 'Veuillez réessayer.'});
+                     }
+                     else {
+                         console.log(error.code + ' : ' + error.message);
+                         admin.database().ref('/stripe_sellers/'+ uid +'/error').set(error.code + ' : ' + error.message);
+                         res.status(500).send(error);
+                     }
+
                  });
-                 */
-                 res.status(200).send({ code: 200, message: 'succès relatif du developpeur epuise'});
+
+                 //res.status(200).send({ code: 200, message: 'succès relatif du developpeur epuise'});
             }   //Sinon on le creer
             else {
+
                 userDatas['tos_acceptance'] = {
                       date: Math.floor(Date.now() / 1000),
                       ip: ipAddress // Assumes you're not using a proxy
