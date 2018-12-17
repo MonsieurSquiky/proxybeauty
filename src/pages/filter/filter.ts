@@ -29,8 +29,8 @@ export class FilterPage {
     supplements = [];
     remote: boolean;
     home: boolean;
-    prix: number;
-    duree: number;
+    prix: number = 0;
+    duree: number = 0;
     category;
     supplementsNode: any;
     uid;
@@ -171,7 +171,7 @@ export class FilterPage {
           }
 
       }
-      console.log(this.tags);
+
       /*
       var newSupplement = this.supplementsNode.clone();
       newSupplement.attr('id', "");
@@ -185,7 +185,7 @@ export class FilterPage {
     var finaltags = [];
 
     for (var i=0; i < this.tags.length; i++) {
-        if (this.tags[i]["prix"] && this.supplements.indexOf(this.tags[i]) == -1)
+        if (this.tags[i]['prix'] && this.supplements.indexOf(this.tags[i]) == -1)
             this.supplements.push(this.tags[i]);
     }
     /*
@@ -200,8 +200,8 @@ export class FilterPage {
         var postData = {
             prestataire: this.uid,
             tags: finaltags,
-            prix: this.prix,
-            duree: this.duree,
+            prix: 0,//this.prix,
+            duree: 0,//this.duree,
             places: [ (this.remote) ? "remote" : null, (this.home) ? "home" : null],
             category: this.category,
             supplements: this.supplements
@@ -233,7 +233,7 @@ export class FilterPage {
           alert.present();
           return false;
       }
-
+      /*
       if (!this.prix || this.prix < 5) {
           let alert = this.alertCtrl.create({
             title: "Prix invalide",
@@ -253,8 +253,11 @@ export class FilterPage {
           alert.present();
           return false;
       }
+      */
 
       for (var i=0; i < this.supplements.length; i++) {
+
+
           if (!this.supplements[i].prix) {
               let alert = this.alertCtrl.create({
                 title: this.supplements[i].name + " : prix invalide",
@@ -274,6 +277,18 @@ export class FilterPage {
               alert.present();
               return false;
           }
+      }
+
+      if (this.supplements.length <= 0) {
+          console.log(this.supplements.length);
+          console.log(this.supplements);
+          let alert = this.alertCtrl.create({
+            title: " Aucun tag sélectionné/valide",
+            subTitle: "Veuillez sélectionner au moins un tag et renseigner la durée et le prix associé",
+            buttons: ['OK']
+          });
+          alert.present();
+          return false;
       }
 
       return true;

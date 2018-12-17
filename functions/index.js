@@ -1133,6 +1133,7 @@ exports.createStripeShop = functions.database.ref('/stripe_customers/{userId}/sh
 
         if (products[val.idProduct].statut == "ambassador") {
             updates['/parrains/' + event.params.userId+'/ambassador'] = true;
+            updates['/parrains/' + event.params.userId+'/rank'] = 0;
             updates['/users/' + event.params.userId + '/ambassador'] = true;
         }
         // send a mail to Nadir so he can send product
