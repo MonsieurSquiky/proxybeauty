@@ -1,8 +1,9 @@
 {
   "name": "ProxyBeauty",
-  "app_id": "",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "id": "aea6fce5",
+  "app_id": ""
 }
