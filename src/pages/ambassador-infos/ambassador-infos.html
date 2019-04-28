@@ -17,8 +17,8 @@
 
 
 <ion-content padding>
-    <button *ngIf="!isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Activer le mode Ambassadeur</button>
-    <button *ngIf="isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador()"> Commander une autre Box </button>
+    <button *ngIf="!isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador('activation')"> Activer le mode Ambassadeur</button>
+    <button *ngIf="isAmbassador" ion-button block style="font-size:12px" class="main-color-button" (click)="submitAmbassador('buy')"> Commander une autre Box </button>
     <p *ngIf="isAmbassador" class="selectable" > Votre code ambassadeur est : <br />
         <ion-item text-center style="font-size:12px" class="selectable"> {{ uid }} </ion-item>
     </p>
